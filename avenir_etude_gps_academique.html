@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Avenir Étude — GPS Académique</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Instrument+Serif:ital@0;1&family=Instrument+Sans:ital,wght@0,400;0,500;0,600&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    :root{
+      --ink:#060B14;--ink-2:#0C1220;--ink-3:#111827;--ink-4:#1C2535;
+      --gold:#D4A853;--gold-dim:#7A5E2A;--gold-10:rgba(212,168,83,.10);
+      --ivory:#F2EDE4;--ivory-dim:#8A8278;--ivory-faint:#2E3545;
+      --wire:rgba(242,237,228,.07);--wire-mid:rgba(242,237,228,.13);--wire-hi:rgba(242,237,228,.24);
+      --green:#34C97A;--green-10:rgba(52,201,122,.1);
+      --blue:#4F7AE8;--blue-10:rgba(79,122,232,.1);
+      --red:#E05A54;--red-10:rgba(224,90,84,.1);
+      --orange:#F59E0B;
+      --max-w:1200px;--nav-h:64px;
+    }
+    body{font-family:'Instrument Sans',sans-serif;background:var(--ink);color:var(--ivory);-webkit-font-smoothing:antialiased;cursor:none;overflow-x:hidden;}
+    .cursor{position:fixed;width:8px;height:8px;background:var(--gold);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);mix-blend-mode:screen;transition:width .18s,height .18s;}
+    .cursor.big{width:28px;height:28px;background:transparent;border:1.5px solid var(--gold);}
+    body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:8000;opacity:.5;}
+
+    /* NAV */
+    nav{position:sticky;top:0;z-index:500;height:var(--nav-h);border-bottom:1px solid var(--wire);background:rgba(6,11,20,.9);backdrop-filter:blur(16px);display:flex;align-items:center;}
+    .nav-inner{max-width:var(--max-w);margin:0 auto;padding:0 40px;width:100%;display:flex;align-items:center;gap:16px;}
+    .nav-logo{font-family:'Bricolage Grotesque',sans-serif;font-size:16px;font-weight:700;color:var(--ivory);letter-spacing:-.03em;text-decoration:none;}
+    .nav-sep{color:var(--ivory-faint);}
+    .nav-page{font-size:13px;color:var(--ivory-dim);}
+    .nav-right{margin-left:auto;display:flex;gap:10px;}
+    .nav-btn{font-size:12px;font-weight:600;padding:8px 16px;background:transparent;color:var(--ivory-dim);border:1px solid var(--wire-mid);border-radius:6px;cursor:none;text-decoration:none;transition:all .15s;}
+    .nav-btn:hover{border-color:var(--wire-hi);color:var(--ivory);}
+    .nav-btn-gold{background:var(--gold);color:var(--ink);border-color:var(--gold);}
+    .nav-btn-gold:hover{background:#e0b55e;}
+
+    /* WRAP */
+    .wrap{max-width:var(--max-w);margin:0 auto;padding:0 40px;}
+
+    /* HERO */
+    .gps-hero{padding:56px 0 48px;border-bottom:1px solid var(--wire);}
+    .hero-eyebrow{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;display:flex;align-items:center;gap:10px;}
+    .hero-eyebrow::before{content:'';width:20px;height:1px;background:var(--gold-dim);}
+    .hero-title{font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(32px,5vw,56px);font-weight:800;letter-spacing:-.04em;line-height:1;color:var(--ivory);margin-bottom:12px;}
+    .hero-title em{font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;color:var(--gold);}
+    .hero-sub{font-size:15px;color:var(--ivory-dim);line-height:1.7;max-width:560px;}
+
+    /* LEVEL TABS */
+    .level-tabs{display:flex;gap:8px;padding:32px 0 0;border-bottom:1px solid var(--wire);margin-bottom:40px;}
+    .level-tab{
+      display:flex;align-items:center;gap:10px;
+      padding:12px 24px;border-radius:10px 10px 0 0;
+      font-size:13px;font-weight:600;color:var(--ivory-dim);
+      cursor:none;transition:all .2s;border:none;background:transparent;
+      font-family:'Instrument Sans',sans-serif;border-bottom:2px solid transparent;
+      margin-bottom:-1px;
+    }
+    .level-tab:hover{color:var(--ivory);}
+    .level-tab.active{color:var(--gold);border-bottom-color:var(--gold);}
+    .level-tab-icon{font-size:18px;}
+    .level-tab-badge{font-size:9px;font-weight:700;padding:2px 7px;border-radius:10px;background:var(--ink-4);color:var(--ivory-faint);}
+    .level-tab.active .level-tab-badge{background:var(--gold-10);color:var(--gold);}
+
+    /* LEVEL PANELS */
+    .level-panel{display:none;}
+    .level-panel.active{display:block;}
+
+    /* DREAM INPUT SECTION */
+    .dream-section{
+      background:var(--ink-2);border:1px solid var(--wire-mid);border-radius:16px;
+      padding:28px;margin-bottom:32px;
+    }
+    .ds-title{font-family:'Bricolage Grotesque',sans-serif;font-size:18px;font-weight:700;color:var(--ivory);letter-spacing:-.02em;margin-bottom:6px;}
+    .ds-sub{font-size:13px;color:var(--ivory-dim);margin-bottom:20px;line-height:1.6;}
+    .dream-input-wrap{position:relative;}
+    .dream-big-input{
+      width:100%;padding:18px 22px 18px 56px;
+      background:var(--ink-3);border:1px solid var(--wire-mid);border-radius:12px;
+      font-family:'Bricolage Grotesque',sans-serif;font-size:18px;font-weight:700;
+      color:var(--ivory);outline:none;transition:border-color .2s;cursor:none;
+    }
+    .dream-big-input:focus{border-color:var(--gold);}
+    .dream-big-input::placeholder{color:var(--ivory-faint);font-weight:400;}
+    .dream-search-icon{position:absolute;left:18px;top:50%;transform:translateY(-50%);font-size:22px;}
+    .dream-quick{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;}
+    .dq-chip{
+      font-size:11px;font-weight:600;padding:5px 12px;border-radius:5px;
+      border:1px solid var(--wire);background:var(--ink-3);color:var(--ivory-dim);
+      cursor:none;transition:all .15s;
+    }
+    .dq-chip:hover,.dq-chip.active{background:var(--gold-10);border-color:var(--gold-dim);color:var(--gold);}
+    .btn-generate{
+      font-family:'Bricolage Grotesque',sans-serif;font-size:14px;font-weight:700;
+      padding:13px 28px;background:var(--gold);color:var(--ink);
+      border:none;border-radius:10px;cursor:none;transition:all .15s;
+      margin-top:16px;display:inline-flex;align-items:center;gap:8px;
+    }
+    .btn-generate:hover{background:#e0b55e;transform:translateY(-1px);}
+
+    /* ROADMAP */
+    .roadmap{margin-top:8px;}
+    .roadmap-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;}
+    .rh-title{font-family:'Bricolage Grotesque',sans-serif;font-size:20px;font-weight:700;color:var(--ivory);letter-spacing:-.02em;}
+    .rh-meta{font-size:12px;color:var(--ivory-dim);}
+    .rh-save{font-size:12px;font-weight:600;padding:7px 14px;background:var(--gold-10);border:1px solid var(--gold-dim);border-radius:6px;color:var(--gold);cursor:none;transition:all .15s;}
+    .rh-save:hover{background:var(--gold);color:var(--ink);}
+
+    /* TIMELINE */
+    .timeline{display:flex;flex-direction:column;gap:0;}
+    .tl-item{display:flex;gap:20px;position:relative;}
+    .tl-item::before{content:'';position:absolute;left:19px;top:44px;bottom:-16px;width:2px;background:var(--wire);z-index:0;}
+    .tl-item:last-child::before{display:none;}
+    .tl-left{display:flex;flex-direction:column;align-items:center;flex-shrink:0;width:40px;z-index:1;}
+    .tl-dot{
+      width:40px;height:40px;border-radius:50%;border:2px solid var(--wire-mid);
+      display:flex;align-items:center;justify-content:center;
+      font-size:16px;background:var(--ink-3);flex-shrink:0;transition:all .3s;
+    }
+    .tl-dot.done{background:var(--green);border-color:var(--green);}
+    .tl-dot.current{background:var(--gold);border-color:var(--gold);box-shadow:0 0 0 4px var(--gold-10);}
+    .tl-dot.alert{background:var(--red-10);border-color:var(--red);}
+    .tl-dot.future{background:var(--ink-4);border-color:var(--ivory-faint);}
+    .tl-body{flex:1;padding:0 0 28px;}
+    .tl-period{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ivory-faint);margin-bottom:6px;}
+    .tl-card{
+      background:var(--ink-2);border:1px solid var(--wire);border-radius:14px;
+      padding:18px 22px;transition:border-color .2s;
+    }
+    .tl-card.current{border-color:var(--gold-dim);}
+    .tl-card.alert{border-color:var(--red);}
+    .tl-card-title{font-family:'Bricolage Grotesque',sans-serif;font-size:16px;font-weight:700;color:var(--ivory);letter-spacing:-.01em;margin-bottom:6px;}
+    .tl-card-desc{font-size:13px;color:var(--ivory-dim);line-height:1.65;margin-bottom:12px;}
+    .tl-actions{display:flex;flex-wrap:wrap;gap:8px;}
+    .tl-action{
+      font-size:11px;font-weight:600;padding:4px 12px;border-radius:4px;
+      border:1px solid var(--wire);color:var(--ivory-dim);background:var(--ink-3);
+      display:flex;align-items:center;gap:5px;
+    }
+    .ta-done{background:var(--green-10);border-color:rgba(52,201,122,.2);color:var(--green);}
+    .ta-now{background:var(--gold-10);border-color:var(--gold-dim);color:var(--gold);}
+    .ta-alert{background:var(--red-10);border-color:rgba(224,90,84,.2);color:var(--red);}
+    .ta-future{background:var(--ink-4);color:var(--ivory-faint);}
+    .tl-matiere-list{margin-top:12px;display:flex;flex-direction:column;gap:6px;}
+    .tl-matiere{display:flex;align-items:center;gap:10px;font-size:12px;}
+    .tl-mat-name{color:var(--ivory-dim);flex:1;}
+    .tl-mat-current{font-family:'Bricolage Grotesque',sans-serif;font-size:13px;font-weight:700;}
+    .tl-mat-target{font-size:11px;color:var(--ivory-faint);}
+    .tl-mat-bar{width:80px;height:4px;background:var(--wire);border-radius:2px;overflow:hidden;}
+    .tl-mat-fill{height:100%;border-radius:2px;}
+    .mc-ok{color:var(--green);}
+    .mc-warn{color:var(--orange);}
+    .mc-bad{color:var(--red);}
+
+    /* PLAN B */
+    .planb-section{
+      background:var(--ink-2);border:1px solid var(--wire);border-radius:14px;
+      padding:22px;margin-top:8px;
+    }
+    .planb-title{font-family:'Bricolage Grotesque',sans-serif;font-size:15px;font-weight:700;color:var(--ivory);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+    .planb-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+    .planb-card{
+      background:var(--ink-3);border:1px solid var(--wire);border-radius:10px;
+      padding:14px;cursor:none;transition:border-color .2s;
+    }
+    .planb-card:hover{border-color:var(--wire-mid);}
+    .planb-icon{font-size:20px;margin-bottom:6px;}
+    .planb-name{font-size:13px;font-weight:600;color:var(--ivory);margin-bottom:2px;}
+    .planb-compat{font-size:10px;color:var(--ivory-dim);}
+
+    /* ALERT BOX */
+    .alert-box{
+      background:var(--red-10);border:1px solid rgba(224,90,84,.2);border-radius:10px;
+      padding:14px 18px;margin-top:12px;display:flex;align-items:flex-start;gap:12px;
+    }
+    .ab-icon{font-size:18px;flex-shrink:0;}
+    .ab-text{font-size:13px;color:var(--ivory-dim);line-height:1.6;}
+    .ab-text strong{color:var(--red);}
+
+    /* UPDATE SECTION */
+    .update-section{
+      background:var(--ink-3);border:1px solid var(--wire);border-radius:12px;
+      padding:20px;margin-top:32px;
+    }
+    .us-title{font-size:14px;font-weight:600;color:var(--ivory);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+    .us-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+    .us-input-wrap{display:flex;flex-direction:column;gap:4px;}
+    .us-label{font-size:11px;font-weight:600;color:var(--ivory-dim);}
+    .us-input{
+      padding:8px 12px;background:var(--ink-4);border:1px solid var(--wire);border-radius:8px;
+      font-family:'Bricolage Grotesque',sans-serif;font-size:15px;font-weight:700;
+      color:var(--ivory);outline:none;text-align:center;cursor:none;transition:border-color .2s;
+    }
+    .us-input:focus{border-color:var(--gold);}
+    .btn-update{
+      font-family:'Bricolage Grotesque',sans-serif;font-size:13px;font-weight:700;
+      padding:10px 22px;background:var(--gold);color:var(--ink);
+      border:none;border-radius:8px;cursor:none;transition:all .15s;margin-top:14px;
+    }
+    .btn-update:hover{background:#e0b55e;}
+
+    /* FOOTER */
+    footer{border-top:1px solid var(--wire);padding:32px 0;margin-top:60px;}
+    .footer-inner{max-width:var(--max-w);margin:0 auto;padding:0 40px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
+    .footer-copy{font-size:11px;color:var(--ivory-faint);}
+
+    /* RESPONSIVE */
+    @media(max-width:768px){
+      .wrap,.nav-inner,.footer-inner{padding-left:20px;padding-right:20px;}
+      .level-tabs{flex-direction:column;gap:4px;}
+      .planb-grid{grid-template-columns:1fr 1fr;}
+      .us-grid{grid-template-columns:1fr 1fr;}
+    }
+    ::-webkit-scrollbar{width:4px;}
+    ::-webkit-scrollbar-track{background:var(--ink);}
+    ::-webkit-scrollbar-thumb{background:var(--wire-mid);border-radius:2px;}
+  </style>
+</head>
+<body>
+<div class="cursor" id="cur"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="avenir_etude_homepage_v2.html" class="nav-logo">Avenir Étude</a>
+    <span class="nav-sep">/</span>
+    <span class="nav-page">GPS Académique</span>
+    <div class="nav-right">
+      <a href="avenir_etude_compte.html" class="nav-btn">Mon compte</a>
+      <a href="avenir_etude_test_riasec_v2.html" class="nav-btn nav-btn-gold">Refaire le test →</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="gps-hero">
+  <div class="wrap">
+    <div class="hero-eyebrow">🗺️ GPS Académique · Côte d'Ivoire</div>
+    <h1 class="hero-title">Ton métier de rêve.<br><em>Ton plan de route.</em></h1>
+    <p class="hero-sub">Dis-nous ce que tu veux devenir. On génère ton plan de route complet — matières à renforcer, série de BAC, concours à préparer, universités à viser — adapté à ton niveau actuel.</p>
+  </div>
+</div>
+
+<div class="wrap" style="padding-top:0;">
+
+  <!-- LEVEL TABS -->
+  <div class="level-tabs">
+    <button class="level-tab active" onclick="showLevel('college',this)">
+      <span class="level-tab-icon">🏫</span>
+      Élève de 3ème
+      <span class="level-tab-badge">Collège</span>
+    </button>
+    <button class="level-tab" onclick="showLevel('lycee',this)">
+      <span class="level-tab-icon">📚</span>
+      Lycéen(ne)
+      <span class="level-tab-badge">2nde → Terminale</span>
+    </button>
+    <button class="level-tab" onclick="showLevel('bachelier',this)">
+      <span class="level-tab-icon">🎓</span>
+      Nouveau Bachelier
+      <span class="level-tab-badge">Post-BAC</span>
+    </button>
+  </div>
+
+  <!-- ════════════════════════════════════════
+       NIVEAU 1 — COLLÈGE (3ème)
+  ════════════════════════════════════════ -->
+  <div class="level-panel active" id="panel-college">
+
+    <div class="dream-section">
+      <div class="ds-title">🌟 Quel métier veux-tu exercer ?</div>
+      <div class="ds-sub">En 3ème, tu as encore toutes les options devant toi. Choisis ton objectif et on te dit exactement quel type de BAC préparer et quelles matières renforcer maintenant.</div>
+      <div class="dream-input-wrap">
+        <span class="dream-search-icon">🎯</span>
+        <input class="dream-big-input" type="text" placeholder="Ex : Médecin, Ingénieur, Data Scientist..." id="dream-college" oninput="updateCollege()">
+      </div>
+      <div class="dream-quick">
+        <div class="dq-chip" onclick="setDream('college','Médecin',this)">👨‍⚕️ Médecin</div>
+        <div class="dq-chip" onclick="setDream('college','Ingénieur',this)">🏗️ Ingénieur</div>
+        <div class="dq-chip" onclick="setDream('college','Data Scientist',this)">📊 Data Scientist</div>
+        <div class="dq-chip" onclick="setDream('college','Avocat',this)">⚖️ Avocat</div>
+        <div class="dq-chip" onclick="setDream('college','Entrepreneur',this)">💼 Entrepreneur</div>
+        <div class="dq-chip" onclick="setDream('college','Architecte',this)">📐 Architecte</div>
+        <div class="dq-chip" onclick="setDream('college','Enseignant',this)">🧑‍🏫 Enseignant</div>
+        <div class="dq-chip" onclick="setDream('college','Pharmacien',this)">💊 Pharmacien</div>
+      </div>
+      <button class="btn-generate" onclick="generateRoadmap('college')">
+        🗺️ Générer mon plan de route
+      </button>
+    </div>
+
+    <div id="roadmap-college" style="display:none;">
+      <!-- Injected by JS -->
+    </div>
+
+  </div>
+
+  <!-- ════════════════════════════════════════
+       NIVEAU 2 — LYCÉEN
+  ════════════════════════════════════════ -->
+  <div class="level-panel" id="panel-lycee">
+
+    <div class="dream-section">
+      <div class="ds-title">🌟 Ton objectif de carrière</div>
+      <div class="ds-sub">Tu es au lycée. Le choix de filière et les résultats de cette année ont un impact direct sur tes portes d'entrée. On analyse ton profil et on génère un plan précis.</div>
+      <div class="dream-input-wrap">
+        <span class="dream-search-icon">🎯</span>
+        <input class="dream-big-input" type="text" placeholder="Ex : Ingénieur Civil, Chirurgien, DG d'entreprise..." id="dream-lycee">
+      </div>
+      <div class="dream-quick">
+        <div class="dq-chip" onclick="setDream('lycee','Médecin Chirurgien',this)">🩺 Médecin Chirurgien</div>
+        <div class="dq-chip" onclick="setDream('lycee','Ingénieur Informatique',this)">💻 Ingénieur Informatique</div>
+        <div class="dq-chip" onclick="setDream('lycee','Statisticien ENSEA',this)">📊 Statisticien ENSEA</div>
+        <div class="dq-chip" onclick="setDream('lycee','Directeur Financier',this)">📈 Directeur Financier</div>
+        <div class="dq-chip" onclick="setDream('lycee','Diplomate',this)">🌍 Diplomate</div>
+        <div class="dq-chip" onclick="setDream('lycee','Entrepreneur Tech',this)">🚀 Entrepreneur Tech</div>
+      </div>
+
+      <!-- Moyennes rapides -->
+      <div style="margin-top:20px;padding-top:20px;border-top:1px solid var(--wire);">
+        <div style="font-size:12px;font-weight:600;color:var(--ivory-dim);margin-bottom:12px;">Tes moyennes actuelles (facultatif mais recommandé)</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;" id="lycee-grades">
+          <div>
+            <div style="font-size:10px;color:var(--ivory-faint);margin-bottom:4px;">Mathématiques</div>
+            <input type="number" min="0" max="20" step="0.5" placeholder="—" class="us-input" id="lm" style="width:100%">
+          </div>
+          <div>
+            <div style="font-size:10px;color:var(--ivory-faint);margin-bottom:4px;">Physique-Chimie</div>
+            <input type="number" min="0" max="20" step="0.5" placeholder="—" class="us-input" id="lpc" style="width:100%">
+          </div>
+          <div>
+            <div style="font-size:10px;color:var(--ivory-faint);margin-bottom:4px;">SVT / Sciences</div>
+            <input type="number" min="0" max="20" step="0.5" placeholder="—" class="us-input" id="lsvt" style="width:100%">
+          </div>
+          <div>
+            <div style="font-size:10px;color:var(--ivory-faint);margin-bottom:4px;">Français</div>
+            <input type="number" min="0" max="20" step="0.5" placeholder="—" class="us-input" id="lfr" style="width:100%">
+          </div>
+          <div>
+            <div style="font-size:10px;color:var(--ivory-faint);margin-bottom:4px;">Série envisagée</div>
+            <select class="us-input" id="lserie" style="width:100%;-webkit-appearance:none;">
+              <option value="">—</option>
+              <option>C</option><option>D</option><option>A1</option><option>A2</option>
+              <option>B</option><option>E</option><option>F2</option>
+            </select>
+          </div>
+          <div>
+            <div style="font-size:10px;color:var(--ivory-faint);margin-bottom:4px;">Classe actuelle</div>
+            <select class="us-input" id="lclasse" style="width:100%;-webkit-appearance:none;">
+              <option value="">—</option>
+              <option>2nde</option><option>1ère</option><option>Terminale</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <button class="btn-generate" onclick="generateRoadmap('lycee')">
+        🗺️ Générer mon plan de route
+      </button>
+    </div>
+
+    <div id="roadmap-lycee" style="display:none;"></div>
+
+  </div>
+
+  <!-- ════════════════════════════════════════
+       NIVEAU 3 — BACHELIER
+  ════════════════════════════════════════ -->
+  <div class="level-panel" id="panel-bachelier">
+
+    <div class="dream-section">
+      <div class="ds-title">🌟 Quelle filière vises-tu ?</div>
+      <div class="ds-sub">Tu as le BAC. C'est maintenant que tout se joue — affectation MESRS, concours grandes écoles, inscription privée. On t'aide à choisir la meilleure option selon ta série et tes résultats.</div>
+      <div class="dream-input-wrap">
+        <span class="dream-search-icon">🎓</span>
+        <input class="dream-big-input" type="text" placeholder="Ex : ENSEA, INP-HB, Médecine, Data Science..." id="dream-bachelier">
+      </div>
+      <div class="dream-quick">
+        <div class="dq-chip" onclick="setDream('bachelier','ENSEA — Data Science',this)">📊 ENSEA</div>
+        <div class="dq-chip" onclick="setDream('bachelier','INP-HB — Génie Informatique',this)">🏗️ INP-HB</div>
+        <div class="dq-chip" onclick="setDream('bachelier','ESATIC — Informatique',this)">💻 ESATIC</div>
+        <div class="dq-chip" onclick="setDream('bachelier','UFHB — Médecine',this)">⚕️ Médecine UFHB</div>
+        <div class="dq-chip" onclick="setDream('bachelier','HEC Abidjan — Management',this)">💼 HEC Abidjan</div>
+        <div class="dq-chip" onclick="setDream('bachelier','UFHB — Droit',this)">⚖️ Droit UFHB</div>
+      </div>
+
+      <div style="margin-top:20px;padding-top:20px;border-top:1px solid var(--wire);">
+        <div style="font-size:12px;font-weight:600;color:var(--ivory-dim);margin-bottom:12px;">Ton profil BAC</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">
+          <div>
+            <div style="font-size:10px;color:var(--ivory-faint);margin-bottom:4px;">Série obtenue</div>
+            <select class="us-input" id="bserie" style="width:100%;-webkit-appearance:none;">
+              <option value="">—</option>
+              <option>A1</option><option>A2</option><option>B</option>
+              <option>C</option><option>D</option><option>E</option><option>F2</option>
+            </select>
+          </div>
+          <div>
+            <div style="font-size:10px;color:var(--ivory-faint);margin-bottom:4px;">Mention</div>
+            <select class="us-input" id="bmention" style="width:100%;-webkit-appearance:none;">
+              <option value="">—</option>
+              <option>Passable (10-11)</option>
+              <option>Assez Bien (12-13)</option>
+              <option>Bien (14-15)</option>
+              <option>Très Bien (16+)</option>
+            </select>
+          </div>
+          <div>
+            <div style="font-size:10px;color:var(--ivory-faint);margin-bottom:4px;">Maths /20</div>
+            <input type="number" min="0" max="20" step="0.5" placeholder="—" class="us-input" id="bmaths" style="width:100%">
+          </div>
+        </div>
+      </div>
+      <button class="btn-generate" onclick="generateRoadmap('bachelier')">
+        🗺️ Générer mon plan de route
+      </button>
+    </div>
+
+    <div id="roadmap-bachelier" style="display:none;"></div>
+
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-copy">© 2026 Avenir Étude · GPS Académique · Données MESRS CI · Mars 2026</div>
+  </div>
+</footer>
+
+<script>
+/* CURSOR */
+const cur=document.getElementById('cur');
+let mx=0,my=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+function addHover(){document.querySelectorAll('a,button,.dq-chip,.planb-card,.tl-card,.level-tab').forEach(el=>{el.addEventListener('mouseenter',()=>cur.classList.add('big'));el.addEventListener('mouseleave',()=>cur.classList.remove('big'));});}
+addHover();
+
+/* TABS */
+function showLevel(level, btn) {
+  document.querySelectorAll('.level-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.level-tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-'+level).classList.add('active');
+  btn.classList.add('active');
+}
+
+/* DREAM CHIPS */
+function setDream(level, val, el) {
+  document.querySelectorAll('#panel-'+level+' .dq-chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('dream-'+level).value = val;
+}
+
+/* ════════════════════════════════════════════════════
+   ROADMAP GENERATOR
+   Génère un plan de route selon niveau + métier
+════════════════════════════════════════════════════ */
+const METIER_DATA = {
+  'Médecin': {
+    serie_requise: ['C','D'],
+    concours: 'UFHB Médecine',
+    duree: '7 ans',
+    matieres_cles: ['SVT','Physique-Chimie','Maths'],
+    seuil_mention: 'Bien (14/20)',
+    salaire: '400 000 – 900 000 FCFA',
+    ecoles: ['UFHB — Faculté de Médecine'],
+    planB: [
+      {icon:'💊',nom:'Pharmacie',compat:'Très compatible'},
+      {icon:'🧬',nom:'Biochimie',compat:'Compatible'},
+      {icon:'🏥',nom:'Sciences Infirmières',compat:'Compatible'},
+    ]
+  },
+  'Ingénieur': {
+    serie_requise: ['C','D','E','F2'],
+    concours: 'INP-HB ou ESATIC',
+    duree: '5 ans',
+    matieres_cles: ['Maths','Physique-Chimie','Informatique'],
+    seuil_mention: 'Assez Bien (12/20)',
+    salaire: '350 000 – 700 000 FCFA',
+    ecoles: ['INP-HB Yamoussoukro','ESATIC Abidjan'],
+    planB: [
+      {icon:'💻',nom:'Informatique UFHB',compat:'Compatible'},
+      {icon:'📡',nom:'Télécom',compat:'Compatible'},
+      {icon:'🏗️',nom:'BTS Génie Civil',compat:'Alternative'},
+    ]
+  },
+  'Data Scientist': {
+    serie_requise: ['C','D'],
+    concours: 'ENSEA — Concours ISE/AS',
+    duree: '5 ans',
+    matieres_cles: ['Maths','Physique','Informatique'],
+    seuil_mention: 'Bien (14/20)',
+    salaire: '280 000 – 600 000 FCFA',
+    ecoles: ['ENSEA Abidjan','INP-HB/ESI'],
+    planB: [
+      {icon:'📊',nom:'Statistique UFHB',compat:'Alternative'},
+      {icon:'💻',nom:'Informatique ESATIC',compat:'Compatible'},
+      {icon:'📈',nom:'Économie appliquée',compat:'Alternative'},
+    ]
+  },
+  'Avocat': {
+    serie_requise: ['A1','A2','B','C','D'],
+    concours: 'Inscription directe Droit UFHB',
+    duree: '7 ans (Barreau)',
+    matieres_cles: ['Français','Histoire-Géo','Philosophie'],
+    seuil_mention: 'Passable accepté',
+    salaire: '300 000 – 700 000 FCFA',
+    ecoles: ['UFHB Droit','CERAP','IUA'],
+    planB: [
+      {icon:'⚖️',nom:'Sciences Politiques',compat:'Très compatible'},
+      {icon:'📋',nom:'Administration',compat:'Compatible'},
+      {icon:'🤝',nom:'Notariat',compat:'Compatible'},
+    ]
+  },
+};
+
+// Fallback for any career
+const DEFAULT_DATA = {
+  serie_requise: ['A','B','C','D'],
+  concours: 'Selon la filière',
+  duree: '3–5 ans',
+  matieres_cles: ['Maths','Français','Anglais'],
+  seuil_mention: 'Assez Bien recommandé',
+  salaire: '200 000 – 500 000 FCFA',
+  ecoles: ['UFHB','HEC Abidjan','IUA'],
+  planB: [
+    {icon:'🏛️',nom:'Gestion UFHB',compat:'Alternative'},
+    {icon:'💼',nom:'Management HEC',compat:'Alternative'},
+    {icon:'📚',nom:'Filière généraliste',compat:'Alternative'},
+  ]
+};
+
+function getMetierData(name) {
+  const keys = Object.keys(METIER_DATA);
+  const match = keys.find(k => name.toLowerCase().includes(k.toLowerCase()));
+  return match ? METIER_DATA[match] : {...DEFAULT_DATA, metier: name};
+}
+
+function generateRoadmap(level) {
+  const input = document.getElementById('dream-'+level);
+  const dream = input.value.trim();
+  if (!dream) { input.focus(); return; }
+
+  const data = getMetierData(dream);
+  const container = document.getElementById('roadmap-'+level);
+  container.style.display = 'block';
+
+  let html = '';
+
+  if (level === 'college') {
+    html = buildCollegeRoadmap(dream, data);
+  } else if (level === 'lycee') {
+    html = buildLyceeRoadmap(dream, data);
+  } else {
+    html = buildBachelierRoadmap(dream, data);
+  }
+
+  container.innerHTML = html;
+  container.scrollIntoView({behavior:'smooth', block:'start'});
+  addHover();
+}
+
+/* ── COLLEGE ROADMAP ── */
+function buildCollegeRoadmap(dream, data) {
+  return `
+  <div class="roadmap">
+    <div class="roadmap-header">
+      <div>
+        <div class="rh-title">Plan de route → ${dream}</div>
+        <div class="rh-meta">Durée estimée : 3ème jusqu'à l'obtention du diplôme · ${data.duree}</div>
+      </div>
+      <button class="rh-save" onclick="alert('Plan sauvegardé dans votre profil !')">💾 Sauvegarder</button>
+    </div>
+
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-dot current">📍</div></div>
+        <div class="tl-body">
+          <div class="tl-period">MAINTENANT · Classe de 3ème</div>
+          <div class="tl-card current">
+            <div class="tl-card-title">Réussir le BEPC et choisir la bonne série</div>
+            <div class="tl-card-desc">
+              Pour devenir <strong style="color:var(--gold)">${dream}</strong>, tu dois viser la série <strong style="color:var(--gold)">${data.serie_requise.join(' ou ')}</strong> au lycée.
+              Cela se prépare dès maintenant en renforçant les matières clés.
+            </div>
+            <div class="tl-matiere-list">
+              ${data.matieres_cles.map(m => `
+                <div class="tl-matiere">
+                  <div class="tl-mat-name">${m}</div>
+                  <div class="tl-mat-bar"><div class="tl-mat-fill" style="width:60%;background:var(--gold);"></div></div>
+                  <div class="tl-mat-target">Objectif : 15/20+</div>
+                </div>`).join('')}
+            </div>
+            <div class="tl-actions" style="margin-top:12px;">
+              <span class="tl-action ta-now">⚡ En cours</span>
+              <span class="tl-action ta-future">🎯 BEPC : réussir avec mention</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-dot future">2️⃣</div></div>
+        <div class="tl-body">
+          <div class="tl-period">DANS 1 AN · Lycée — 2nde</div>
+          <div class="tl-card">
+            <div class="tl-card-title">Choisir la série ${data.serie_requise[0]} — sans compromis</div>
+            <div class="tl-card-desc">La série ${data.serie_requise[0]} est la voie directe vers ${dream}. C'est non-négociable. Si ton lycée ne la propose pas, demande une mutation.</div>
+            <div class="tl-actions">
+              <span class="tl-action ta-future">📋 Confirmer série ${data.serie_requise[0]}</span>
+              <span class="tl-action ta-future">🏫 Trouver un bon lycée</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-dot future">3️⃣</div></div>
+        <div class="tl-body">
+          <div class="tl-period">DANS 3 ANS · Terminale</div>
+          <div class="tl-card">
+            <div class="tl-card-title">Viser la mention ${data.seuil_mention} au BAC</div>
+            <div class="tl-card-desc">Le seuil minimum pour accéder à ${dream} est une mention ${data.seuil_mention}. Commence les préparations intensives 6 mois avant les épreuves.</div>
+            <div class="tl-actions">
+              <span class="tl-action ta-future">🎯 BAC ${data.serie_requise[0]} mention ${data.seuil_mention}</span>
+              <span class="tl-action ta-future">📝 Préparer les concours dès la 1ère</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-dot future">4️⃣</div></div>
+        <div class="tl-body">
+          <div class="tl-period">DANS 4 ANS · Post-BAC</div>
+          <div class="tl-card">
+            <div class="tl-card-title">Concours ${data.concours}</div>
+            <div class="tl-card-desc">Passer le concours d'entrée à : ${data.ecoles.join(', ')}. Durée de la formation : ${data.duree}. Salaire débutant : ${data.salaire}.</div>
+            <div class="tl-actions">
+              <span class="tl-action ta-future">🏛️ ${data.ecoles[0]}</span>
+              <span class="tl-action ta-future">📅 Inscriptions concours</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    ${buildPlanB(data)}
+
+    <div class="update-section" style="margin-top:24px;">
+      <div class="us-title">📊 Mettre à jour mes moyennes du trimestre</div>
+      <div class="us-grid">
+        ${data.matieres_cles.map(m=>`
+          <div class="us-input-wrap">
+            <label class="us-label">${m}</label>
+            <input type="number" min="0" max="20" step="0.5" placeholder="—" class="us-input">
+          </div>`).join('')}
+      </div>
+      <button class="btn-update" onclick="alert('Moyennes mises à jour — plan recalculé !')">Recalculer mon plan →</button>
+    </div>
+  </div>`;
+}
+
+/* ── LYCEE ROADMAP ── */
+function buildLyceeRoadmap(dream, data) {
+  const serie = document.getElementById('lserie').value || data.serie_requise[0];
+  const classe = document.getElementById('lclasse').value || 'Terminale';
+  const maths = parseFloat(document.getElementById('lm').value) || null;
+
+  const serieOk = data.serie_requise.includes(serie);
+  const mathsOk = maths ? maths >= 12 : null;
+
+  return `
+  <div class="roadmap">
+    <div class="roadmap-header">
+      <div>
+        <div class="rh-title">Plan de route → ${dream}</div>
+        <div class="rh-meta">Lycéen · Série ${serie||'?'} · ${classe||'?'} · Durée formation : ${data.duree}</div>
+      </div>
+      <button class="rh-save" onclick="alert('Plan sauvegardé !')">💾 Sauvegarder</button>
+    </div>
+
+    ${!serieOk && serie ? `
+    <div class="alert-box">
+      <div class="ab-icon">⚠️</div>
+      <div class="ab-text"><strong>Attention :</strong> La série ${serie} n'est pas la voie directe pour devenir ${dream}.
+      La série recommandée est <strong>${data.serie_requise.join(' ou ')}</strong>. Un changement de série est encore possible.
+      Contacte ton conseiller d'orientation pour en discuter.</div>
+    </div>` : ''}
+
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-dot current">📍</div></div>
+        <div class="tl-body">
+          <div class="tl-period">MAINTENANT · ${classe}</div>
+          <div class="tl-card current">
+            <div class="tl-card-title">Renforcer les matières clés</div>
+            <div class="tl-card-desc">Pour intégrer ${data.ecoles[0]}, tes matières prioritaires sont :</div>
+            <div class="tl-matiere-list">
+              ${data.matieres_cles.map((m,i) => {
+                const grade = i===0 ? maths : null;
+                const pct = grade ? (grade/20*100) : 60;
+                const cls = grade >= 15 ? 'mc-ok' : grade >= 12 ? 'mc-warn' : grade ? 'mc-bad' : '';
+                const color = grade >= 15 ? 'var(--green)' : grade >= 12 ? 'var(--orange)' : grade ? 'var(--red)' : 'var(--gold)';
+                return `
+                <div class="tl-matiere">
+                  <div class="tl-mat-name">${m}</div>
+                  <div class="tl-mat-bar"><div class="tl-mat-fill" style="width:${pct}%;background:${color};"></div></div>
+                  ${grade ? `<div class="tl-mat-current ${cls}">${grade}/20</div>` : ''}
+                  <div class="tl-mat-target">→ 15/20</div>
+                </div>`;
+              }).join('')}
+            </div>
+            <div class="tl-actions" style="margin-top:12px;">
+              <span class="tl-action ta-now">⚡ Priorité immédiate</span>
+              ${maths && maths < 12 ? '<span class="tl-action ta-alert">🔴 Maths insuffisantes</span>' : ''}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-dot future">2️⃣</div></div>
+        <div class="tl-body">
+          <div class="tl-period">BAC · Mention ${data.seuil_mention}</div>
+          <div class="tl-card">
+            <div class="tl-card-title">Obtenir le BAC ${serie} avec la mention requise</div>
+            <div class="tl-card-desc">Le seuil d'admission pour ${data.ecoles[0]} est une mention ${data.seuil_mention}. Inscris-toi au moins 6 mois avant aux cours de préparation.</div>
+            <div class="tl-actions">
+              <span class="tl-action ta-future">🎓 BAC ${serie} mention ${data.seuil_mention}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-dot future">3️⃣</div></div>
+        <div class="tl-body">
+          <div class="tl-period">POST-BAC · Concours</div>
+          <div class="tl-card">
+            <div class="tl-card-title">${data.concours}</div>
+            <div class="tl-card-desc">Écoles cibles : ${data.ecoles.join(', ')}. Prépare le concours dès maintenant — les inscriptions ouvrent souvent en janvier de l'année du BAC.</div>
+            <div class="tl-actions">
+              ${data.ecoles.map(e=>`<span class="tl-action ta-future">🏛️ ${e}</span>`).join('')}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    ${buildPlanB(data)}
+
+    <div class="update-section" style="margin-top:24px;">
+      <div class="us-title">📊 Mettre à jour mes moyennes</div>
+      <div class="us-grid">
+        ${data.matieres_cles.map(m=>`
+          <div class="us-input-wrap">
+            <label class="us-label">${m}</label>
+            <input type="number" min="0" max="20" step="0.5" placeholder="—" class="us-input">
+          </div>`).join('')}
+      </div>
+      <button class="btn-update" onclick="alert('Plan mis à jour !')">Recalculer →</button>
+    </div>
+  </div>`;
+}
+
+/* ── BACHELIER ROADMAP ── */
+function buildBachelierRoadmap(dream, data) {
+  const serie = document.getElementById('bserie').value;
+  const mention = document.getElementById('bmention').value;
+  const maths = parseFloat(document.getElementById('bmaths').value) || null;
+
+  const serieOk = !serie || data.serie_requise.includes(serie);
+
+  return `
+  <div class="roadmap">
+    <div class="roadmap-header">
+      <div>
+        <div class="rh-title">Plan d'action → ${dream}</div>
+        <div class="rh-meta">Bachelier · BAC ${serie||'?'} · ${mention||'?'} · Durée : ${data.duree}</div>
+      </div>
+      <button class="rh-save" onclick="alert('Sauvegardé !')">💾 Sauvegarder</button>
+    </div>
+
+    ${!serieOk ? `
+    <div class="alert-box">
+      <div class="ab-icon">⚠️</div>
+      <div class="ab-text"><strong>Série non compatible :</strong> Le BAC ${serie} limite l'accès direct à ${dream}.
+      Des passerelles existent via des classes préparatoires ou des formations complémentaires. Consulte notre section Écoles pour des alternatives.</div>
+    </div>` : ''}
+
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-dot current">🚨</div></div>
+        <div class="tl-body">
+          <div class="tl-period">MAINTENANT · Urgence inscription</div>
+          <div class="tl-card current">
+            <div class="tl-card-title">Agir dans les 30 jours suivant les résultats</div>
+            <div class="tl-card-desc">Les inscriptions aux concours et à l'université sont limitées dans le temps. Voici les actions immédiates :</div>
+            <div class="tl-actions" style="margin-top:8px;">
+              <span class="tl-action ta-now">1. S'inscrire sur bac.mesrs-ci.net</span>
+              <span class="tl-action ta-now">2. Déposer dossier ${data.ecoles[0]}</span>
+              <span class="tl-action ta-now">3. Préparer pièces : BAC, relevés, photos</span>
+              <span class="tl-action ta-alert">⏰ Délai : 30-45 jours max</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-dot future">2️⃣</div></div>
+        <div class="tl-body">
+          <div class="tl-period">CONCOURS · ${data.concours}</div>
+          <div class="tl-card">
+            <div class="tl-card-title">Préparer et passer le concours</div>
+            <div class="tl-card-desc">
+              ${data.ecoles.map(e=>`<strong style="color:var(--gold)">${e}</strong>`).join(' · ')} —
+              Matières prioritaires au concours : ${data.matieres_cles.join(', ')}.
+              ${maths && maths < 14 ? '<br><span style="color:var(--orange)">⚠️ Tes maths doivent être renforcées avant le concours.</span>' : ''}
+            </div>
+            <div class="tl-actions">
+              <span class="tl-action ta-future">📚 Révisions intensives 3 mois</span>
+              <span class="tl-action ta-future">📄 Annales des 5 dernières années</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-dot future">3️⃣</div></div>
+        <div class="tl-body">
+          <div class="tl-period">FORMATION · ${data.duree}</div>
+          <div class="tl-card">
+            <div class="tl-card-title">Débouchés après ${data.duree} de formation</div>
+            <div class="tl-card-desc">Salaire débutant pour ${dream} en Côte d'Ivoire : <strong style="color:var(--gold)">${data.salaire}</strong>. Taux d'insertion dans la filière : supérieur à 80%.</div>
+            <div class="tl-actions">
+              <span class="tl-action ta-done">💰 ${data.salaire}</span>
+              <span class="tl-action ta-future">📈 Secteur en croissance</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    ${buildPlanB(data)}
+  </div>`;
+}
+
+function buildPlanB(data) {
+  if (!data.planB || data.planB.length === 0) return '';
+  return `
+  <div class="planb-section" style="margin-top:24px;">
+    <div class="planb-title">🔄 Plan B — Alternatives si le chemin principal se ferme</div>
+    <div class="planb-grid">
+      ${data.planB.map(p=>`
+        <div class="planb-card">
+          <div class="planb-icon">${p.icon}</div>
+          <div class="planb-name">${p.nom}</div>
+          <div class="planb-compat">${p.compat}</div>
+        </div>`).join('')}
+    </div>
+  </div>`;
+}
+</script>
+</body>
+</html>

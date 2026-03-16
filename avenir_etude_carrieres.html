@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Avenir Étude — Explorateur de Carrières</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Lora:ital,wght@0,400;0,600;1,400;1,600&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Instrument+Serif:ital@0;1&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    :root{
+      --ink:#060B14;--ink-2:#0C1220;--ink-3:#111827;--ink-4:#1C2535;
+      --gold:#D4A853;--gold-dim:#7A5E2A;--gold-10:rgba(212,168,83,.10);
+      --ivory:#F2EDE4;--ivory-dim:#8A8278;--ivory-faint:#2E3545;
+      --wire:rgba(242,237,228,.07);--wire-mid:rgba(242,237,228,.13);--wire-hi:rgba(242,237,228,.24);
+      --green:#34C97A;--green-10:rgba(52,201,122,.1);
+      --blue:#4F7AE8;--blue-10:rgba(79,122,232,.1);
+      --red:#E05A54;--red-10:rgba(224,90,84,.1);
+      --max-w:1280px;--nav-h:64px;
+    }
+    body{font-family:'Instrument Sans',sans-serif;background:var(--ink);color:var(--ivory);-webkit-font-smoothing:antialiased;cursor:none;overflow-x:hidden;}
+    .cursor{position:fixed;width:8px;height:8px;background:var(--gold);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);mix-blend-mode:screen;transition:width .18s,height .18s;}
+    .cursor.big{width:28px;height:28px;background:transparent;border:1.5px solid var(--gold);}
+    .cursor-ring{position:fixed;width:24px;height:24px;border:0.5px solid rgba(212,168,83,.25);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:transform .14s ease;}
+    body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:8000;opacity:.5;}
+
+    /* NAV */
+    nav{position:sticky;top:0;z-index:500;height:var(--nav-h);border-bottom:1px solid var(--wire);background:rgba(6,11,20,.9);backdrop-filter:blur(16px);display:flex;align-items:center;}
+    .nav-inner{max-width:var(--max-w);margin:0 auto;padding:0 40px;width:100%;display:flex;align-items:center;gap:16px;}
+    .nav-logo{font-family:'Bricolage Grotesque',sans-serif;font-size:16px;font-weight:700;color:var(--ivory);letter-spacing:-.03em;text-decoration:none;}
+    .nav-sep{color:var(--ivory-faint);}
+    .nav-page{font-size:13px;color:var(--ivory-dim);}
+    .nav-right{margin-left:auto;display:flex;align-items:center;gap:10px;}
+    .nav-btn{font-size:12px;font-weight:600;padding:8px 16px;background:transparent;color:var(--ivory-dim);border:1px solid var(--wire-mid);border-radius:6px;cursor:none;text-decoration:none;transition:all .15s;}
+    .nav-btn:hover{border-color:var(--wire-hi);color:var(--ivory);}
+    .nav-btn-gold{background:var(--gold);color:var(--ink);border-color:var(--gold);}
+    .nav-btn-gold:hover{background:#e0b55e;color:var(--ink);}
+
+    /* WRAP */
+    .wrap{max-width:var(--max-w);margin:0 auto;padding:0 40px;position:relative;z-index:1;}
+
+    /* HERO */
+    .page-hero{padding:52px 0 44px;border-bottom:1px solid var(--wire);}
+    .hero-grid{display:grid;grid-template-columns:1fr auto;gap:40px;align-items:end;}
+    .hero-eyebrow{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;display:flex;align-items:center;gap:10px;}
+    .hero-eyebrow::before{content:'';width:20px;height:1px;background:var(--gold-dim);}
+    .hero-title{font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(32px,4.5vw,56px);font-weight:800;letter-spacing:-.04em;line-height:1;color:var(--ivory);}
+    .hero-title em{font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;color:var(--gold);}
+    .hero-sub{font-size:14px;color:var(--ivory-dim);margin-top:14px;line-height:1.7;max-width:520px;}
+    .hero-stats{display:flex;gap:32px;}
+    .hs-item{text-align:right;}
+    .hs-num{font-family:'Bricolage Grotesque',sans-serif;font-size:36px;font-weight:800;color:var(--gold);letter-spacing:-.04em;line-height:1;}
+    .hs-lbl{font-size:10px;color:var(--ivory-dim);text-transform:uppercase;letter-spacing:.06em;margin-top:2px;}
+
+    /* SEARCH BAR */
+    .search-wrap{padding:24px 0 0;position:relative;}
+    .search-input{width:100%;padding:16px 20px 16px 52px;background:var(--ink-3);border:1px solid var(--wire-mid);border-radius:12px;font-family:'Instrument Sans',sans-serif;font-size:15px;color:var(--ivory);outline:none;transition:border-color .2s;cursor:none;}
+    .search-input::placeholder{color:var(--ivory-dim);}
+    .search-input:focus{border-color:var(--gold);}
+    .search-icon{position:absolute;left:18px;top:50%;transform:translateY(-50%);color:var(--ivory-dim);pointer-events:none;margin-top:12px;}
+
+    /* RIASEC FILTER */
+    .riasec-filter{display:flex;gap:8px;padding:24px 0 0;flex-wrap:wrap;align-items:center;}
+    .rf-label{font-size:11px;font-weight:600;color:var(--ivory-dim);letter-spacing:.06em;text-transform:uppercase;margin-right:4px;}
+    .riasec-btn{
+      display:flex;flex-direction:column;align-items:center;gap:2px;
+      width:54px;padding:8px 6px;border-radius:8px;
+      border:1px solid var(--wire);background:transparent;cursor:none;
+      transition:all .2s;
+    }
+    .riasec-btn:hover{border-color:var(--wire-hi);}
+    .riasec-btn.active{border-color:var(--gold-dim);background:var(--gold-10);}
+    .riasec-letter{font-family:'Bricolage Grotesque',sans-serif;font-size:18px;font-weight:800;color:var(--ivory-faint);transition:color .2s;line-height:1;}
+    .riasec-btn.active .riasec-letter,.riasec-btn:hover .riasec-letter{color:var(--gold);}
+    .riasec-name{font-size:8px;font-weight:600;color:var(--ivory-faint);letter-spacing:.04em;text-transform:uppercase;text-align:center;transition:color .2s;}
+    .riasec-btn.active .riasec-name,.riasec-btn:hover .riasec-name{color:var(--gold-dim);}
+    .rf-reset{font-size:11px;color:var(--ivory-dim);background:none;border:none;cursor:none;padding:4px 8px;border-radius:4px;transition:color .15s;margin-left:4px;}
+    .rf-reset:hover{color:var(--red);}
+
+    /* SECTOR STRIP */
+    .sector-strip{padding:28px 0 0;}
+    .sector-scroll{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:4px;}
+    .sector-scroll::-webkit-scrollbar{display:none;}
+    .sector-chip{
+      display:flex;align-items:center;gap:8px;
+      padding:9px 16px;border-radius:8px;
+      border:1px solid var(--wire);background:var(--ink-3);
+      white-space:nowrap;cursor:none;transition:all .2s;flex-shrink:0;
+    }
+    .sector-chip:hover,.sector-chip.active{border-color:var(--gold-dim);background:var(--gold-10);}
+    .sector-chip-icon{font-size:16px;}
+    .sector-chip-name{font-size:12px;font-weight:600;color:var(--ivory-dim);}
+    .sector-chip.active .sector-chip-name,.sector-chip:hover .sector-chip-name{color:var(--ivory);}
+    .sector-chip-count{font-size:10px;color:var(--ivory-faint);font-weight:600;}
+
+    /* RESULTS AREA */
+    .results-area{padding:32px 0;}
+    .results-toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+    .results-count{font-size:13px;color:var(--ivory-dim);}
+    .results-count strong{font-family:'Bricolage Grotesque',sans-serif;font-size:16px;color:var(--ivory);font-weight:700;}
+    .sort-select{font-family:'Instrument Sans',sans-serif;font-size:12px;font-weight:500;padding:7px 12px;background:var(--ink-3);border:1px solid var(--wire-mid);border-radius:6px;color:var(--ivory-dim);cursor:none;outline:none;}
+    .sort-select:focus{border-color:var(--gold);}
+
+    /* CAREER GRID */
+    .career-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+
+    /* CAREER CARD */
+    .career-card{
+      background:var(--ink-2);border:1px solid var(--wire);
+      border-radius:16px;padding:20px;
+      cursor:none;transition:all .25s;
+      display:flex;flex-direction:column;gap:12px;
+      position:relative;overflow:hidden;
+    }
+    .career-card:hover{border-color:var(--wire-mid);transform:translateY(-3px);}
+    .career-card.hot{border-color:var(--gold-dim);}
+    .career-card.hot::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--gold);}
+    .cc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
+    .cc-icon{
+      width:44px;height:44px;border-radius:12px;
+      display:flex;align-items:center;justify-content:center;
+      font-size:20px;flex-shrink:0;
+      background:var(--ink-4);border:1px solid var(--wire);
+    }
+    .cc-demand{
+      display:flex;align-items:center;gap:4px;
+      font-size:10px;font-weight:700;letter-spacing:.06em;
+      padding:4px 8px;border-radius:4px;
+      flex-shrink:0;
+    }
+    .demand-critical{background:rgba(224,90,84,.12);color:var(--red);border:1px solid rgba(224,90,84,.25);}
+    .demand-high{background:var(--gold-10);color:var(--gold);border:1px solid var(--gold-dim);}
+    .demand-medium{background:var(--blue-10);color:var(--blue);border:1px solid rgba(79,122,232,.25);}
+    .demand-dot{width:5px;height:5px;border-radius:50%;background:currentColor;animation:pulse-dot 2s ease-in-out infinite;}
+    @keyframes pulse-dot{0%,100%{opacity:1}50%{opacity:.4}}
+
+    .cc-name{font-family:'Bricolage Grotesque',sans-serif;font-size:16px;font-weight:700;color:var(--ivory);letter-spacing:-.02em;line-height:1.2;}
+    .cc-sector{font-size:11px;color:var(--ivory-dim);margin-top:3px;}
+    .cc-desc{font-size:12px;color:var(--ivory-dim);line-height:1.6;flex:1;}
+
+    .cc-metrics{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+    .cc-metric{background:var(--ink-3);border-radius:8px;padding:10px 12px;}
+    .cc-metric-val{font-family:'Bricolage Grotesque',sans-serif;font-size:15px;font-weight:800;letter-spacing:-.02em;}
+    .cv-gold{color:var(--gold);}
+    .cv-green{color:var(--green);}
+    .cv-blue{color:var(--blue);}
+    .cc-metric-lbl{font-size:9px;text-transform:uppercase;letter-spacing:.06em;color:var(--ivory-faint);margin-top:2px;}
+
+    .cc-tags{display:flex;gap:5px;flex-wrap:wrap;}
+    .cc-tag{font-size:10px;font-weight:600;padding:2px 8px;border-radius:3px;border:1px solid var(--wire);color:var(--ivory-faint);}
+    .cc-tag.riasec-tag{background:var(--gold-10);border-color:var(--gold-dim);color:var(--gold);}
+
+    .cc-footer{display:flex;align-items:center;justify-content:space-between;padding-top:8px;border-top:1px solid var(--wire);margin-top:auto;}
+    .cc-formation{font-size:11px;color:var(--ivory-dim);}
+    .cc-arrow{font-size:14px;color:var(--ivory-faint);transition:color .2s,transform .2s;}
+    .career-card:hover .cc-arrow{color:var(--gold);transform:translateX(3px);}
+
+    /* EMPTY */
+    .empty-state{text-align:center;padding:80px 24px;grid-column:1/-1;}
+    .empty-icon{font-size:48px;opacity:.3;margin-bottom:16px;}
+    .empty-title{font-family:'Bricolage Grotesque',sans-serif;font-size:20px;font-weight:700;color:var(--ivory);margin-bottom:8px;}
+    .empty-sub{font-size:13px;color:var(--ivory-dim);}
+
+    /* CTA BAND */
+    .cta-band{
+      margin:20px 0 48px;
+      background:var(--ink-3);border:1px solid var(--wire-mid);
+      border-radius:16px;padding:32px 40px;
+      display:flex;align-items:center;justify-content:space-between;gap:32px;
+      position:relative;overflow:hidden;
+    }
+    .cta-band::before{content:'';position:absolute;top:-40px;right:-40px;width:160px;height:160px;background:var(--gold-10);border-radius:50%;filter:blur(40px);pointer-events:none;}
+    .cta-band-title{font-family:'Bricolage Grotesque',sans-serif;font-size:22px;font-weight:800;color:var(--ivory);letter-spacing:-.03em;}
+    .cta-band-sub{font-size:13px;color:var(--ivory-dim);margin-top:6px;line-height:1.6;max-width:440px;}
+    .btn-gold{display:inline-flex;align-items:center;gap:8px;font-family:'Bricolage Grotesque',sans-serif;font-size:14px;font-weight:700;padding:14px 28px;background:var(--gold);color:var(--ink);border:none;border-radius:8px;cursor:none;text-decoration:none;white-space:nowrap;transition:all .15s;}
+    .btn-gold:hover{background:#e0b55e;transform:translateY(-2px);}
+
+    /* FOOTER */
+    footer{border-top:1px solid var(--wire);padding:28px 0;}
+    .footer-inner{max-width:var(--max-w);margin:0 auto;padding:0 40px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
+    .footer-copy{font-size:11px;color:var(--ivory-faint);}
+    .footer-links{display:flex;gap:20px;}
+    .footer-links a{font-size:11px;color:var(--ivory-faint);text-decoration:none;transition:color .15s;}
+    .footer-links a:hover{color:var(--ivory-dim);}
+
+    /* ANIMS */
+    @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+    .fade-up{opacity:0;}
+    .fade-up.in{animation:fadeUp .5s ease forwards;}
+    .hero-grid{animation:fadeUp .7s ease .05s both;}
+
+    /* RESPONSIVE */
+    @media(max-width:1024px){.career-grid{grid-template-columns:repeat(2,1fr);}}
+    @media(max-width:768px){
+      .wrap,.nav-inner,.footer-inner{padding-left:20px;padding-right:20px;}
+      .career-grid{grid-template-columns:1fr;}
+      .hero-grid{grid-template-columns:1fr;}
+      .hs-item{display:none;}
+      .cta-band{flex-direction:column;padding:24px;}
+    }
+    ::-webkit-scrollbar{width:4px;}
+    ::-webkit-scrollbar-track{background:var(--ink);}
+    ::-webkit-scrollbar-thumb{background:var(--wire-mid);border-radius:2px;}
+  
+  /* ═══════════════════════════════════════
+     AVENIR ÉTUDE V3 — DESIGN SYSTEM
+     Clarté Africaine · Fond Blanc · Moderne
+  ═══════════════════════════════════════ */
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Lora:ital,wght@0,400;0,600;1,400;1,600&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap');
+
+  :root {
+    /* Colours */
+    --bg:        #FAFAF8 !important;
+    --bg-2:      #F4F3EF !important;
+    --bg-3:      #EEECEA !important;
+    --white:     #FFFFFF !important;
+    --ink:       #0D0D0D !important;
+    --ink-2:     #2A2A2A !important;
+    --ink-3:     #555555 !important;
+    --ink-4:     #888888 !important;
+    --ink-5:     #BBBBBB !important;
+    --border:    #E5E3DF !important;
+    --border-2:  #D4D2CE !important;
+    --blue:      #1B4FFF !important;
+    --blue-10:   rgba(27,79,255,.08) !important;
+    --blue-20:   rgba(27,79,255,.15) !important;
+    --blue-dk:   #1240CC !important;
+    --orange:    #FF6B35 !important;
+    --orange-10: rgba(255,107,53,.08) !important;
+    --green:     #00C853 !important;
+    --green-10:  rgba(0,200,83,.08) !important;
+    --purple:    #7C3AED !important;
+    --purple-10: rgba(124,58,237,.08) !important;
+    --yellow:    #F59E0B !important;
+    --gold:      #D4A853 !important;
+    --gold-dim:  #A07830 !important;
+    --gold-10:   rgba(212,168,83,.10) !important;
+    /* Legacy dark vars kept for compatibility */
+    --ink-old:   #060B14;
+    --wire:      rgba(0,0,0,.08) !important;
+    --wire-mid:  rgba(0,0,0,.12) !important;
+    --wire-hi:   rgba(0,0,0,.20) !important;
+    --ivory:     #0D0D0D !important;
+    --ivory-dim: #555555 !important;
+    --ivory-faint: #888888 !important;
+    /* Layout */
+    --radius:    16px;
+    --radius-lg: 24px;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+    --shadow:    0 4px 16px rgba(0,0,0,.08), 0 2px 4px rgba(0,0,0,.04);
+    --shadow-lg: 0 12px 40px rgba(0,0,0,.12), 0 4px 12px rgba(0,0,0,.06);
+  }
+
+  /* BASE RESET FOR V3 LIGHT THEME */
+  body {
+    font-family: 'DM Sans', 'Instrument Sans', sans-serif !important;
+    background: #FAFAF8 !important;
+    color: #0D0D0D !important;
+    cursor: auto !important;
+  }
+  /* Hide dark cursor */
+  .cursor, .cursor-ring { display: none !important; }
+  body::after { display: none !important; }
+  .grid-bg { display: none !important; }
+
+  /* NAV V3 */
+  nav {
+    background: rgba(250,250,248,.94) !important;
+    backdrop-filter: blur(16px) !important;
+    border-bottom: 1px solid #E5E3DF !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,.04) !important;
+  }
+  .nav-logo, .nav-logo a {
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+    color: #0D0D0D !important;
+  }
+  .nav-btn {
+    background: transparent !important;
+    color: #555555 !important;
+    border-color: #D4D2CE !important;
+    border-radius: 10px !important;
+    font-family: 'DM Sans', sans-serif !important;
+    cursor: pointer !important;
+  }
+  .nav-btn:hover {
+    background: #F4F3EF !important;
+    color: #0D0D0D !important;
+    border-color: #888888 !important;
+  }
+  .nav-btn-gold, .nav-btn.nav-btn-gold {
+    background: #1B4FFF !important;
+    color: #FFFFFF !important;
+    border-color: #1B4FFF !important;
+  }
+  .nav-btn-gold:hover {
+    background: #1240CC !important;
+    box-shadow: 0 4px 12px rgba(27,79,255,.3) !important;
+  }
+  .nav-sep, .nav-page, .nav-crumb { color: #888888 !important; }
+  .nav-crumb { font-family: 'DM Sans', sans-serif !important; }
+
+  /* PAGE BACKGROUNDS */
+  .page-header, .sec-block, .panel, .panel-dark,
+  .sidebar, .results-area, .main-grid,
+  .dash-shell, .dash-sidebar, .auth-left, .auth-right,
+  section, .section, .gps-section {
+    background: #FAFAF8 !important;
+    border-color: #E5E3DF !important;
+  }
+  .main-grid { background: #E5E3DF !important; }
+
+  /* CARDS */
+  .school-card, .career-card, .article-card, .article-une,
+  .side-card, .sec-block, .kpi-card, .apt-card,
+  .rs-row, .concours-card, .history-item, .favori-card,
+  .reco-card, .stat-card, .profile-card, .step-card,
+  .news-card, .news-card-v3, .testi-card, .test-card {
+    background: #FFFFFF !important;
+    border-color: #E5E3DF !important;
+    color: #0D0D0D !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,.06) !important;
+  }
+  .school-card:hover, .career-card:hover, .step-card:hover {
+    border-color: #1B4FFF !important;
+    box-shadow: 0 4px 16px rgba(27,79,255,.12) !important;
+  }
+
+  /* TEXT COLOURS */
+  h1, h2, h3, h4, h5, h6,
+  .ph-title, .sec-title, .card-name, .school-name,
+  .hero-title, .section-title, .une-titre, .art-titre,
+  .cc-name, .fil-name, .adm-title, .rs-name,
+  .concours-card .cc-nom, .kpi-val, .sc-val,
+  .snav-item, .page-name, .user-name, .road-name {
+    color: #0D0D0D !important;
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+  }
+  p, .ph-sub, .section-sub, .card-loc, .school-meta,
+  .une-resume, .art-resume, .cc-desc, .fil-desc,
+  .rs-desc, .gps-sub, .footer-desc, .testi-text {
+    color: #555555 !important;
+    font-family: 'DM Sans', sans-serif !important;
+  }
+  .ph-eyebrow, .section-eyebrow, .sec-label,
+  .hero-eyebrow, .rh-eyebrow, .gps-eyebrow {
+    color: #1B4FFF !important;
+    font-family: 'DM Sans', sans-serif !important;
+  }
+
+  /* GOLD → BLUE primary */
+  .gold, .kv-gold, .sc-val.gold, .school-rating,
+  .rs-row.dominant .rs-pct, .rs-row.dominant .rs-letter,
+  .rs-badge, .rs-row.dominant .rs-fill,
+  .score-big, .une-cat, .ph-count-num,
+  .stat-num.gold, .kpi-val, .nsb-val, .sb-val {
+    color: #1B4FFF !important;
+  }
+
+  /* GOLD fills → blue */
+  .btn-gold, .btn-unlock, .btn-submit, .btn-hero,
+  .nav-btn-gold, a.btn-gold {
+    background: #1B4FFF !important;
+    color: #FFFFFF !important;
+    border-color: #1B4FFF !important;
+    border-radius: 10px !important;
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+  }
+  .btn-gold:hover, .btn-unlock:hover, .btn-submit:hover, .btn-hero:hover {
+    background: #1240CC !important;
+    box-shadow: 0 4px 12px rgba(27,79,255,.3) !important;
+  }
+
+  /* CTA card on dark sections */
+  .cta-card { background: #1B4FFF !important; }
+  .cta-card-title { color: #FFFFFF !important; }
+  .cta-card-sub { color: rgba(255,255,255,.75) !important; }
+  .cta-card-btn { background: #FFFFFF !important; color: #1B4FFF !important; }
+
+  /* Tags / Chips */
+  .chip, .fchip, .tag-chip, .domain-tag,
+  .sector-chip, .ctag, .stag, .cc-tag {
+    background: #F4F3EF !important;
+    border-color: #E5E3DF !important;
+    color: #555555 !important;
+  }
+  .chip.active, .fchip.active, .tag-chip.riasec {
+    background: rgba(27,79,255,.08) !important;
+    border-color: rgba(27,79,255,.2) !important;
+    color: #1B4FFF !important;
+  }
+  .rs-row.dominant, .article-une {
+    border-color: rgba(27,79,255,.2) !important;
+    background: rgba(27,79,255,.04) !important;
+  }
+  .article-une::before { background: #1B4FFF !important; }
+
+  /* Search input */
+  .search-input, .field-input, .field-select, .sort-select {
+    background: #FFFFFF !important;
+    border-color: #D4D2CE !important;
+    color: #0D0D0D !important;
+    border-radius: 10px !important;
+  }
+  .search-input:focus, .field-input:focus, .field-select:focus {
+    border-color: #1B4FFF !important;
+    box-shadow: 0 0 0 3px rgba(27,79,255,.1) !important;
+  }
+  .search-input::placeholder, .field-input::placeholder { color: #888888 !important; }
+
+  /* Progress bars → blue */
+  .gauge-fill[style*="gold"], .rb-fill, .bar-fill,
+  .pb-fill, .rs-fill { background: #1B4FFF !important; }
+  .gauge-fill[style*="green"], .bar-fill[style*="green"] { background: #00C853 !important; }
+  .gauge-fill[style*="red"], .bar-fill[style*="red"] { background: #FF6B35 !important; }
+
+  /* Sidebar */
+  .dash-sidebar, .sidebar {
+    background: #F4F3EF !important;
+    border-color: #E5E3DF !important;
+  }
+  .snav-item.active {
+    background: rgba(27,79,255,.08) !important;
+    color: #1B4FFF !important;
+    border-color: rgba(27,79,255,.2) !important;
+  }
+  .snav-item:hover { background: #EEECEA !important; color: #0D0D0D !important; }
+  .user-card { background: #FFFFFF !important; border-color: #E5E3DF !important; }
+  .user-badge {
+    background: rgba(27,79,255,.08) !important;
+    border-color: rgba(27,79,255,.2) !important;
+    color: #1B4FFF !important;
+  }
+  .user-avatar, .nav-avatar-btn, .road-avatar,
+  .testi-avatar, .hero-avatar { background: #1B4FFF !important; }
+
+  /* Auth */
+  .auth-left { background: #F4F3EF !important; }
+  .auth-tab.active { background: #0D0D0D !important; color: #FFFFFF !important; }
+  .auth-tabs { background: #F4F3EF !important; border-color: #E5E3DF !important; }
+
+  /* Radar SVG — make lines visible on light bg */
+  #auth-radar circle, #radar-svg circle { opacity: 0.15; }
+
+  /* Footer V3 */
+  footer {
+    background: #0D0D0D !important;
+    border-top: 1px solid #E5E3DF !important;
+  }
+  .footer-copy { color: rgba(255,255,255,.4) !important; }
+
+  /* Paywall */
+  .paywall-section { border-color: #E5E3DF !important; }
+  .paywall-overlay { background: linear-gradient(to bottom, rgba(250,250,248,0) 0%, rgba(250,250,248,.97) 50%) !important; }
+  .paywall-title, .paywall-sub { color: #0D0D0D !important; }
+  .paywall-badge {
+    background: rgba(27,79,255,.08) !important;
+    border-color: rgba(27,79,255,.2) !important;
+    color: #1B4FFF !important;
+  }
+
+  /* Ticker */
+  .ticker-bar { background: #F4F3EF !important; border-color: #E5E3DF !important; }
+  .ticker-label { background: #FFFFFF !important; color: #1B4FFF !important; border-color: #E5E3DF !important; }
+  .ticker-item { color: #555555 !important; border-color: #E5E3DF !important; }
+  .ticker-dot { background: #1B4FFF !important; }
+
+  /* Stats sections */
+  .stats-band, .cta-band { background: #1B4FFF !important; }
+  .sb-val, .sb-lbl { color: #FFFFFF !important; }
+  .cta-band { border-color: rgba(27,79,255,.2) !important; }
+
+  /* Demand badges */
+  .demand-critical { background: rgba(255,107,53,.1) !important; color: #FF6B35 !important; border-color: rgba(255,107,53,.2) !important; }
+  .demand-high { background: rgba(27,79,255,.08) !important; color: #1B4FFF !important; border-color: rgba(27,79,255,.15) !important; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar-track { background: #F4F3EF !important; }
+  ::-webkit-scrollbar-thumb { background: #D4D2CE !important; }
+
+  /* GPS road card on dark section */
+  .gps-section { background: #0D0D0D !important; }
+  .gps-section .gps-title, .gps-section .gps-feat-title { color: #FFFFFF !important; }
+  .gps-section .gps-sub, .gps-section .gps-feat-desc { color: rgba(255,255,255,.6) !important; }
+
+
+  </style>
+</head>
+<body>
+<div class="cursor" id="cur"></div>
+<div class="cursor-ring" id="ring"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="avenir_etude_homepage_v2.html" class="nav-logo">Avenir Étude</a>
+    <span class="nav-sep">/</span>
+    <span class="nav-page">Explorateur de Carrières</span>
+    <div class="nav-right">
+      <a href="avenir_etude_ecoles.html" class="nav-btn">Écoles</a>
+      <a href="avenir_etude_ressources.html" class="nav-btn">Actualités</a>
+      <a href="avenir_etude_test_riasec.html" class="nav-btn nav-btn-gold">Mon test →</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="page-hero">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-eyebrow">Marché du travail · Côte d'Ivoire & Afrique francophone</div>
+        <h1 class="hero-title">Dessinez votre<br><em>futur professionnel.</em></h1>
+        <p class="hero-sub">Explorez les métiers d'avenir, les salaires réels en Côte d'Ivoire et les formations qui y mènent. Données issues du marché local.</p>
+        <div class="search-wrap">
+          <svg class="search-icon" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input class="search-input" id="search" type="text" placeholder="Rechercher un métier, un secteur, une compétence..." autocomplete="off">
+        </div>
+      </div>
+      <div class="hero-stats">
+        <div class="hs-item">
+          <div class="hs-num" id="total-count">—</div>
+          <div class="hs-lbl">Métiers</div>
+        </div>
+        <div class="hs-item">
+          <div class="hs-num">10</div>
+          <div class="hs-lbl">Secteurs</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- RIASEC FILTER -->
+<div class="wrap">
+  <div class="riasec-filter">
+    <span class="rf-label">Filtrer par profil</span>
+    <button class="riasec-btn" data-r="R" onclick="toggleRiasec('R',this)">
+      <span class="riasec-letter">R</span>
+      <span class="riasec-name">Réaliste</span>
+    </button>
+    <button class="riasec-btn" data-r="I" onclick="toggleRiasec('I',this)">
+      <span class="riasec-letter">I</span>
+      <span class="riasec-name">Investigatif</span>
+    </button>
+    <button class="riasec-btn" data-r="A" onclick="toggleRiasec('A',this)">
+      <span class="riasec-letter">A</span>
+      <span class="riasec-name">Artistique</span>
+    </button>
+    <button class="riasec-btn" data-r="S" onclick="toggleRiasec('S',this)">
+      <span class="riasec-letter">S</span>
+      <span class="riasec-name">Social</span>
+    </button>
+    <button class="riasec-btn" data-r="E" onclick="toggleRiasec('E',this)">
+      <span class="riasec-letter">E</span>
+      <span class="riasec-name">Entreprenant</span>
+    </button>
+    <button class="riasec-btn" data-r="C" onclick="toggleRiasec('C',this)">
+      <span class="riasec-letter">C</span>
+      <span class="riasec-name">Conventionnel</span>
+    </button>
+    <button class="rf-reset" onclick="resetFilters()">✕ Tout effacer</button>
+  </div>
+
+  <!-- SECTOR CHIPS -->
+  <div class="sector-strip">
+    <div class="sector-scroll" id="sector-scroll"></div>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="results-area">
+    <div class="results-toolbar">
+      <div class="results-count"><strong id="result-count">—</strong> métier(s)</div>
+      <select class="sort-select" id="sort-select" onchange="applyFilters()">
+        <option value="hot">Les plus demandés</option>
+        <option value="salaire">Meilleur salaire</option>
+        <option value="croissance">Croissance forte</option>
+        <option value="az">A → Z</option>
+      </select>
+    </div>
+    <div class="career-grid" id="career-grid"></div>
+  </div>
+
+  <!-- CTA BAND -->
+  <div class="cta-band fade-up">
+    <div>
+      <div class="cta-band-title">Quel métier est fait pour vous ?</div>
+      <p class="cta-band-sub">Passez le test d'orientation Avenir Étude et recevez votre profil RIASEC avec vos 5 métiers les plus compatibles et les écoles qui y mènent en Côte d'Ivoire.</p>
+    </div>
+    <a href="avenir_etude_test_riasec.html" class="btn-gold">
+      Découvrir mon profil →
+    </a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-copy">© 2025 Avenir Étude · Données marché CI · Agence Emploi Jeunes · BNETD</div>
+    <div class="footer-links">
+      <a href="avenir_etude_homepage_v2.html">Accueil</a>
+      <a href="avenir_etude_ecoles.html">Écoles</a>
+      <a href="avenir_etude_ressources.html">Actualités</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* CURSOR */
+const cur=document.getElementById('cur'),ring=document.getElementById('ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+(function a(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(a);})();
+function addHover(){document.querySelectorAll('a,button,.career-card,.sector-chip,.riasec-btn').forEach(el=>{el.addEventListener('mouseenter',()=>cur.classList.add('big'));el.addEventListener('mouseleave',()=>cur.classList.remove('big'));});}
+
+/* DATA */
+const CAREERS = [
+  // ── TECHNOLOGIE & IA ───────────────────────────────────────
+  {id:"m-001",nom:"Data Scientist",secteur:"Technologie & IA",icon:"📊",riasec:["I","C"],demande:"critical",croissance:34,salaire_min:400000,salaire_max:1200000,desc:"Analyse de données massives, machine learning, prise de décision basée sur les données. Forte demande dans les banques, télécoms et startups ivoiriennes.",competences:["Python","Machine Learning","SQL","Statistiques","TensorFlow"],formation:"ENSEA, INP-HB/ESI, Master Data Science",hot:true},
+  {id:"m-002",nom:"Développeur Full Stack",secteur:"Technologie & IA",icon:"💻",riasec:["I","R"],demande:"critical",croissance:42,salaire_min:250000,salaire_max:900000,desc:"Développement d'applications web et mobiles front et back. Secteur en explosion avec la digitalisation massive des entreprises ivoiriennes.",competences:["React","Node.js","Python","Flutter","Bases de données"],formation:"ESATIC, INP-HB/ESI, IMAT",hot:true},
+  {id:"m-003",nom:"Expert Cybersécurité",secteur:"Technologie & IA",icon:"🛡️",riasec:["I","R"],demande:"critical",croissance:51,salaire_min:400000,salaire_max:900000,desc:"Protection des systèmes d'information. Demande explosive avec la digitalisation bancaire et gouvernementale en CI.",competences:["SIEM","Pentest","ISO 27001","Réseaux","Forensics"],formation:"ESATIC — Master Cybersécurité",hot:true},
+  {id:"m-004",nom:"Ingénieur DevOps / Cloud",secteur:"Technologie & IA",icon:"☁️",riasec:["I","R"],demande:"critical",croissance:45,salaire_min:350000,salaire_max:850000,desc:"Automatisation des déploiements, infrastructure cloud (AWS, Azure, GCP). Profil rare et très recherché en CI.",competences:["Docker","Kubernetes","CI/CD","AWS","Linux"],formation:"ESATIC, INP-HB/ESI",hot:true},
+  {id:"m-005",nom:"Product Manager Tech",secteur:"Technologie & IA",icon:"🎯",riasec:["E","I"],demande:"high",croissance:48,salaire_min:350000,salaire_max:800000,desc:"Pilotage produit des applications et services digitaux. Profil très recherché dans les fintechs et startups ivoiriennes.",competences:["Agile/Scrum","UX","Data","Roadmap produit","OKR"],formation:"INP-HB, ENSEA + expérience terrain",hot:true},
+  {id:"m-006",nom:"Architecte Logiciel",secteur:"Technologie & IA",icon:"🏛️",riasec:["I","R"],demande:"critical",croissance:38,salaire_min:400000,salaire_max:2450000,desc:"Conception de l'architecture technique des systèmes d'information. Parmi les profils les mieux payés en CI.",competences:["Architecture microservices","API","Cloud","Design patterns","Sécurité"],formation:"INP-HB/ESI, ESATIC + 3-5 ans expérience",hot:true},
+  {id:"m-007",nom:"Business Analyst IT",secteur:"Technologie & IA",icon:"📋",riasec:["I","C"],demande:"high",croissance:35,salaire_min:200000,salaire_max:1850000,desc:"Interface entre la direction informatique et les directions opérationnelles. Traduction des besoins métiers en solutions techniques.",competences:["UML","BPMN","SQL","Rédaction fonctionnelle","Gestion projet"],formation:"ENSEA, INP-HB, HEC Abidjan",hot:false},
+  {id:"m-008",nom:"Développeur Mobile",secteur:"Technologie & IA",icon:"📱",riasec:["I","R"],demande:"high",croissance:40,salaire_min:250000,salaire_max:700000,desc:"Création d'applications Android et iOS. Marché mobile en très forte croissance avec 20M+ d'utilisateurs mobile en CI.",competences:["Flutter","React Native","Swift","Kotlin","Firebase"],formation:"ESATIC, INP-HB/ESI",hot:false},
+  {id:"m-009",nom:"Administrateur Systèmes & Réseaux",secteur:"Technologie & IA",icon:"🔧",riasec:["R","I"],demande:"high",croissance:22,salaire_min:200000,salaire_max:600000,desc:"Gestion et maintenance des infrastructures informatiques. Présent dans toutes les grandes entreprises ivoiriennes.",competences:["Linux","Windows Server","CISCO","Active Directory","Virtualisation"],formation:"ESATIC, INP-HB/ESI",hot:false},
+  {id:"m-010",nom:"UX/UI Designer",secteur:"Technologie & IA",icon:"🎨",riasec:["A","I"],demande:"high",croissance:36,salaire_min:200000,salaire_max:650000,desc:"Conception des interfaces utilisateurs et de l'expérience digitale. Demande croissante avec le boom du digital en CI.",competences:["Figma","Adobe XD","Prototypage","Recherche utilisateur","HTML/CSS"],formation:"ESATIC, Écoles de design",hot:false},
+
+  // ── BTP & INFRASTRUCTURE ───────────────────────────────────
+  {id:"m-011",nom:"Ingénieur Génie Civil",secteur:"BTP & Infrastructure",icon:"🏗️",riasec:["R","I"],demande:"critical",croissance:28,salaire_min:350000,salaire_max:700000,desc:"Conception et supervision des grands chantiers. Demande portée par les projets métro, autoroutes et ponts en CI.",competences:["AutoCAD","BIM","Béton armé","Gestion chantier","ROBOT"],formation:"INP-HB/ESTP",hot:true},
+  {id:"m-012",nom:"Architecte",secteur:"BTP & Infrastructure",icon:"📐",riasec:["A","I"],demande:"high",croissance:20,salaire_min:300000,salaire_max:650000,desc:"Conception des bâtiments et espaces urbains. Forte demande avec le développement immobilier à Abidjan.",competences:["AutoCAD","ArchiCAD","Urbanisme","Dessin technique","3D Max"],formation:"INP-HB/ESTP, École d'Architecture d'Abidjan",hot:false},
+  {id:"m-013",nom:"Conducteur de Travaux",secteur:"BTP & Infrastructure",icon:"👷",riasec:["R","E"],demande:"high",croissance:25,salaire_min:250000,salaire_max:600000,desc:"Coordination des chantiers de construction. Profil très demandé par les entreprises BTP qui peinent à recruter des profils expérimentés.",competences:["Gestion chantier","Planning","Budget","Sécurité","Management"],formation:"INP-HB/ESTP, BTS Génie Civil",hot:false},
+  {id:"m-014",nom:"Ingénieur Géotechnicien",secteur:"BTP & Infrastructure",icon:"⛏️",riasec:["R","I"],demande:"high",croissance:18,salaire_min:300000,salaire_max:650000,desc:"Étude des sols et fondations pour les grands projets d'infrastructure.",competences:["Géologie","Mécanique des sols","SIG","Forage","Calcul structures"],formation:"INP-HB/ESTP, ESMG",hot:false},
+  {id:"m-015",nom:"Chiffreur BTP",secteur:"BTP & Infrastructure",icon:"🧮",riasec:["C","I"],demande:"high",croissance:20,salaire_min:250000,salaire_max:550000,desc:"Analyse des appels d'offres et établissement des estimations financières des projets BTP.",competences:["Métrés","Excel","Devis","Appels d'offres","Normes CI"],formation:"INP-HB/ESTP, BTS Génie Civil",hot:false},
+
+  // ── FINANCE & COMPTABILITÉ ─────────────────────────────────
+  {id:"m-016",nom:"Auditeur Financier",secteur:"Finance & Comptabilité",icon:"📈",riasec:["C","I"],demande:"high",croissance:22,salaire_min:350000,salaire_max:750000,desc:"Contrôle des comptes et certification des états financiers. Forte demande des multinationales installées à Abidjan.",competences:["SYSCOHADA","IFRS","Excel","Audit interne","Normes OHADA"],formation:"HEC Abidjan, CERAP, DSCG",hot:false},
+  {id:"m-017",nom:"Contrôleur de Gestion",secteur:"Finance & Comptabilité",icon:"🧾",riasec:["C","I"],demande:"high",croissance:19,salaire_min:300000,salaire_max:650000,desc:"Pilotage financier et suivi budgétaire. Profil recherché dans toutes les grandes entreprises et groupes ivoiriens.",competences:["Budget","Reporting","Excel avancé","ERP SAP","Tableaux de bord"],formation:"HEC Abidjan, UFHB Éco-Gestion, ABS",hot:false},
+  {id:"m-018",nom:"Analyste Financier",secteur:"Finance & Comptabilité",icon:"💹",riasec:["I","C"],demande:"high",croissance:24,salaire_min:300000,salaire_max:800000,desc:"Analyse des marchés financiers, évaluation d'entreprises et aide à la décision d'investissement.",competences:["Modélisation financière","Bloomberg","Excel","Valorisation","Due diligence"],formation:"ENSEA, HEC Abidjan, Licence Finance",hot:false},
+  {id:"m-019",nom:"Responsable Comptable",secteur:"Finance & Comptabilité",icon:"📒",riasec:["C","I"],demande:"high",croissance:15,salaire_min:250000,salaire_max:600000,desc:"Supervision de la comptabilité générale et analytique de l'entreprise selon les normes SYSCOHADA.",competences:["SYSCOHADA","Paie","Déclarations fiscales","Logiciels comptables","Bilan"],formation:"HEC Abidjan, ABS, UFHB",hot:false},
+  {id:"m-020",nom:"Acheteur / Supply Chain Manager",secteur:"Finance & Comptabilité",icon:"🛒",riasec:["C","E"],demande:"high",croissance:20,salaire_min:250000,salaire_max:1100000,desc:"Gestion des achats et de la chaîne d'approvisionnement. Rôle stratégique en contexte de hausse des prix des matières premières.",competences:["Négociation","ERP","Incoterms","Supply Chain","Sourcing Afrique"],formation:"HEC Abidjan, IMAT, BTS logistique",hot:false},
+  {id:"m-021",nom:"Demand Planner",secteur:"Finance & Comptabilité",icon:"📦",riasec:["I","C"],demande:"high",croissance:18,salaire_min:450000,salaire_max:2600000,desc:"Régulation des flux de commandes, d'approvisionnement et de fabrication. Parmi les profils les plus recherchés et mieux payés.",competences:["Prévisions","Excel avancé","ERP SAP","Statistiques","Planification"],formation:"ENSEA, INP-HB Commerce",hot:true},
+  {id:"m-022",nom:"Chargé de Recouvrement",secteur:"Finance & Comptabilité",icon:"💰",riasec:["E","C"],demande:"medium",croissance:12,salaire_min:150000,salaire_max:400000,desc:"Gestion du recouvrement des créances clients. Secteur bancaire et microfinance en forte croissance en CI.",competences:["Négociation","Droit civil","Excel","Communication","Suivi juridique"],formation:"UFHB Droit, BTS Comptabilité",hot:false},
+
+  // ── SANTÉ & SCIENCES MÉDICALES ─────────────────────────────
+  {id:"m-023",nom:"Médecin Généraliste",secteur:"Santé & Sciences médicales",icon:"⚕️",riasec:["S","I"],demande:"critical",croissance:15,salaire_min:400000,salaire_max:900000,desc:"Déficit chronique de médecins en CI. Débouchés garantis dans le public comme dans le privé.",competences:["Diagnostic clinique","Prescription","Urgences","Pédiatrie","Médecine tropicale"],formation:"UFHB — Faculté de Médecine",hot:true},
+  {id:"m-024",nom:"Chirurgien",secteur:"Santé & Sciences médicales",icon:"🩺",riasec:["S","I"],demande:"critical",croissance:12,salaire_min:700000,salaire_max:2000000,desc:"Spécialiste chirurgical. Très peu nombreux en CI — les cliniques privées se battent pour les recruter.",competences:["Chirurgie générale","Bloc opératoire","Anatomie","Anesthésiologie","Urgences"],formation:"UFHB Médecine — spécialisation 5 ans",hot:true},
+  {id:"m-025",nom:"Pharmacien",secteur:"Santé & Sciences médicales",icon:"💊",riasec:["I","R"],demande:"high",croissance:18,salaire_min:350000,salaire_max:800000,desc:"Dispensation et conseil pharmaceutique. Forte demande avec l'expansion des officines privées.",competences:["Pharmacologie","Galénique","Conseil patient","Gestion officine","Législation"],formation:"UFHB — Faculté de Pharmacie",hot:false},
+  {id:"m-026",nom:"Infirmier Spécialisé",secteur:"Santé & Sciences médicales",icon:"🏥",riasec:["S","R"],demande:"critical",croissance:20,salaire_min:160000,salaire_max:450000,desc:"Soins infirmiers spécialisés (bloc, réanimation, pédiatrie). Déficit massif dans les hôpitaux publics et cliniques privées.",competences:["Soins infirmiers","Réanimation","Pédiatrie","Pharmacologie de base","Urgences"],formation:"INFAS, ISIS, Écoles de soins infirmiers",hot:false},
+  {id:"m-027",nom:"Biologiste Médical",secteur:"Santé & Sciences médicales",icon:"🔬",riasec:["I","R"],demande:"high",croissance:16,salaire_min:400000,salaire_max:900000,desc:"Analyses biologiques et diagnostics en laboratoire. Secteur porté par le développement des cliniques privées.",competences:["Biochimie","Microbiologie","Hématologie","Immunologie","PCR"],formation:"UFHB Pharmacie/Médecine",hot:false},
+  {id:"m-028",nom:"Médecin du Travail",secteur:"Santé & Sciences médicales",icon:"👨‍⚕️",riasec:["S","I"],demande:"high",croissance:14,salaire_min:500000,salaire_max:1200000,desc:"Prévention des risques professionnels. Toutes les entreprises de +50 salariés sont obligées d'en avoir un.",competences:["Médecine préventive","Toxicologie","Ergonomie","Réglementation du travail"],formation:"UFHB Médecine — spécialisation",hot:false},
+  {id:"m-029",nom:"Sage-Femme",secteur:"Santé & Sciences médicales",icon:"👶",riasec:["S","R"],demande:"critical",croissance:18,salaire_min:150000,salaire_max:400000,desc:"Soins obstétricaux et gynécologiques. Manque chronique en zone rurale et péri-urbaine.",competences:["Obstétrique","Soins néonatals","Planification familiale","Urgences obstétricales"],formation:"INFAS, Écoles de sages-femmes",hot:false},
+
+  // ── AGRONOMIE & AGROBUSINESS ───────────────────────────────
+  {id:"m-030",nom:"Ingénieur Agronome",secteur:"Agronomie & Agrobusiness",icon:"🌱",riasec:["R","I"],demande:"high",croissance:18,salaire_min:280000,salaire_max:580000,desc:"La CI est le 1er producteur mondial de cacao. Les agronomes sont au cœur de la transformation agricole ivoirienne.",competences:["Agronomie tropicale","Certification qualité","Gestion exploitation","Cacao/café","SIG"],formation:"INP-HB/ESEA",hot:true},
+  {id:"m-031",nom:"Expert Agro-industrie",secteur:"Agronomie & Agrobusiness",icon:"🏭",riasec:["R","I"],demande:"high",croissance:22,salaire_min:300000,salaire_max:700000,desc:"Transformation et valorisation des produits agricoles. Secteur stratégique dans la politique 'agrobusiness' du gouvernement CI.",competences:["Process industriel","HACCP","Qualité alimentaire","Gestion production","Supply chain agro"],formation:"INP-HB/ESEA, ESA",hot:false},
+  {id:"m-032",nom:"Consultant Cacao & Café",secteur:"Agronomie & Agrobusiness",icon:"☕",riasec:["I","E"],demande:"high",croissance:15,salaire_min:350000,salaire_max:800000,desc:"Expertise sur la filière cacao-café ivoirienne, la 1ère au monde. Accompagnement des producteurs et acheteurs internationaux.",competences:["Filière cacao","Certification bio/équitable","Commerce international","Analyse qualité"],formation:"INP-HB/ESEA, Masters spécialisés",hot:false},
+  {id:"m-033",nom:"Vétérinaire",secteur:"Agronomie & Agrobusiness",icon:"🐄",riasec:["R","I"],demande:"high",croissance:14,salaire_min:300000,salaire_max:700000,desc:"Santé animale et élevage. Secteur élevage en développement en CI — cliniques vétérinaires privées en expansion.",competences:["Médecine vétérinaire","Chirurgie animale","Santé publique vétérinaire","Élevage"],formation:"UFHB Sciences vétérinaires",hot:false},
+  {id:"m-034",nom:"Ingénieur Halieutique",secteur:"Agronomie & Agrobusiness",icon:"🐟",riasec:["R","I"],demande:"medium",croissance:16,salaire_min:250000,salaire_max:550000,desc:"Gestion des ressources halieutiques et de l'aquaculture. La CI a un potentiel énorme en aquaculture encore sous-exploité.",competences:["Aquaculture","Ichtyologie","Pêche durable","Gestion des stocks"],formation:"INP-HB/ESEA",hot:false},
+
+  // ── COMMERCE & MARKETING ──────────────────────────────────
+  {id:"m-035",nom:"Responsable Marketing Digital",secteur:"Commerce & Marketing",icon:"📱",riasec:["E","A"],demande:"high",croissance:38,salaire_min:200000,salaire_max:500000,desc:"Gestion des canaux digitaux, e-commerce et campagnes en ligne. Boom du digital avec 14M+ d'utilisateurs internet en CI.",competences:["SEO/SEM","Social Media","Analytics","Content marketing","E-commerce"],formation:"HEC Abidjan, BEM Abidjan, ABS",hot:false},
+  {id:"m-036",nom:"Ingénieur Commercial",secteur:"Commerce & Marketing",icon:"🤝",riasec:["E","S"],demande:"high",croissance:20,salaire_min:250000,salaire_max:1500000,desc:"Développement commercial B2B pour les entreprises tech, industrielles et de services. Primes de performance très élevées.",competences:["Négociation B2B","CRM","Prospection","Technique produit","Présentation"],formation:"HEC Abidjan, BEM Abidjan, INP-HB Commerce",hot:false},
+  {id:"m-037",nom:"Business Developer Afrique",secteur:"Commerce & Marketing",icon:"🌍",riasec:["E","S"],demande:"high",croissance:30,salaire_min:300000,salaire_max:1000000,desc:"Développement de nouveaux marchés en Afrique subsaharienne. Abidjan hub régional — profil très recherché par les multinationales.",competences:["Développement commercial","Langues (anglais/français)","Négociation interculturelle","Réseau"],formation:"HEC Abidjan, BEM, AUCI",hot:true},
+  {id:"m-038",nom:"Responsable Ressources Humaines",secteur:"Commerce & Marketing",icon:"👥",riasec:["S","E"],demande:"medium",croissance:15,salaire_min:200000,salaire_max:450000,desc:"Recrutement, formation et gestion des talents. Les grandes entreprises ivoiriennes et multinationales recrutent des DRH qualifiés.",competences:["GPEC","Droit du travail CI","Recrutement","Paie","Formation"],formation:"HEC Abidjan, IUA, ABS",hot:false},
+  {id:"m-039",nom:"Community Manager",secteur:"Commerce & Marketing",icon:"📸",riasec:["A","E"],demande:"high",croissance:42,salaire_min:100000,salaire_max:350000,desc:"Animation des réseaux sociaux et création de contenu. Boom des médias sociaux en CI — toutes les entreprises recrutent.",competences:["Instagram","Facebook","TikTok","Canva","Copywriting"],formation:"Écoles de communication, autoformation",hot:false},
+  {id:"m-040",nom:"Responsable E-commerce",secteur:"Commerce & Marketing",icon:"🛍️",riasec:["E","I"],demande:"high",croissance:45,salaire_min:200000,salaire_max:600000,desc:"Gestion des plateformes de vente en ligne. Boom du commerce électronique en CI avec l'essor du mobile money.",competences:["E-commerce","Logistique","SEO","Analytics","Mobile money"],formation:"HEC Abidjan, formations digitales",hot:true},
+
+  // ── DROIT & INSTITUTIONS ──────────────────────────────────
+  {id:"m-041",nom:"Juriste d'Affaires",secteur:"Droit & Institutions",icon:"⚖️",riasec:["I","E"],demande:"medium",croissance:14,salaire_min:300000,salaire_max:700000,desc:"Accompagnement juridique des entreprises : contrats, contentieux, compliance. Forte demande des multinationales.",competences:["Droit OHADA","Droit fiscal","Arbitrage","Rédaction juridique","Anglais juridique"],formation:"UFHB Droit, CERAP, IUA",hot:false},
+  {id:"m-042",nom:"Avocat",secteur:"Droit & Institutions",icon:"👨‍⚖️",riasec:["E","I"],demande:"medium",croissance:12,salaire_min:300000,salaire_max:2000000,desc:"Conseil et représentation juridique. Les avocats d'affaires spécialisés en droit OHADA et droit des investissements sont très demandés.",competences:["Droit OHADA","Plaidoirie","Rédaction actes","Droit des affaires","Arbitrage CCJA"],formation:"UFHB Droit + École du Barreau",hot:false},
+  {id:"m-043",nom:"Notaire",secteur:"Droit & Institutions",icon:"📜",riasec:["C","I"],demande:"medium",croissance:10,salaire_min:400000,salaire_max:1500000,desc:"Officier public authentifiant les actes juridiques. Profession réglementée très lucrative.",competences:["Droit notarial","Droit immobilier","Droit de la famille","Succession","Actes authentiques"],formation:"UFHB Droit + Institut Notarial",hot:false},
+  {id:"m-044",nom:"Administrateur Civil",secteur:"Droit & Institutions",icon:"🏛️",riasec:["C","E"],demande:"high",croissance:8,salaire_min:250000,salaire_max:700000,desc:"Gestion administrative de l'État. Carrière stable avec progression garantie dans la fonction publique ivoirienne.",competences:["Droit public","Administration","Gestion budgétaire","Rédaction administrative","Procédures"],formation:"ENA Côte d'Ivoire, UFHB Droit",hot:false},
+  {id:"m-045",nom:"Huissier de Justice",secteur:"Droit & Institutions",icon:"📋",riasec:["C","I"],demande:"medium",croissance:10,salaire_min:250000,salaire_max:600000,desc:"Officier ministériel chargé des significations et exécutions judiciaires.",competences:["Procédure civile","Droit OHADA","Signification","Saisie","Rédaction juridique"],formation:"UFHB Droit + Stage professionnel",hot:false},
+
+  // ── LOGISTIQUE & TRANSPORT ────────────────────────────────
+  {id:"m-046",nom:"Logisticien Portuaire",secteur:"Logistique & Transport",icon:"🚢",riasec:["C","E"],demande:"high",croissance:20,salaire_min:250000,salaire_max:550000,desc:"Gestion des flux au Port d'Abidjan, 1er port à conteneurs d'Afrique de l'Ouest. Secteur clé de l'économie ivoirienne.",competences:["Incoterms","Supply Chain","Douanes","ERP","Transit"],formation:"ISTC, INSUCA, École des Douanes CI",hot:false},
+  {id:"m-047",nom:"Transitaire / Agent Douane",secteur:"Logistique & Transport",icon:"📦",riasec:["C","E"],demande:"high",croissance:18,salaire_min:200000,salaire_max:500000,desc:"Dédouanement et transit des marchandises. Le port d'Abidjan traite les imports/exports de toute la sous-région.",competences:["Réglementation douanière","SYDAM","Tarif douanier","Transit","Import-export"],formation:"École des Douanes CI, BTS Commerce International",hot:false},
+  {id:"m-048",nom:"Responsable Chaîne Logistique",secteur:"Logistique & Transport",icon:"🔄",riasec:["C","E"],demande:"high",croissance:22,salaire_min:300000,salaire_max:700000,desc:"Optimisation de la supply chain des entreprises industrielles et de distribution.",competences:["ERP SAP","Lean","Gestion stocks","Transport","Planification"],formation:"HEC Abidjan, INP-HB Commerce, BTS Logistique",hot:false},
+  {id:"m-049",nom:"Pilote de Ligne",secteur:"Logistique & Transport",icon:"✈️",riasec:["R","I"],demande:"high",croissance:15,salaire_min:800000,salaire_max:3000000,desc:"Commandant de bord pour les compagnies aériennes. Air Côte d'Ivoire et Ethiopian recrutent des pilotes ivoiriens.",competences:["ATPL","Navigation aérienne","Météorologie","CRM (Cockpit)","Anglais aviation"],formation:"Écoles de pilotage agréées ANAC CI",hot:false},
+  {id:"m-050",nom:"Ingénieur Trafic / Planification Transport",secteur:"Logistique & Transport",icon:"🚇",riasec:["I","R"],demande:"high",croissance:25,salaire_min:300000,salaire_max:650000,desc:"Planification des réseaux de transport urbain. Très demandé avec les projets de métro d'Abidjan et extensions routières.",competences:["Modélisation trafic","SIG","Autocad","Études de mobilité","Urban Planning"],formation:"INP-HB/ESTP, Masters Urbanisme",hot:true},
+
+  // ── TÉLÉCOMMUNICATIONS ────────────────────────────────────
+  {id:"m-051",nom:"Ingénieur Télécoms",secteur:"Télécommunications",icon:"📡",riasec:["R","I"],demande:"high",croissance:24,salaire_min:300000,salaire_max:650000,desc:"Déploiement et maintenance des réseaux télécoms. Orange CI, MTN, Moov et Wave recrutent massivement.",competences:["4G/5G","Fibre optique","IP/MPLS","Antennes","Transmission"],formation:"ESATIC, INP-HB/ESI",hot:false},
+  {id:"m-052",nom:"Ingénieur Systèmes Embarqués",secteur:"Télécommunications",icon:"🔌",riasec:["R","I"],demande:"high",croissance:28,salaire_min:300000,salaire_max:700000,desc:"Développement de systèmes électroniques embarqués. Demande dans l'industrie, les télécoms et l'IoT.",competences:["C/C++ embarqué","FPGA","Microcontrôleurs","IoT","RTOS"],formation:"INP-HB/ESI, ESATIC",hot:false},
+  {id:"m-053",nom:"Expert Mobile Money / Fintech",secteur:"Télécommunications",icon:"📲",riasec:["I","E"],demande:"critical",croissance:55,salaire_min:350000,salaire_max:900000,desc:"Développement et gestion des services mobile money (Orange Money, MTN MoMo, Wave). La CI est leader africain du mobile money.",competences:["API paiement","Conformité financière","Développement mobile","Blockchain","Compliance"],formation:"ENSEA, ESATIC, INP-HB",hot:true},
+  {id:"m-054",nom:"Ingénieur Qualité Réseau",secteur:"Télécommunications",icon:"📶",riasec:["R","I"],demande:"medium",croissance:18,salaire_min:280000,salaire_max:600000,desc:"Analyse et optimisation de la qualité des réseaux télécoms mobiles et fixes.",competences:["Drive test","Optimisation RF","Qualité de service","Outils télécom","Reporting"],formation:"ESATIC, INP-HB/ESI",hot:false},
+
+  // ── ÉNERGIE & ENVIRONNEMENT ───────────────────────────────
+  {id:"m-055",nom:"Ingénieur Énergie Solaire",secteur:"Énergie & Environnement",icon:"☀️",riasec:["R","I"],demande:"high",croissance:45,salaire_min:280000,salaire_max:600000,desc:"Installation et maintenance de systèmes photovoltaïques. Forte croissance avec les objectifs de transition énergétique de la CI.",competences:["Photovoltaïque","Électrotechnique","Onduleurs","Audit énergétique","Normes IEC"],formation:"INP-HB, Formations spécialisées",hot:true},
+  {id:"m-056",nom:"Ingénieur Environnement",secteur:"Énergie & Environnement",icon:"🌿",riasec:["I","R"],demande:"high",croissance:28,salaire_min:280000,salaire_max:600000,desc:"Études d'impact environnemental et gestion des ressources naturelles. Obligatoire pour tout grand projet en CI.",competences:["EIE","SIG","Droit environnemental CI","Biodiversité","Pollution"],formation:"INP-HB/ESEA, UFHB Sciences Environnement",hot:false},
+  {id:"m-057",nom:"Expert HSE",secteur:"Énergie & Environnement",icon:"⚠️",riasec:["R","C"],demande:"high",croissance:22,salaire_min:300000,salaire_max:1000000,desc:"Hygiène, Sécurité et Environnement dans les industries pétrolières, minières et BTP.",competences:["ISO 45001","Audit sécurité","Plan d'urgence","Formation sécurité","OHSAS"],formation:"INP-HB, Certifications HSE",hot:false},
+  {id:"m-058",nom:"Ingénieur Pétrolier",secteur:"Énergie & Environnement",icon:"🛢️",riasec:["R","I"],demande:"high",croissance:20,salaire_min:500000,salaire_max:1500000,desc:"La CI possède des gisements pétroliers offshore. Total, CNR International et Petroci recrutent des ingénieurs pétroliers.",competences:["Géologie pétrolière","Forage","Simulation réservoir","Offshore","Pétrochimie"],formation:"INP-HB/ESMG, Formations spécialisées",hot:false},
+
+  // ── ÉDUCATION & FORMATION ────────────────────────────────
+  {id:"m-059",nom:"Enseignant Secondaire",secteur:"Éducation & Formation",icon:"📚",riasec:["S","A"],demande:"high",croissance:12,salaire_min:200000,salaire_max:400000,desc:"Recrutements massifs dans le secteur public via les concours MENETFP. Emploi stable et progression garantie.",competences:["Pédagogie","Discipline enseignée","Didactique","Évaluation","Gestion classe"],formation:"ENS, CAFOP, Université + concours enseignant",hot:false},
+  {id:"m-060",nom:"Formateur en Entreprise",secteur:"Éducation & Formation",icon:"🎓",riasec:["S","E"],demande:"high",croissance:20,salaire_min:200000,salaire_max:500000,desc:"Conception et animation de formations professionnelles. Boom de la formation continue dans les grandes entreprises.",competences:["Ingénierie formation","Animation","E-learning","HRBP","Évaluation formation"],formation:"CAFOP, ENS, Master Ressources Humaines",hot:false},
+  {id:"m-061",nom:"Directeur d'École",secteur:"Éducation & Formation",icon:"🏫",riasec:["E","S"],demande:"medium",croissance:10,salaire_min:250000,salaire_max:600000,desc:"Direction d'établissement scolaire public ou privé. Secteur privé scolaire en forte expansion à Abidjan.",competences:["Management","Pédagogie","Gestion financière","Réglementation scolaire","Communication"],formation:"CAFOP + expérience, ENS",hot:false},
+
+  // ── MÉDIAS & COMMUNICATION ───────────────────────────────
+  {id:"m-062",nom:"Journaliste Digital",secteur:"Médias & Communication",icon:"🎙️",riasec:["A","S"],demande:"medium",croissance:20,salaire_min:150000,salaire_max:350000,desc:"Production de contenus pour les médias numériques ivoiriens. Croissance des plateformes d'info en ligne.",competences:["Rédaction web","SEO","Reportage","Réseaux sociaux","Montage vidéo"],formation:"ISTC, UJLOG, IUA Communication",hot:false},
+  {id:"m-063",nom:"Chargé de Communication",secteur:"Médias & Communication",icon:"📣",riasec:["A","E"],demande:"medium",croissance:18,salaire_min:150000,salaire_max:400000,desc:"Communication externe et interne des entreprises. Toutes les grandes structures recrutent des profils communication.",competences:["Relations presse","Communication institutionnelle","Rédaction","Événementiel","Réseaux sociaux"],formation:"ISTC, IUA Communication, HEC Abidjan",hot:false},
+  {id:"m-064",nom:"Réalisateur / Vidéaste",secteur:"Médias & Communication",icon:"🎬",riasec:["A","E"],demande:"medium",croissance:25,salaire_min:150000,salaire_max:500000,desc:"Production audiovisuelle pour les entreprises, medias et plateformes digitales. Boom du contenu vidéo en CI.",competences:["Tournage","Montage","After Effects","YouTube","Storytelling"],formation:"ISTC, Écoles de cinéma, autoformation",hot:false},
+
+  // ── TOURISME & HÔTELLERIE ────────────────────────────────
+  {id:"m-065",nom:"Manager Hôtelier",secteur:"Tourisme & Hôtellerie",icon:"🏨",riasec:["E","S"],demande:"medium",croissance:16,salaire_min:250000,salaire_max:600000,desc:"Direction d'établissements hôteliers. Abidjan accueille des chaînes internationales (Sofitel, Pullman, Marriott) qui recrutent.",competences:["Management hôtelier","Revenue management","F&B","Relations clients","Yield management"],formation:"UMEF, IUA, Écoles hôtelières privées",hot:false},
+  {id:"m-066",nom:"Guide Touristique",secteur:"Tourisme & Hôtellerie",icon:"🗺️",riasec:["S","A"],demande:"medium",croissance:20,salaire_min:100000,salaire_max:300000,desc:"Accompagnement de touristes nationaux et internationaux. CI : programme 'Sublime Côte d'Ivoire' du gouvernement.",competences:["Langues (anglais, espagnol)","Histoire CI","Patrimoine culturel","Communication","Organisation"],formation:"ISTC, Écoles de tourisme",hot:false},
+  {id:"m-067",nom:"Chef Cuisinier",secteur:"Tourisme & Hôtellerie",icon:"👨‍🍳",riasec:["R","A"],demande:"medium",croissance:18,salaire_min:150000,salaire_max:500000,desc:"Art culinaire dans les hôtels et restaurants. Boom de la restauration haut de gamme à Abidjan.",competences:["Cuisine française","Cuisine africaine","Gestion stocks","HACCP","Management cuisine"],formation:"Lycées hôteliers, Écoles de cuisine",hot:false},
+
+  // ── MINES & RESSOURCES ────────────────────────────────────
+  {id:"m-068",nom:"Géologue Minier",secteur:"Mines & Ressources",icon:"⛏️",riasec:["R","I"],demande:"high",croissance:22,salaire_min:400000,salaire_max:900000,desc:"Exploration et exploitation des ressources minières. La CI possède d'importantes réserves d'or, manganèse et pétrole.",competences:["Géologie structurale","SIG","Forage","Géochimie","Modélisation 3D"],formation:"INP-HB/ESMG",hot:false},
+  {id:"m-069",nom:"Ingénieur Mines",secteur:"Mines & Ressources",icon:"🔩",riasec:["R","I"],demande:"high",croissance:20,salaire_min:450000,salaire_max:1000000,desc:"Gestion et optimisation de l'exploitation minière. Mines d'or (Tongon, Bonikro) et manganèse en plein développement.",competences:["Mine à ciel ouvert","Explosifs","Sécurité minière","Géostatistiques","ERP mine"],formation:"INP-HB/ESMG",hot:false},
+  {id:"m-070",nom:"Hydrogéologue",secteur:"Mines & Ressources",icon:"💧",riasec:["R","I"],demande:"medium",croissance:18,salaire_min:300000,salaire_max:650000,desc:"Gestion des ressources en eau souterraine. Problématique majeure dans le contexte d'urbanisation rapide de la CI.",competences:["Hydrogéologie","Forages","SIG","Qualité eau","Modélisation"],formation:"INP-HB/ESMG, UFHB Sciences de la Terre",hot:false},
+
+  // ── SECTEURS ÉMERGENTS ────────────────────────────────────
+  {id:"m-071",nom:"Statisticien Économiste",secteur:"Finance & Comptabilité",icon:"📊",riasec:["I","C"],demande:"high",croissance:25,salaire_min:350000,salaire_max:750000,desc:"Analyse économique et modélisation pour les banques, ONG et ministères. Diplôme ENSEA reconnu dans toute l'Afrique.",competences:["SAS","R","Économétrie","Modélisation","SPSS"],formation:"ENSEA Abidjan",hot:true},
+  {id:"m-072",nom:"Actuaire",secteur:"Finance & Comptabilité",icon:"🎲",riasec:["I","C"],demande:"high",croissance:30,salaire_min:500000,salaire_max:1500000,desc:"Évaluation des risques financiers pour les assurances et banques. Profil très rare et extrêmement recherché en CI.",competences:["Mathématiques actuarielles","SAS","R","Normes Solvabilité 2","Statistiques"],formation:"ENSEA Abidjan — Master Actuariat",hot:true},
+  {id:"m-073",nom:"Blockchain Developer",secteur:"Technologie & IA",icon:"🔗",riasec:["I","R"],demande:"high",croissance:60,salaire_min:400000,salaire_max:1200000,desc:"Développement de solutions basées sur la blockchain. Secteur naissant en CI mais en croissance explosive.",competences:["Solidity","Ethereum","Web3","DeFi","Smart contracts"],formation:"Autoformation + certifications internationales",hot:true},
+  {id:"m-074",nom:"Ingénieur Intelligence Artificielle",secteur:"Technologie & IA",icon:"🤖",riasec:["I","R"],demande:"critical",croissance:65,salaire_min:500000,salaire_max:1500000,desc:"Développement de modèles d'IA et de machine learning. Le métier de l'avenir, déjà recherché par les banques et télécoms CI.",competences:["Deep Learning","NLP","TensorFlow","PyTorch","Computer Vision"],formation:"ENSEA, INP-HB/ESI + Masters spécialisés",hot:true},
+  {id:"m-075",nom:"Entrepreneur Tech",secteur:"Technologie & IA",icon:"🚀",riasec:["E","I"],demande:"high",croissance:55,salaire_min:0,salaire_max:0,desc:"Création d'entreprises innovantes. Abidjan est la plus grande scène startup d'Afrique de l'Ouest francophone.",competences:["Business Model","Levée de fonds","Product","Leadership","Résilience"],formation:"HEC Abidjan, BEM, incubateurs CTIC, Orange Fab",hot:true},
+  {id:"m-076",nom:"Expert RSE / Développement Durable",secteur:"Énergie & Environnement",icon:"♻️",riasec:["I","S"],demande:"high",croissance:32,salaire_min:280000,salaire_max:650000,desc:"Responsabilité Sociale et Environnementale des entreprises. Obligation croissante pour les grandes entreprises opérant en CI.",competences:["Reporting ESG","ISO 26000","Parties prenantes","Communication RSE","Audit"],formation:"INP-HB, Masters Développement Durable",hot:false},
+  {id:"m-077",nom:"Ingénieur Qualité",secteur:"Commerce & Marketing",icon:"✅",riasec:["C","R"],demande:"high",croissance:18,salaire_min:250000,salaire_max:600000,desc:"Contrôle et amélioration de la qualité des produits et processus. Secteur agro-alimentaire et industriel très demandeur.",competences:["ISO 9001","HACCP","Six Sigma","Audit qualité","SPC"],formation:"INP-HB, Certifications ISO",hot:false},
+  {id:"m-078",nom:"Expert Sécurité Incendie",secteur:"BTP & Infrastructure",icon:"🧯",riasec:["R","C"],demande:"medium",croissance:20,salaire_min:200000,salaire_max:500000,desc:"Prévention et lutte contre les incendies dans les bâtiments et industries. Réglementation CI de plus en plus stricte.",competences:["Normes incendie","Sprinklers","Plans évacuation","Formation sécurité"],formation:"Formations spécialisées, INP-HB",hot:false},
+  {id:"m-079",nom:"Chercheur Universitaire",secteur:"Éducation & Formation",icon:"🔭",riasec:["I","A"],demande:"medium",croissance:15,salaire_min:400000,salaire_max:1200000,desc:"Recherche fondamentale et appliquée. Les universités CI et les laboratoires de recherche recrutent des docteurs.",competences:["Méthodes de recherche","Publication scientifique","Enseignement","Statistiques","Anglais académique"],formation:"UFHB, INP-HB — Doctorat requis",hot:false},
+  {id:"m-080",nom:"Diplomate / Fonctionnaire International",secteur:"Droit & Institutions",icon:"🌐",riasec:["E","S"],demande:"medium",croissance:10,salaire_min:500000,salaire_max:2000000,desc:"Représentation de la CI à l'international ou dans les organisations internationales (ONU, UA, CEDEAO).",competences:["Droit international","Langues (anglais, espagnol)","Négociation","Protocole","Relations internationales"],formation:"ENA CI, Sciences Po, Universités + concours diplomatique",hot:false},
+];
+
+
+
+const SECTORS = [...new Set(CAREERS.map(c=>c.secteur))];
+
+/* STATE */
+let activeRiasec = [];
+let activeSector = null;
+let searchQ = '';
+
+/* HELPERS */
+function fmtSalaire(min, max) {
+  if (min === 0 && max === 0) return 'Variable';
+  const fmt = n => n >= 1000000 ? (n/1e6).toFixed(1)+'M' : Math.round(n/1000)+'k';
+  return fmt(min) + ' – ' + fmt(max) + ' FCFA';
+}
+function demandLabel(d) {
+  if(d==='critical') return {cls:'demand-critical',txt:'Critique'};
+  if(d==='high')     return {cls:'demand-high',txt:'Forte'};
+  return                    {cls:'demand-medium',txt:'Moyenne'};
+}
+const riasecNames = {R:'Réaliste',I:'Investigatif',A:'Artistique',S:'Social',E:'Entreprenant',C:'Conventionnel'};
+
+/* SECTOR CHIPS */
+function buildSectors() {
+  const el = document.getElementById('sector-scroll');
+  const counts = {};
+  CAREERS.forEach(c => { counts[c.secteur] = (counts[c.secteur]||0)+1; });
+  el.innerHTML = SECTORS.map(s => `
+    <div class="sector-chip ${activeSector===s?'active':''}" onclick="toggleSector('${s}',this)">
+      <span class="sector-chip-icon">${getSectorIcon(s)}</span>
+      <span class="sector-chip-name">${s}</span>
+      <span class="sector-chip-count">${counts[s]}</span>
+    </div>`).join('');
+  addHover();
+}
+
+function getSectorIcon(s) {
+  const icons = {'Technologie & IA':'💻','BTP & Infrastructure':'🏗️','Finance & Comptabilité':'📈','Santé & Sciences médicales':'⚕️','Agronomie & Agrobusiness':'🌱','Commerce & Marketing':'🛍️','Droit & Institutions':'⚖️','Logistique & Transport':'🚢','Éducation & Formation':'📚','Télécommunications':'📡','Tourisme & Hôtellerie':'🏨','Énergie & Environnement':'☀️','Médias & Communication':'🎙️','Mines & Ressources':'⛏️'};
+  return icons[s] || '💼';
+}
+
+/* RENDER CARDS */
+function renderCareers(data) {
+  const grid = document.getElementById('career-grid');
+  document.getElementById('result-count').textContent = data.length;
+  if (data.length === 0) {
+    grid.innerHTML = `<div class="empty-state"><div class="empty-icon">🔍</div><div class="empty-title">Aucun résultat</div><div class="empty-sub">Essayez de modifier vos filtres ou votre recherche.</div></div>`;
+    return;
+  }
+  grid.innerHTML = data.map((c,i) => {
+    const d = demandLabel(c.demande);
+    return `
+    <div class="career-card ${c.hot?'hot':''} fade-up" style="animation-delay:${i*.04}s" onclick="openCareer('${c.id}')">
+      <div class="cc-top">
+        <div class="cc-icon">${c.icon}</div>
+        <div class="cc-demand ${d.cls}"><span class="demand-dot"></span>${d.txt}</div>
+      </div>
+      <div>
+        <div class="cc-name">${c.nom}</div>
+        <div class="cc-sector">${c.secteur}</div>
+      </div>
+      <p class="cc-desc">${c.desc}</p>
+      <div class="cc-metrics">
+        <div class="cc-metric">
+          <div class="cc-metric-val cv-gold">${fmtSalaire(c.salaire_min,c.salaire_max)}</div>
+          <div class="cc-metric-lbl">Salaire débutant</div>
+        </div>
+        <div class="cc-metric">
+          <div class="cc-metric-val cv-green">+${c.croissance}%</div>
+          <div class="cc-metric-lbl">Croissance / an</div>
+        </div>
+      </div>
+      <div class="cc-tags">
+        ${c.riasec.map(r=>`<span class="cc-tag riasec-tag">${r} — ${riasecNames[r]}</span>`).join('')}
+        ${c.competences.slice(0,2).map(k=>`<span class="cc-tag">${k}</span>`).join('')}
+      </div>
+      <div class="cc-footer">
+        <span class="cc-formation">🎓 ${c.formation}</span>
+        <span class="cc-arrow">→</span>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Scroll reveal
+  const io = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});
+  },{threshold:.08});
+  document.querySelectorAll('.fade-up').forEach(el=>io.observe(el));
+  addHover();
+}
+
+/* FILTERS */
+function applyFilters() {
+  let data = [...CAREERS];
+  const q = searchQ.toLowerCase().trim();
+
+  if (q) data = data.filter(c =>
+    c.nom.toLowerCase().includes(q) ||
+    c.secteur.toLowerCase().includes(q) ||
+    c.desc.toLowerCase().includes(q) ||
+    c.competences.some(k=>k.toLowerCase().includes(q))
+  );
+
+  if (activeRiasec.length > 0)
+    data = data.filter(c => activeRiasec.some(r=>c.riasec.includes(r)));
+
+  if (activeSector)
+    data = data.filter(c => c.secteur === activeSector);
+
+  const sort = document.getElementById('sort-select').value;
+  if (sort==='hot')       data.sort((a,b)=>(b.hot?1:0)-(a.hot?1:0) || b.demande.localeCompare(a.demande));
+  if (sort==='salaire')   data.sort((a,b)=>b.salaire_max-a.salaire_max);
+  if (sort==='croissance')data.sort((a,b)=>b.croissance-a.croissance);
+  if (sort==='az')        data.sort((a,b)=>a.nom.localeCompare(b.nom));
+
+  renderCareers(data);
+}
+
+function toggleRiasec(r, btn) {
+  if (activeRiasec.includes(r)) {
+    activeRiasec = activeRiasec.filter(x=>x!==r);
+    btn.classList.remove('active');
+  } else {
+    activeRiasec.push(r);
+    btn.classList.add('active');
+  }
+  applyFilters();
+}
+
+function toggleSector(s, el) {
+  if (activeSector === s) {
+    activeSector = null;
+    el.classList.remove('active');
+  } else {
+    activeSector = s;
+    document.querySelectorAll('.sector-chip').forEach(c=>c.classList.remove('active'));
+    el.classList.add('active');
+  }
+  applyFilters();
+}
+
+function resetFilters() {
+  activeRiasec = [];
+  activeSector = null;
+  searchQ = '';
+  document.getElementById('search').value = '';
+  document.querySelectorAll('.riasec-btn.active').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.sector-chip.active').forEach(c=>c.classList.remove('active'));
+  document.getElementById('sort-select').value = 'hot';
+  applyFilters();
+}
+
+document.getElementById('search').addEventListener('input', function(){
+  searchQ = this.value;
+  applyFilters();
+});
+
+/* OPEN CAREER MODAL */
+function openCareer(id) {
+  const c = CAREERS.find(x=>x.id===id);
+  if (!c) return;
+  const d = demandLabel(c.demande);
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(6,11,20,.95);z-index:600;overflow-y:auto;padding:40px 20px;display:flex;align-items:flex-start;justify-content:center;';
+  overlay.innerHTML = `
+    <div style="max-width:640px;width:100%;">
+      <button onclick="this.closest('div[style*=fixed]').remove()" style="display:flex;align-items:center;gap:8px;background:none;border:1px solid rgba(242,237,228,.13);color:#8A8278;padding:8px 16px;border-radius:6px;cursor:none;font-family:'Instrument Sans',sans-serif;font-size:12px;font-weight:600;margin-bottom:28px;">← Retour aux carrières</button>
+      <div style="background:#0C1220;border:1px solid rgba(242,237,228,.13);border-radius:20px;padding:32px;">
+        <div style="display:flex;align-items:center;gap:16px;margin-bottom:24px;">
+          <div style="font-size:40px;">${c.icon}</div>
+          <div>
+            <div style="font-family:'Bricolage Grotesque',sans-serif;font-size:26px;font-weight:800;color:#F2EDE4;letter-spacing:-.03em;">${c.nom}</div>
+            <div style="font-size:13px;color:#8A8278;margin-top:3px;">${c.secteur}</div>
+          </div>
+          <div style="margin-left:auto;" class="cc-demand ${d.cls}"><span class="demand-dot"></span>${d.txt}</div>
+        </div>
+        <p style="font-size:14px;color:#8A8278;line-height:1.75;margin-bottom:24px;">${c.desc}</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px;">
+          <div style="background:#111827;border-radius:10px;padding:16px;">
+            <div style="font-family:'Bricolage Grotesque',sans-serif;font-size:20px;font-weight:800;color:#D4A853;">${fmtSalaire(c.salaire_min,c.salaire_max)}</div>
+            <div style="font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:#2E3545;margin-top:4px;">Salaire débutant CI</div>
+          </div>
+          <div style="background:#111827;border-radius:10px;padding:16px;">
+            <div style="font-family:'Bricolage Grotesque',sans-serif;font-size:20px;font-weight:800;color:#34C97A;">+${c.croissance}% / an</div>
+            <div style="font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:#2E3545;margin-top:4px;">Croissance du secteur</div>
+          </div>
+        </div>
+        <div style="margin-bottom:20px;">
+          <div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#D4A853;margin-bottom:10px;">Compétences clés</div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;">
+            ${c.competences.map(k=>`<span style="font-size:12px;font-weight:600;padding:4px 12px;border-radius:4px;background:rgba(79,122,232,.1);border:1px solid rgba(79,122,232,.2);color:#4F7AE8;">${k}</span>`).join('')}
+          </div>
+        </div>
+        <div style="margin-bottom:20px;">
+          <div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#D4A853;margin-bottom:10px;">Profil RIASEC compatible</div>
+          <div style="display:flex;gap:6px;">
+            ${c.riasec.map(r=>`<span style="font-size:12px;font-weight:700;padding:4px 12px;border-radius:4px;background:rgba(212,168,83,.1);border:1px solid #7A5E2A;color:#D4A853;">${r} — ${riasecNames[r]}</span>`).join('')}
+          </div>
+        </div>
+        <div style="background:#111827;border-radius:10px;padding:16px;margin-bottom:24px;">
+          <div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#34C97A;margin-bottom:6px;">🎓 Formation recommandée</div>
+          <div style="font-size:13px;color:#F2EDE4;">${c.formation}</div>
+        </div>
+        <div style="display:flex;gap:10px;">
+          <a href="avenir_etude_test_riasec.html" style="flex:1;text-align:center;font-family:'Bricolage Grotesque',sans-serif;font-size:13px;font-weight:700;padding:13px;background:#D4A853;color:#060B14;border-radius:8px;text-decoration:none;">Tester ma compatibilité →</a>
+          <a href="avenir_etude_ecoles.html" style="flex:1;text-align:center;font-size:13px;font-weight:600;padding:13px;background:transparent;color:#8A8278;border:1px solid rgba(242,237,228,.13);border-radius:8px;text-decoration:none;">Voir les écoles →</a>
+        </div>
+      </div>
+    </div>`;
+  overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+  document.body.appendChild(overlay);
+}
+
+/* SCROLL REVEAL CTA */
+const io2 = new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io2.unobserve(e.target);}});},{threshold:.1});
+document.querySelectorAll('.fade-up').forEach(el=>io2.observe(el));
+
+/* KEYBOARD */
+document.addEventListener('keydown', e => {
+  if (e.key==='/' && document.activeElement!==document.getElementById('search')) {
+    e.preventDefault(); document.getElementById('search').focus();
+  }
+  if (e.key==='Escape') { document.getElementById('search').blur(); resetFilters(); }
+});
+
+/* INIT */
+document.getElementById('total-count').textContent = CAREERS.length;
+  // 80 métiers, 14 secteurs
+buildSectors();
+applyFilters();
+</script>
+</body>
+</html>

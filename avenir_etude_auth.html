@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Avenir Étude — Connexion / Inscription</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Lora:ital,wght@0,400;0,600;1,400;1,600&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Instrument+Serif:ital@0;1&family=Instrument+Sans:ital,wght@0,400;0,500;0,600&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    :root{
+      --ink:#060B14;--ink-2:#0C1220;--ink-3:#111827;--ink-4:#1C2535;
+      --gold:#D4A853;--gold-dim:#7A5E2A;--gold-10:rgba(212,168,83,.10);
+      --ivory:#F2EDE4;--ivory-dim:#8A8278;--ivory-faint:#2E3545;
+      --wire:rgba(242,237,228,.07);--wire-mid:rgba(242,237,228,.13);--wire-hi:rgba(242,237,228,.24);
+      --green:#34C97A;--blue:#4F7AE8;--red:#E05A54;
+    }
+    body{font-family:'Instrument Sans',sans-serif;background:var(--ink);color:var(--ivory);-webkit-font-smoothing:antialiased;cursor:none;height:100vh;overflow:hidden;}
+    .cursor{position:fixed;width:8px;height:8px;background:var(--gold);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);mix-blend-mode:screen;transition:width .18s,height .18s;}
+    .cursor.big{width:28px;height:28px;background:transparent;border:1.5px solid var(--gold);}
+
+    /* LAYOUT */
+    .auth-shell{display:grid;grid-template-columns:1fr 1fr;height:100vh;}
+
+    /* LEFT PANEL */
+    .auth-left{
+      background:var(--ink-2);border-right:1px solid var(--wire);
+      display:flex;flex-direction:column;justify-content:center;align-items:center;
+      padding:60px;position:relative;overflow:hidden;
+    }
+    .auth-left::before{content:'';position:absolute;top:-100px;left:-100px;width:400px;height:400px;background:rgba(212,168,83,.05);border-radius:50%;filter:blur(80px);pointer-events:none;}
+    .auth-left::after{content:'';position:absolute;bottom:-80px;right:-80px;width:300px;height:300px;background:rgba(79,122,232,.05);border-radius:50%;filter:blur(60px);pointer-events:none;}
+    .al-logo{font-family:'Bricolage Grotesque',sans-serif;font-size:18px;font-weight:700;color:var(--ivory);letter-spacing:-.03em;margin-bottom:48px;align-self:flex-start;}
+    .al-logo em{font-style:italic;}
+    .al-visual{width:100%;max-width:360px;position:relative;}
+
+    /* RADAR SVG */
+    .radar-container{width:100%;aspect-ratio:1;position:relative;}
+    #auth-radar{overflow:visible;}
+
+    .al-caption{text-align:center;margin-top:32px;}
+    .al-caption-title{font-family:'Bricolage Grotesque',sans-serif;font-size:22px;font-weight:800;color:var(--ivory);letter-spacing:-.03em;line-height:1.1;}
+    .al-caption-title em{font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;color:var(--gold);}
+    .al-caption-sub{font-size:13px;color:var(--ivory-dim);margin-top:8px;line-height:1.65;}
+
+    /* Testimonial mini */
+    .al-testimonial{
+      margin-top:32px;padding:16px 20px;
+      background:var(--ink-3);border:1px solid var(--wire);border-radius:12px;
+      max-width:360px;width:100%;
+    }
+    .alt-text{font-size:12px;color:var(--ivory-dim);line-height:1.65;font-style:italic;}
+    .alt-text strong{color:var(--ivory);font-style:normal;}
+    .alt-author{display:flex;align-items:center;gap:10px;margin-top:10px;}
+    .alt-avatar{width:28px;height:28px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-family:'Bricolage Grotesque',sans-serif;font-size:10px;font-weight:700;color:var(--ink);flex-shrink:0;}
+    .alt-name{font-size:11px;font-weight:600;color:var(--ivory);}
+    .alt-role{font-size:10px;color:var(--ivory-faint);}
+
+    /* RIGHT PANEL */
+    .auth-right{
+      display:flex;flex-direction:column;justify-content:center;align-items:center;
+      padding:60px;overflow-y:auto;
+    }
+    .auth-form-wrap{width:100%;max-width:380px;}
+
+    /* TABS */
+    .auth-tabs{display:flex;gap:0;border:1px solid var(--wire-mid);border-radius:10px;padding:3px;margin-bottom:32px;background:var(--ink-3);}
+    .auth-tab{flex:1;padding:10px;border:none;background:transparent;font-family:'Instrument Sans',sans-serif;font-size:13px;font-weight:600;color:var(--ivory-dim);border-radius:8px;cursor:none;transition:all .2s;}
+    .auth-tab.active{background:var(--ivory);color:var(--ink);}
+
+    /* FORM HEADER */
+    .form-title{font-family:'Bricolage Grotesque',sans-serif;font-size:26px;font-weight:800;color:var(--ivory);letter-spacing:-.03em;margin-bottom:6px;}
+    .form-sub{font-size:13px;color:var(--ivory-dim);margin-bottom:28px;line-height:1.6;}
+
+    /* GOOGLE BTN */
+    .btn-google{
+      display:flex;align-items:center;justify-content:center;gap:10px;
+      width:100%;padding:13px;
+      background:var(--ink-3);border:1px solid var(--wire-mid);border-radius:10px;
+      font-family:'Instrument Sans',sans-serif;font-size:14px;font-weight:600;color:var(--ivory);
+      cursor:none;transition:all .15s;margin-bottom:20px;
+    }
+    .btn-google:hover{border-color:var(--wire-hi);background:var(--ink-4);}
+    .google-icon{width:18px;height:18px;flex-shrink:0;}
+
+    /* DIVIDER */
+    .form-divider{display:flex;align-items:center;gap:12px;margin-bottom:20px;}
+    .fd-line{flex:1;height:1px;background:var(--wire);}
+    .fd-text{font-size:11px;color:var(--ivory-faint);white-space:nowrap;letter-spacing:.04em;}
+
+    /* FIELDS */
+    .field{margin-bottom:16px;}
+    .field-label{font-size:12px;font-weight:600;color:var(--ivory-dim);margin-bottom:6px;display:block;letter-spacing:.02em;}
+    .field-input{
+      width:100%;padding:12px 14px;
+      background:var(--ink-3);border:1px solid var(--wire-mid);border-radius:8px;
+      font-family:'Instrument Sans',sans-serif;font-size:14px;color:var(--ivory);
+      outline:none;transition:border-color .2s;
+      cursor:none;
+    }
+    .field-input::placeholder{color:var(--ivory-faint);}
+    .field-input:focus{border-color:var(--gold);}
+    .field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+    .field-select{
+      width:100%;padding:12px 14px;
+      background:var(--ink-3);border:1px solid var(--wire-mid);border-radius:8px;
+      font-family:'Instrument Sans',sans-serif;font-size:14px;color:var(--ivory);
+      outline:none;cursor:none;transition:border-color .2s;
+      -webkit-appearance:none;
+    }
+    .field-select:focus{border-color:var(--gold);}
+
+    /* PASSWORD STRENGTH */
+    .pw-strength{margin-top:6px;display:flex;gap:3px;}
+    .pw-bar{flex:1;height:3px;border-radius:2px;background:var(--wire);transition:background .3s;}
+
+    /* SUBMIT */
+    .btn-submit{
+      width:100%;padding:14px;
+      background:var(--gold);color:var(--ink);
+      font-family:'Bricolage Grotesque',sans-serif;font-size:15px;font-weight:700;
+      border:none;border-radius:10px;cursor:none;
+      letter-spacing:-.01em;transition:all .15s;
+      margin-top:8px;
+    }
+    .btn-submit:hover{background:#e0b55e;transform:translateY(-1px);}
+    .btn-submit:active{transform:scale(.98);}
+
+    /* TERMS */
+    .form-terms{font-size:11px;color:var(--ivory-faint);text-align:center;margin-top:16px;line-height:1.6;}
+    .form-terms a{color:var(--ivory-dim);text-decoration:underline;}
+
+    /* SWITCH */
+    .form-switch{text-align:center;margin-top:20px;font-size:13px;color:var(--ivory-dim);}
+    .form-switch button{background:none;border:none;color:var(--gold);font-weight:600;cursor:none;font-family:'Instrument Sans',sans-serif;font-size:13px;}
+
+    /* SUCCESS */
+    .success-banner{
+      display:none;
+      background:var(--green-10,rgba(52,201,122,.1));
+      border:1px solid rgba(52,201,122,.2);
+      border-radius:8px;padding:12px 16px;
+      font-size:13px;color:var(--green);
+      margin-bottom:16px;
+      align-items:center;gap:8px;
+    }
+    .success-banner.show{display:flex;}
+
+    /* BACK LINK */
+    .back-link{
+      position:absolute;top:24px;right:32px;
+      font-size:12px;color:var(--ivory-dim);text-decoration:none;
+      display:flex;align-items:center;gap:6px;transition:color .15s;
+    }
+    .back-link:hover{color:var(--ivory);}
+
+    /* ANIM */
+    @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+    .auth-left{animation:fadeUp .7s ease .05s both;}
+    .auth-right{animation:fadeUp .7s ease .15s both;}
+    @keyframes radar-draw{from{stroke-dashoffset:800}to{stroke-dashoffset:0}}
+
+    /* RESPONSIVE */
+    @media(max-width:768px){
+      body{overflow-y:auto;height:auto;}
+      .auth-shell{grid-template-columns:1fr;height:auto;}
+      .auth-left{display:none;}
+      .auth-right{padding:40px 24px;min-height:100vh;}
+    }
+  
+  /* ═══════════════════════════════════════
+     AVENIR ÉTUDE V3 — DESIGN SYSTEM
+     Clarté Africaine · Fond Blanc · Moderne
+  ═══════════════════════════════════════ */
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Lora:ital,wght@0,400;0,600;1,400;1,600&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap');
+
+  :root {
+    /* Colours */
+    --bg:        #FAFAF8 !important;
+    --bg-2:      #F4F3EF !important;
+    --bg-3:      #EEECEA !important;
+    --white:     #FFFFFF !important;
+    --ink:       #0D0D0D !important;
+    --ink-2:     #2A2A2A !important;
+    --ink-3:     #555555 !important;
+    --ink-4:     #888888 !important;
+    --ink-5:     #BBBBBB !important;
+    --border:    #E5E3DF !important;
+    --border-2:  #D4D2CE !important;
+    --blue:      #1B4FFF !important;
+    --blue-10:   rgba(27,79,255,.08) !important;
+    --blue-20:   rgba(27,79,255,.15) !important;
+    --blue-dk:   #1240CC !important;
+    --orange:    #FF6B35 !important;
+    --orange-10: rgba(255,107,53,.08) !important;
+    --green:     #00C853 !important;
+    --green-10:  rgba(0,200,83,.08) !important;
+    --purple:    #7C3AED !important;
+    --purple-10: rgba(124,58,237,.08) !important;
+    --yellow:    #F59E0B !important;
+    --gold:      #D4A853 !important;
+    --gold-dim:  #A07830 !important;
+    --gold-10:   rgba(212,168,83,.10) !important;
+    /* Legacy dark vars kept for compatibility */
+    --ink-old:   #060B14;
+    --wire:      rgba(0,0,0,.08) !important;
+    --wire-mid:  rgba(0,0,0,.12) !important;
+    --wire-hi:   rgba(0,0,0,.20) !important;
+    --ivory:     #0D0D0D !important;
+    --ivory-dim: #555555 !important;
+    --ivory-faint: #888888 !important;
+    /* Layout */
+    --radius:    16px;
+    --radius-lg: 24px;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+    --shadow:    0 4px 16px rgba(0,0,0,.08), 0 2px 4px rgba(0,0,0,.04);
+    --shadow-lg: 0 12px 40px rgba(0,0,0,.12), 0 4px 12px rgba(0,0,0,.06);
+  }
+
+  /* BASE RESET FOR V3 LIGHT THEME */
+  body {
+    font-family: 'DM Sans', 'Instrument Sans', sans-serif !important;
+    background: #FAFAF8 !important;
+    color: #0D0D0D !important;
+    cursor: auto !important;
+  }
+  /* Hide dark cursor */
+  .cursor, .cursor-ring { display: none !important; }
+  body::after { display: none !important; }
+  .grid-bg { display: none !important; }
+
+  /* NAV V3 */
+  nav {
+    background: rgba(250,250,248,.94) !important;
+    backdrop-filter: blur(16px) !important;
+    border-bottom: 1px solid #E5E3DF !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,.04) !important;
+  }
+  .nav-logo, .nav-logo a {
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+    color: #0D0D0D !important;
+  }
+  .nav-btn {
+    background: transparent !important;
+    color: #555555 !important;
+    border-color: #D4D2CE !important;
+    border-radius: 10px !important;
+    font-family: 'DM Sans', sans-serif !important;
+    cursor: pointer !important;
+  }
+  .nav-btn:hover {
+    background: #F4F3EF !important;
+    color: #0D0D0D !important;
+    border-color: #888888 !important;
+  }
+  .nav-btn-gold, .nav-btn.nav-btn-gold {
+    background: #1B4FFF !important;
+    color: #FFFFFF !important;
+    border-color: #1B4FFF !important;
+  }
+  .nav-btn-gold:hover {
+    background: #1240CC !important;
+    box-shadow: 0 4px 12px rgba(27,79,255,.3) !important;
+  }
+  .nav-sep, .nav-page, .nav-crumb { color: #888888 !important; }
+  .nav-crumb { font-family: 'DM Sans', sans-serif !important; }
+
+  /* PAGE BACKGROUNDS */
+  .page-header, .sec-block, .panel, .panel-dark,
+  .sidebar, .results-area, .main-grid,
+  .dash-shell, .dash-sidebar, .auth-left, .auth-right,
+  section, .section, .gps-section {
+    background: #FAFAF8 !important;
+    border-color: #E5E3DF !important;
+  }
+  .main-grid { background: #E5E3DF !important; }
+
+  /* CARDS */
+  .school-card, .career-card, .article-card, .article-une,
+  .side-card, .sec-block, .kpi-card, .apt-card,
+  .rs-row, .concours-card, .history-item, .favori-card,
+  .reco-card, .stat-card, .profile-card, .step-card,
+  .news-card, .news-card-v3, .testi-card, .test-card {
+    background: #FFFFFF !important;
+    border-color: #E5E3DF !important;
+    color: #0D0D0D !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,.06) !important;
+  }
+  .school-card:hover, .career-card:hover, .step-card:hover {
+    border-color: #1B4FFF !important;
+    box-shadow: 0 4px 16px rgba(27,79,255,.12) !important;
+  }
+
+  /* TEXT COLOURS */
+  h1, h2, h3, h4, h5, h6,
+  .ph-title, .sec-title, .card-name, .school-name,
+  .hero-title, .section-title, .une-titre, .art-titre,
+  .cc-name, .fil-name, .adm-title, .rs-name,
+  .concours-card .cc-nom, .kpi-val, .sc-val,
+  .snav-item, .page-name, .user-name, .road-name {
+    color: #0D0D0D !important;
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+  }
+  p, .ph-sub, .section-sub, .card-loc, .school-meta,
+  .une-resume, .art-resume, .cc-desc, .fil-desc,
+  .rs-desc, .gps-sub, .footer-desc, .testi-text {
+    color: #555555 !important;
+    font-family: 'DM Sans', sans-serif !important;
+  }
+  .ph-eyebrow, .section-eyebrow, .sec-label,
+  .hero-eyebrow, .rh-eyebrow, .gps-eyebrow {
+    color: #1B4FFF !important;
+    font-family: 'DM Sans', sans-serif !important;
+  }
+
+  /* GOLD → BLUE primary */
+  .gold, .kv-gold, .sc-val.gold, .school-rating,
+  .rs-row.dominant .rs-pct, .rs-row.dominant .rs-letter,
+  .rs-badge, .rs-row.dominant .rs-fill,
+  .score-big, .une-cat, .ph-count-num,
+  .stat-num.gold, .kpi-val, .nsb-val, .sb-val {
+    color: #1B4FFF !important;
+  }
+
+  /* GOLD fills → blue */
+  .btn-gold, .btn-unlock, .btn-submit, .btn-hero,
+  .nav-btn-gold, a.btn-gold {
+    background: #1B4FFF !important;
+    color: #FFFFFF !important;
+    border-color: #1B4FFF !important;
+    border-radius: 10px !important;
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+  }
+  .btn-gold:hover, .btn-unlock:hover, .btn-submit:hover, .btn-hero:hover {
+    background: #1240CC !important;
+    box-shadow: 0 4px 12px rgba(27,79,255,.3) !important;
+  }
+
+  /* CTA card on dark sections */
+  .cta-card { background: #1B4FFF !important; }
+  .cta-card-title { color: #FFFFFF !important; }
+  .cta-card-sub { color: rgba(255,255,255,.75) !important; }
+  .cta-card-btn { background: #FFFFFF !important; color: #1B4FFF !important; }
+
+  /* Tags / Chips */
+  .chip, .fchip, .tag-chip, .domain-tag,
+  .sector-chip, .ctag, .stag, .cc-tag {
+    background: #F4F3EF !important;
+    border-color: #E5E3DF !important;
+    color: #555555 !important;
+  }
+  .chip.active, .fchip.active, .tag-chip.riasec {
+    background: rgba(27,79,255,.08) !important;
+    border-color: rgba(27,79,255,.2) !important;
+    color: #1B4FFF !important;
+  }
+  .rs-row.dominant, .article-une {
+    border-color: rgba(27,79,255,.2) !important;
+    background: rgba(27,79,255,.04) !important;
+  }
+  .article-une::before { background: #1B4FFF !important; }
+
+  /* Search input */
+  .search-input, .field-input, .field-select, .sort-select {
+    background: #FFFFFF !important;
+    border-color: #D4D2CE !important;
+    color: #0D0D0D !important;
+    border-radius: 10px !important;
+  }
+  .search-input:focus, .field-input:focus, .field-select:focus {
+    border-color: #1B4FFF !important;
+    box-shadow: 0 0 0 3px rgba(27,79,255,.1) !important;
+  }
+  .search-input::placeholder, .field-input::placeholder { color: #888888 !important; }
+
+  /* Progress bars → blue */
+  .gauge-fill[style*="gold"], .rb-fill, .bar-fill,
+  .pb-fill, .rs-fill { background: #1B4FFF !important; }
+  .gauge-fill[style*="green"], .bar-fill[style*="green"] { background: #00C853 !important; }
+  .gauge-fill[style*="red"], .bar-fill[style*="red"] { background: #FF6B35 !important; }
+
+  /* Sidebar */
+  .dash-sidebar, .sidebar {
+    background: #F4F3EF !important;
+    border-color: #E5E3DF !important;
+  }
+  .snav-item.active {
+    background: rgba(27,79,255,.08) !important;
+    color: #1B4FFF !important;
+    border-color: rgba(27,79,255,.2) !important;
+  }
+  .snav-item:hover { background: #EEECEA !important; color: #0D0D0D !important; }
+  .user-card { background: #FFFFFF !important; border-color: #E5E3DF !important; }
+  .user-badge {
+    background: rgba(27,79,255,.08) !important;
+    border-color: rgba(27,79,255,.2) !important;
+    color: #1B4FFF !important;
+  }
+  .user-avatar, .nav-avatar-btn, .road-avatar,
+  .testi-avatar, .hero-avatar { background: #1B4FFF !important; }
+
+  /* Auth */
+  .auth-left { background: #F4F3EF !important; }
+  .auth-tab.active { background: #0D0D0D !important; color: #FFFFFF !important; }
+  .auth-tabs { background: #F4F3EF !important; border-color: #E5E3DF !important; }
+
+  /* Radar SVG — make lines visible on light bg */
+  #auth-radar circle, #radar-svg circle { opacity: 0.15; }
+
+  /* Footer V3 */
+  footer {
+    background: #0D0D0D !important;
+    border-top: 1px solid #E5E3DF !important;
+  }
+  .footer-copy { color: rgba(255,255,255,.4) !important; }
+
+  /* Paywall */
+  .paywall-section { border-color: #E5E3DF !important; }
+  .paywall-overlay { background: linear-gradient(to bottom, rgba(250,250,248,0) 0%, rgba(250,250,248,.97) 50%) !important; }
+  .paywall-title, .paywall-sub { color: #0D0D0D !important; }
+  .paywall-badge {
+    background: rgba(27,79,255,.08) !important;
+    border-color: rgba(27,79,255,.2) !important;
+    color: #1B4FFF !important;
+  }
+
+  /* Ticker */
+  .ticker-bar { background: #F4F3EF !important; border-color: #E5E3DF !important; }
+  .ticker-label { background: #FFFFFF !important; color: #1B4FFF !important; border-color: #E5E3DF !important; }
+  .ticker-item { color: #555555 !important; border-color: #E5E3DF !important; }
+  .ticker-dot { background: #1B4FFF !important; }
+
+  /* Stats sections */
+  .stats-band, .cta-band { background: #1B4FFF !important; }
+  .sb-val, .sb-lbl { color: #FFFFFF !important; }
+  .cta-band { border-color: rgba(27,79,255,.2) !important; }
+
+  /* Demand badges */
+  .demand-critical { background: rgba(255,107,53,.1) !important; color: #FF6B35 !important; border-color: rgba(255,107,53,.2) !important; }
+  .demand-high { background: rgba(27,79,255,.08) !important; color: #1B4FFF !important; border-color: rgba(27,79,255,.15) !important; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar-track { background: #F4F3EF !important; }
+  ::-webkit-scrollbar-thumb { background: #D4D2CE !important; }
+
+  /* GPS road card on dark section */
+  .gps-section { background: #0D0D0D !important; }
+  .gps-section .gps-title, .gps-section .gps-feat-title { color: #FFFFFF !important; }
+  .gps-section .gps-sub, .gps-section .gps-feat-desc { color: rgba(255,255,255,.6) !important; }
+
+
+  </style>
+</head>
+<body>
+<div class="cursor" id="cur"></div>
+
+<a href="avenir_etude_homepage_v2.html" class="back-link">← Retour à l'accueil</a>
+
+<div class="auth-shell">
+
+  <!-- LEFT -->
+  <div class="auth-left">
+    <div class="al-logo">Avenir <em>Étude</em></div>
+    <div class="al-visual">
+      <div class="radar-container">
+        <svg id="auth-radar" width="100%" viewBox="0 0 300 300">
+          <!-- Grid -->
+          <g id="radar-grid-auth"></g>
+          <!-- Axes -->
+          <g id="radar-axes-auth"></g>
+          <!-- Profile polygon -->
+          <g id="radar-poly-auth"></g>
+          <!-- Labels -->
+          <g id="radar-labels-auth"></g>
+        </svg>
+      </div>
+      <div class="al-caption">
+        <div class="al-caption-title">Votre profil,<br><em>révélé en 15 min.</em></div>
+        <div class="al-caption-sub">142 points de données psychométriques. Des recommandations qui changent vraiment votre trajectoire.</div>
+      </div>
+      <div class="al-testimonial">
+        <p class="alt-text">"Le test m'a révélé des aptitudes que je n'aurais jamais découvertes seul. <strong>Aujourd'hui je suis à l'ENSEA</strong> et c'est exactement ce qu'il me fallait."</p>
+        <div class="alt-author">
+          <div class="alt-avatar">KD</div>
+          <div>
+            <div class="alt-name">Koffi D.</div>
+            <div class="alt-role">Étudiant ISE · ENSEA Abidjan</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="auth-right">
+    <div class="auth-form-wrap">
+
+      <!-- Tabs -->
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tab-connexion" onclick="switchTab('connexion')">Se connecter</button>
+        <button class="auth-tab" id="tab-inscription" onclick="switchTab('inscription')">Créer un compte</button>
+      </div>
+
+      <!-- CONNEXION FORM -->
+      <div id="form-connexion">
+        <div class="form-title">Bon retour 👋</div>
+        <p class="form-sub">Retrouvez vos résultats et continuez votre parcours d'orientation.</p>
+
+        <div class="success-banner" id="success-connexion">
+          ✓ Connexion réussie — redirection en cours…
+        </div>
+
+        <button class="btn-google" onclick="handleGoogle()">
+          <svg class="google-icon" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+          Continuer avec Google
+        </button>
+
+        <div class="form-divider">
+          <div class="fd-line"></div>
+          <div class="fd-text">ou avec votre email</div>
+          <div class="fd-line"></div>
+        </div>
+
+        <div class="field">
+          <label class="field-label">Adresse email</label>
+          <input class="field-input" type="email" placeholder="votre@email.com" id="login-email">
+        </div>
+        <div class="field">
+          <label class="field-label" style="display:flex;justify-content:space-between;">
+            Mot de passe
+            <a href="#" style="font-size:11px;color:var(--gold);text-decoration:none;">Mot de passe oublié ?</a>
+          </label>
+          <input class="field-input" type="password" placeholder="••••••••" id="login-pw">
+        </div>
+
+        <button class="btn-submit" onclick="handleLogin()">Se connecter →</button>
+
+        <div class="form-switch">
+          Pas encore de compte ?
+          <button onclick="switchTab('inscription')">Créer un compte</button>
+        </div>
+      </div>
+
+      <!-- INSCRIPTION FORM -->
+      <div id="form-inscription" style="display:none;">
+        <div class="form-title">Créez votre compte</div>
+        <p class="form-sub">Gratuit. Sauvegardez vos résultats et accédez à vos recommandations à tout moment.</p>
+
+        <div class="success-banner" id="success-inscription">
+          ✓ Compte créé — bienvenue sur Avenir Étude !
+        </div>
+
+        <button class="btn-google" onclick="handleGoogle()">
+          <svg class="google-icon" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+          S'inscrire avec Google
+        </button>
+
+        <div class="form-divider">
+          <div class="fd-line"></div>
+          <div class="fd-text">ou avec votre email</div>
+          <div class="fd-line"></div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label class="field-label">Prénom</label>
+            <input class="field-input" type="text" placeholder="Kofi" id="reg-prenom">
+          </div>
+          <div class="field">
+            <label class="field-label">Nom</label>
+            <input class="field-input" type="text" placeholder="Asante" id="reg-nom">
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label">Email</label>
+          <input class="field-input" type="email" placeholder="kofi@email.com" id="reg-email">
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label class="field-label">Niveau d'études</label>
+            <select class="field-select" id="reg-niveau">
+              <option value="">Sélectionner...</option>
+              <option>Lycéen (3ème–Terminale)</option>
+              <option>Nouveau Bachelier</option>
+              <option>Étudiant L1–L3</option>
+              <option>Étudiant Master</option>
+              <option>En réorientation</option>
+              <option>Parent d'élève</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="field-label">Pays</label>
+            <select class="field-select" id="reg-pays">
+              <option value="">Pays...</option>
+              <option selected>Côte d'Ivoire</option>
+              <option>Sénégal</option>
+              <option>Cameroun</option>
+              <option>Mali</option>
+              <option>Burkina Faso</option>
+              <option>Guinée</option>
+              <option>Autre</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label">Mot de passe</label>
+          <input class="field-input" type="password" placeholder="Min. 8 caractères" id="reg-pw" oninput="checkPw(this.value)">
+          <div class="pw-strength">
+            <div class="pw-bar" id="pw-b1"></div>
+            <div class="pw-bar" id="pw-b2"></div>
+            <div class="pw-bar" id="pw-b3"></div>
+            <div class="pw-bar" id="pw-b4"></div>
+          </div>
+        </div>
+
+        <button class="btn-submit" onclick="handleRegister()">Créer mon compte →</button>
+
+        <p class="form-terms">En créant un compte, vous acceptez nos <a href="#">Conditions d'utilisation</a> et notre <a href="#">Politique de confidentialité</a>.</p>
+
+        <div class="form-switch">
+          Déjà un compte ?
+          <button onclick="switchTab('connexion')">Se connecter</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+/* CURSOR */
+const cur=document.getElementById('cur');
+let mx=0,my=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+document.querySelectorAll('button,a,input,select').forEach(el=>{el.addEventListener('mouseenter',()=>cur.classList.add('big'));el.addEventListener('mouseleave',()=>cur.classList.remove('big'));});
+
+/* RADAR */
+const cx=150,cy=150,r=110;
+const labels=['R','I','A','S','E','C'];
+const vals=[0.32,0.94,0.82,0.65,0.48,0.20];
+const angles=labels.map((_,i)=>-Math.PI/2+(i/6)*2*Math.PI);
+
+function buildRadar(){
+  const grid=document.getElementById('radar-grid-auth');
+  const axes=document.getElementById('radar-axes-auth');
+  const poly=document.getElementById('radar-poly-auth');
+  const labelsG=document.getElementById('radar-labels-auth');
+
+  [0.25,0.5,0.75,1.0].forEach(f=>{
+    const pts=angles.map(a=>({x:cx+r*f*Math.cos(a),y:cy+r*f*Math.sin(a)}));
+    const d=pts.map((p,i)=>(i?'L':'M')+p.x.toFixed(1)+' '+p.y.toFixed(1)).join(' ')+'Z';
+    const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+    path.setAttribute('d',d);path.setAttribute('fill','none');
+    path.setAttribute('stroke','rgba(242,237,228,.06)');path.setAttribute('stroke-width','1');
+    grid.appendChild(path);
+  });
+
+  angles.forEach((a,i)=>{
+    const x=cx+r*Math.cos(a),y=cy+r*Math.sin(a);
+    const line=document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute('x1',cx);line.setAttribute('y1',cy);
+    line.setAttribute('x2',x.toFixed(1));line.setAttribute('y2',y.toFixed(1));
+    line.setAttribute('stroke','rgba(242,237,228,.08)');line.setAttribute('stroke-width','1');
+    axes.appendChild(line);
+    const lx=cx+(r+22)*Math.cos(a),ly=cy+(r+22)*Math.sin(a);
+    const t=document.createElementNS('http://www.w3.org/2000/svg','text');
+    t.setAttribute('x',lx.toFixed(1));t.setAttribute('y',ly.toFixed(1));
+    t.setAttribute('text-anchor','middle');t.setAttribute('dominant-baseline','central');
+    t.setAttribute('font-family','Bricolage Grotesque,sans-serif');
+    t.setAttribute('font-size','12');t.setAttribute('font-weight','700');
+    t.setAttribute('fill',vals[i]>0.7?'#D4A853':'rgba(242,237,228,.3)');
+    t.textContent=labels[i];labelsG.appendChild(t);
+  });
+
+  const pts=angles.map((a,i)=>({x:cx+r*vals[i]*Math.cos(a),y:cy+r*vals[i]*Math.sin(a)}));
+  const d=pts.map((p,i)=>(i?'L':'M')+p.x.toFixed(1)+' '+p.y.toFixed(1)).join(' ')+'Z';
+  const fill=document.createElementNS('http://www.w3.org/2000/svg','path');
+  fill.setAttribute('d',d);fill.setAttribute('fill','rgba(212,168,83,.1)');
+  poly.appendChild(fill);
+  const stroke=document.createElementNS('http://www.w3.org/2000/svg','path');
+  stroke.setAttribute('d',d);stroke.setAttribute('fill','none');stroke.setAttribute('stroke','#D4A853');
+  stroke.setAttribute('stroke-width','2');stroke.setAttribute('stroke-linecap','round');
+  const len=600;
+  stroke.setAttribute('stroke-dasharray',len);stroke.setAttribute('stroke-dashoffset',len);
+  stroke.style.transition='stroke-dashoffset 1.8s cubic-bezier(.4,0,.2,1) .5s';
+  poly.appendChild(stroke);
+  pts.forEach((p,i)=>{
+    const c=document.createElementNS('http://www.w3.org/2000/svg','circle');
+    c.setAttribute('cx',p.x.toFixed(1));c.setAttribute('cy',p.y.toFixed(1));c.setAttribute('r','4');
+    c.setAttribute('fill',vals[i]>0.7?'#D4A853':'rgba(242,237,228,.3)');
+    c.style.opacity='0';c.style.transition=`opacity .3s ease ${1.8+i*0.1}s`;
+    poly.appendChild(c);setTimeout(()=>c.style.opacity='1',100);
+  });
+  setTimeout(()=>stroke.setAttribute('stroke-dashoffset','0'),200);
+}
+buildRadar();
+
+/* TABS */
+function switchTab(tab){
+  document.getElementById('form-connexion').style.display=tab==='connexion'?'block':'none';
+  document.getElementById('form-inscription').style.display=tab==='inscription'?'block':'none';
+  document.getElementById('tab-connexion').classList.toggle('active',tab==='connexion');
+  document.getElementById('tab-inscription').classList.toggle('active',tab==='inscription');
+}
+
+/* PASSWORD STRENGTH */
+function checkPw(v){
+  const bars=['pw-b1','pw-b2','pw-b3','pw-b4'];
+  const strength=Math.min(4,Math.floor(v.length/2));
+  const colors=['#E05A54','#F59E0B','#4F7AE8','#34C97A'];
+  bars.forEach((id,i)=>{
+    const el=document.getElementById(id);
+    el.style.background=i<strength?colors[Math.min(strength-1,3)]:'rgba(242,237,228,.07)';
+  });
+}
+
+/* HANDLERS */
+function handleLogin(){
+  const email=document.getElementById('login-email').value;
+  const pw=document.getElementById('login-pw').value;
+  if(!email||!pw){alert('Veuillez remplir tous les champs.');return;}
+  document.getElementById('success-connexion').classList.add('show');
+  const existing = sessionStorage.getItem('ae_profile');
+  const dest = existing ? 'avenir_etude_compte.html' : 'avenir_etude_onboarding.html';
+  setTimeout(()=>window.location.href=dest, 1200);
+}
+function handleRegister(){
+  const prenom=document.getElementById('reg-prenom').value;
+  const email=document.getElementById('reg-email').value;
+  const pw=document.getElementById('reg-pw').value;
+  if(!prenom||!email||!pw){alert('Veuillez remplir tous les champs requis.');return;}
+  document.getElementById('success-inscription').classList.add('show');
+  // Save basic profile to sessionStorage
+  sessionStorage.setItem('ae_user', JSON.stringify({
+    prenom: document.getElementById('reg-prenom').value,
+    nom: document.getElementById('reg-nom').value,
+    email: document.getElementById('reg-email').value,
+    niveau: document.getElementById('reg-niveau').value,
+    pays: document.getElementById('reg-pays').value,
+    new_user: true
+  }));
+  setTimeout(()=>window.location.href='avenir_etude_onboarding.html',1200);
+}
+function handleGoogle(){
+  document.body.style.opacity='.7';
+  setTimeout(()=>{document.body.style.opacity='1';alert('Authentification Google — nécessite un backend. Redirigé vers le dashboard.');window.location.href='avenir_etude_onboarding.html';},800);
+}
+</script>
+</body>
+</html>

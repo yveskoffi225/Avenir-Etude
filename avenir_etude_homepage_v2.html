@@ -1,0 +1,1899 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Avenir Étude — Votre boussole académique</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200;12..96,300;12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Instrument+Serif:ital@0;1&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    /* ─────────────────────────────────────────
+       RESET
+    ───────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    /* ─────────────────────────────────────────
+       TOKENS
+    ───────────────────────────────────────── */
+    :root {
+      --ink:       #0A0F1A;
+      --ink-2:     #0F1623;
+      --ink-3:     #151D2E;
+      --gold:      #D4A853;
+      --gold-dim:  #8B6E36;
+      --gold-glow: rgba(212,168,83,.18);
+      --ivory:     #F2EDE4;
+      --ivory-dim: #A89E8E;
+      --ivory-faint:#3A3530;
+      --wire:      rgba(242,237,228,.08);
+      --wire-mid:  rgba(242,237,228,.14);
+      --wire-hi:   rgba(242,237,228,.28);
+      --accent:    #4F7AE8;
+      --green:     #34C97A;
+      --red:       #E8564F;
+      --max-w:     1280px;
+      --nav-h:     64px;
+    }
+
+    /* ─────────────────────────────────────────
+       BASE
+    ───────────────────────────────────────── */
+    body {
+      font-family: 'Instrument Sans', sans-serif;
+      background: var(--ink);
+      color: var(--ivory);
+      -webkit-font-smoothing: antialiased;
+      cursor: none;
+      overflow-x: hidden;
+    }
+
+    /* ─────────────────────────────────────────
+       CUSTOM CURSOR
+    ───────────────────────────────────────── */
+    .cursor {
+      position: fixed;
+      top: 0; left: 0;
+      width: 8px; height: 8px;
+      background: var(--gold);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: transform .1s, width .2s, height .2s, background .2s;
+      mix-blend-mode: screen;
+    }
+    .cursor.hover {
+      width: 32px; height: 32px;
+      background: transparent;
+      border: 1.5px solid var(--gold);
+    }
+    .cursor-trail {
+      position: fixed;
+      top: 0; left: 0;
+      width: 28px; height: 28px;
+      border: 0.5px solid rgba(212,168,83,.3);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%, -50%);
+      transition: transform .18s ease;
+    }
+
+    /* ─────────────────────────────────────────
+       GRAIN OVERLAY
+    ───────────────────────────────────────── */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9000;
+      opacity: .55;
+    }
+
+    /* ─────────────────────────────────────────
+       NAV
+    ───────────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 500;
+      height: var(--nav-h);
+      border-bottom: 1px solid var(--wire);
+      background: rgba(10,15,26,.82);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+    .nav-inner {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 48px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      gap: 0;
+    }
+    .nav-logo {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--ivory);
+      letter-spacing: -.03em;
+      text-decoration: none;
+      margin-right: auto;
+    }
+    .nav-logo sup {
+      font-size: 9px;
+      font-weight: 500;
+      color: var(--gold);
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      vertical-align: super;
+      margin-left: 4px;
+    }
+    .nav-links {
+      display: flex;
+      list-style: none;
+      gap: 36px;
+      margin-right: 36px;
+    }
+    .nav-links a {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ivory-dim);
+      text-decoration: none;
+      letter-spacing: .02em;
+      transition: color .15s;
+    }
+    .nav-links a:hover { color: var(--ivory); }
+    .nav-cta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 9px 22px;
+      background: var(--gold);
+      color: var(--ink);
+      border: none;
+      border-radius: 6px;
+      cursor: none;
+      letter-spacing: -.01em;
+      transition: background .15s, transform .1s;
+      text-decoration: none;
+    }
+    .nav-cta:hover { background: #e0b55e; transform: translateY(-1px); }
+
+    /* ─────────────────────────────────────────
+       HERO
+    ───────────────────────────────────────── */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      padding-top: var(--nav-h);
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding-left: 48px;
+      padding-right: 48px;
+      position: relative;
+    }
+
+    /* Vertical rule */
+    .hero::after {
+      content: '';
+      position: absolute;
+      top: var(--nav-h);
+      left: 50%;
+      bottom: 0;
+      width: 1px;
+      background: var(--wire);
+    }
+
+    .hero-left {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-right: 64px;
+      padding-top: 80px;
+      padding-bottom: 80px;
+    }
+
+    /* Section marker */
+    .section-marker {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+    .section-marker-num {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--gold);
+      letter-spacing: .12em;
+    }
+    .section-marker-line {
+      flex: 1;
+      max-width: 40px;
+      height: 1px;
+      background: var(--gold-dim);
+    }
+    .section-marker-label {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--ivory-dim);
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .hero-title {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: clamp(48px, 5.5vw, 80px);
+      font-weight: 800;
+      line-height: .96;
+      letter-spacing: -.04em;
+      color: var(--ivory);
+      margin-bottom: 8px;
+    }
+    .hero-title-serif {
+      font-family: 'Instrument Serif', serif;
+      font-style: italic;
+      font-weight: 400;
+      color: var(--gold);
+      display: block;
+    }
+    .hero-sub {
+      font-size: 15px;
+      line-height: 1.72;
+      color: var(--ivory-dim);
+      max-width: 380px;
+      margin: 24px 0 40px;
+    }
+    .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn-gold {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      padding: 14px 28px;
+      background: var(--gold);
+      color: var(--ink);
+      border: none;
+      border-radius: 6px;
+      cursor: none;
+      letter-spacing: -.01em;
+      text-decoration: none;
+      transition: background .15s, transform .15s;
+    }
+    .btn-gold:hover { background: #e0b55e; transform: translateY(-2px); }
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      padding: 13px 22px;
+      background: transparent;
+      color: var(--ivory-dim);
+      border: 1px solid var(--wire-mid);
+      border-radius: 6px;
+      cursor: none;
+      text-decoration: none;
+      transition: border-color .15s, color .15s;
+    }
+    .btn-ghost:hover { border-color: var(--wire-hi); color: var(--ivory); }
+
+    /* Stats strip */
+    .hero-stats {
+      display: flex;
+      gap: 32px;
+      margin-top: 56px;
+      padding-top: 32px;
+      border-top: 1px solid var(--wire);
+    }
+    .hero-stat-num {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--ivory);
+      letter-spacing: -.03em;
+    }
+    .hero-stat-num span { color: var(--gold); }
+    .hero-stat-label {
+      font-size: 11px;
+      color: var(--ivory-dim);
+      margin-top: 2px;
+      letter-spacing: .02em;
+    }
+
+    /* ── RIGHT PANEL ── */
+    .hero-right {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-left: 64px;
+      padding-top: 80px;
+      padding-bottom: 80px;
+      gap: 16px;
+    }
+
+    /* Destiny counter */
+    .destiny-board {
+      background: var(--ink-3);
+      border: 1px solid var(--wire);
+      border-radius: 12px;
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .destiny-board::before {
+      content: '';
+      position: absolute;
+      top: -40px; right: -40px;
+      width: 120px; height: 120px;
+      background: var(--gold-glow);
+      border-radius: 50%;
+      filter: blur(40px);
+      pointer-events: none;
+    }
+    .destiny-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .destiny-label::before {
+      content: '';
+      display: inline-block;
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: blink 2s ease-in-out infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+    .destiny-ticker {
+      height: 52px;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+    .destiny-ticker-inner {
+      display: flex;
+      flex-direction: column;
+      animation: ticker-scroll 12s ease-in-out infinite;
+    }
+    @keyframes ticker-scroll {
+      0%   { transform: translateY(0); }
+      14%  { transform: translateY(0); }
+      20%  { transform: translateY(-52px); }
+      34%  { transform: translateY(-52px); }
+      40%  { transform: translateY(-104px); }
+      54%  { transform: translateY(-104px); }
+      60%  { transform: translateY(-156px); }
+      74%  { transform: translateY(-156px); }
+      80%  { transform: translateY(-208px); }
+      94%  { transform: translateY(-208px); }
+      100% { transform: translateY(-260px); }
+    }
+    .destiny-item {
+      height: 52px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-shrink: 0;
+    }
+    .destiny-emoji { font-size: 24px; width: 36px; text-align: center; }
+    .destiny-meta { flex: 1; }
+    .destiny-career {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--ivory);
+      letter-spacing: -.02em;
+      line-height: 1;
+    }
+    .destiny-domain {
+      font-size: 11px;
+      color: var(--ivory-dim);
+      margin-top: 3px;
+    }
+    .destiny-match {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--green);
+      background: rgba(52,201,122,.1);
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+    .destiny-progress {
+      display: flex;
+      gap: 3px;
+      margin-top: 12px;
+    }
+    .dp-dot {
+      width: 20px; height: 3px;
+      border-radius: 2px;
+      background: var(--wire);
+      transition: background .4s;
+    }
+    .dp-dot.active { background: var(--gold); }
+
+    /* Profile mini card */
+    .profile-card {
+      background: var(--ink-3);
+      border: 1px solid var(--wire);
+      border-radius: 12px;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+    }
+    .profile-dim {
+      text-align: center;
+      padding: 12px 8px;
+      border-radius: 8px;
+      background: var(--ink-2);
+      border: 1px solid var(--wire);
+      position: relative;
+      overflow: hidden;
+    }
+    .profile-dim.active {
+      border-color: var(--gold-dim);
+      background: rgba(212,168,83,.05);
+    }
+    .profile-dim-letter {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--ivory-faint);
+      letter-spacing: -.04em;
+    }
+    .profile-dim.active .profile-dim-letter { color: var(--gold); }
+    .profile-dim-name {
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--ivory-dim);
+      margin-top: 2px;
+    }
+    .profile-dim-bar {
+      position: absolute;
+      bottom: 0; left: 0;
+      height: 2px;
+      background: var(--gold);
+      border-radius: 0 1px 1px 0;
+      transition: width 1s ease;
+    }
+
+    /* Score ring */
+    .score-mini {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: var(--ink-3);
+      border: 1px solid var(--wire);
+      border-radius: 12px;
+      padding: 16px 20px;
+    }
+    .score-ring-wrap { position: relative; width: 56px; height: 56px; flex-shrink: 0; }
+    .score-ring-wrap svg { position: absolute; top:0; left:0; }
+    .score-ring-val {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--gold);
+      letter-spacing: -.02em;
+    }
+    .score-mini-info { flex: 1; }
+    .score-mini-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--ivory-dim);
+      margin-bottom: 6px;
+    }
+    .score-mini-bars { display: flex; flex-direction: column; gap: 4px; }
+    .smb-row { display: flex; align-items: center; gap: 8px; }
+    .smb-name { font-size: 10px; color: var(--ivory-dim); width: 56px; flex-shrink: 0; }
+    .smb-track { flex: 1; height: 3px; background: var(--wire); border-radius: 2px; }
+    .smb-fill { height: 100%; border-radius: 2px; background: var(--accent); }
+    .smb-val { font-size: 10px; font-weight: 600; color: var(--ivory-dim); width: 28px; text-align: right; }
+
+    /* ─────────────────────────────────────────
+       SECTION SHARED
+    ───────────────────────────────────────── */
+    .full-bleed {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 48px;
+    }
+
+    .sec-num {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--gold);
+      letter-spacing: .14em;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .sec-num::after {
+      content: '';
+      flex: 1;
+      max-width: 32px;
+      height: 1px;
+      background: var(--gold-dim);
+    }
+
+    .big-title {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: clamp(32px, 4vw, 52px);
+      font-weight: 800;
+      line-height: 1.0;
+      letter-spacing: -.04em;
+      color: var(--ivory);
+    }
+    .big-title em {
+      font-family: 'Instrument Serif', serif;
+      font-style: italic;
+      font-weight: 400;
+      color: var(--gold);
+    }
+
+    /* ─────────────────────────────────────────
+       HOW IT WORKS — horizontal editorial
+    ───────────────────────────────────────── */
+    .section-how {
+      border-top: 1px solid var(--wire);
+      border-bottom: 1px solid var(--wire);
+      padding: 80px 0;
+    }
+    .how-grid {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 80px;
+      align-items: start;
+      margin-top: 48px;
+    }
+    .how-left { }
+    .how-desc {
+      font-size: 15px;
+      line-height: 1.75;
+      color: var(--ivory-dim);
+      margin-bottom: 28px;
+    }
+    .how-steps { display: flex; flex-direction: column; gap: 0; }
+    .how-step {
+      display: flex;
+      gap: 20px;
+      padding: 20px 0;
+      border-bottom: 1px solid var(--wire);
+      cursor: none;
+      transition: padding-left .2s;
+    }
+    .how-step:hover { padding-left: 8px; }
+    .how-step:first-child { padding-top: 0; }
+    .how-step-num {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: .06em;
+      padding-top: 3px;
+      flex-shrink: 0;
+      width: 28px;
+    }
+    .how-step-body { flex: 1; }
+    .how-step-title {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--ivory);
+      letter-spacing: -.02em;
+      margin-bottom: 6px;
+    }
+    .how-step-desc {
+      font-size: 13px;
+      line-height: 1.65;
+      color: var(--ivory-dim);
+    }
+    .how-step-arrow {
+      font-size: 16px;
+      color: var(--wire-mid);
+      padding-top: 4px;
+      transition: color .2s, transform .2s;
+    }
+    .how-step:hover .how-step-arrow { color: var(--gold); transform: translateX(4px); }
+
+    /* ─────────────────────────────────────────
+       SCHOOLS — full-width table
+    ───────────────────────────────────────── */
+    .section-schools { padding: 80px 0; }
+    .schools-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 40px;
+    }
+    .schools-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .schools-table thead tr {
+      border-bottom: 1px solid var(--wire);
+    }
+    .schools-table thead th {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--ivory-dim);
+      padding: 0 0 12px;
+      text-align: left;
+    }
+    .schools-table thead th:last-child { text-align: right; }
+    .schools-table tbody tr {
+      border-bottom: 1px solid var(--wire);
+      cursor: none;
+      transition: background .15s;
+    }
+    .schools-table tbody tr:hover { background: rgba(242,237,228,.02); }
+    .schools-table tbody td {
+      padding: 18px 0;
+      vertical-align: middle;
+    }
+    .school-rank-cell {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--ivory-faint);
+      width: 36px;
+    }
+    .school-rank-cell.gold { color: var(--gold); }
+    .school-logo-cell {
+      width: 44px;
+      padding-right: 16px !important;
+    }
+    .school-logo-box {
+      width: 36px; height: 36px;
+      border-radius: 8px;
+      background: var(--ink-3);
+      border: 1px solid var(--wire);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 8px;
+      font-weight: 700;
+      color: var(--ivory-dim);
+      text-align: center;
+      line-height: 1.2;
+    }
+    .school-name-cell { }
+    .sn-name {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--ivory);
+      letter-spacing: -.01em;
+    }
+    .sn-loc {
+      font-size: 11px;
+      color: var(--ivory-dim);
+      margin-top: 2px;
+    }
+    .school-tags-cell { padding: 0 24px !important; }
+    .school-tags-wrap { display: flex; gap: 5px; flex-wrap: wrap; }
+    .stag {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: .04em;
+      padding: 3px 8px;
+      border-radius: 3px;
+      border: 1px solid var(--wire);
+      color: var(--ivory-dim);
+    }
+    .school-ins-cell { text-align: right; }
+    .sins-val {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--green);
+    }
+    .sins-lbl { font-size: 10px; color: var(--ivory-dim); margin-top: 1px; }
+    .school-rating-cell { text-align: right; }
+    .srat {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--gold);
+      letter-spacing: -.02em;
+    }
+    .srat-lbl { font-size: 10px; color: var(--ivory-dim); margin-top: 1px; }
+    .school-arrow-cell {
+      text-align: right;
+      color: var(--wire-mid);
+      font-size: 14px;
+      width: 32px;
+      transition: color .15s;
+    }
+    tr:hover .school-arrow-cell { color: var(--gold); }
+
+    /* ─────────────────────────────────────────
+       DOMAINS — editorial cards
+    ───────────────────────────────────────── */
+    .section-domains {
+      padding: 80px 0;
+      border-top: 1px solid var(--wire);
+    }
+    .domains-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 40px;
+    }
+    .domains-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--wire);
+      border: 1px solid var(--wire);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .domain-cell {
+      background: var(--ink);
+      padding: 32px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      cursor: none;
+      transition: background .2s;
+      position: relative;
+      overflow: hidden;
+      min-height: 220px;
+    }
+    .domain-cell:hover { background: var(--ink-3); }
+    .domain-cell::before {
+      content: attr(data-emoji);
+      position: absolute;
+      right: -8px; bottom: -12px;
+      font-size: 72px;
+      opacity: .07;
+      pointer-events: none;
+      transition: opacity .2s, transform .3s;
+    }
+    .domain-cell:hover::before { opacity: .12; transform: scale(1.08) rotate(-5deg); }
+    .domain-icon {
+      font-size: 24px;
+      width: 48px; height: 48px;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--ink-3);
+      border: 1px solid var(--wire);
+      border-radius: 10px;
+    }
+    .domain-name {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--ivory);
+      letter-spacing: -.02em;
+      line-height: 1.1;
+    }
+    .domain-meta { font-size: 12px; color: var(--ivory-dim); }
+    .domain-arrow {
+      margin-top: auto;
+      font-size: 18px;
+      color: var(--ivory-faint);
+      transition: color .2s, transform .2s;
+    }
+    .domain-cell:hover .domain-arrow { color: var(--gold); transform: translateX(4px); }
+
+    /* ─────────────────────────────────────────
+       TESTIMONIALS — magazine pull-quotes
+    ───────────────────────────────────────── */
+    .section-testimonials {
+      padding: 80px 0;
+      border-top: 1px solid var(--wire);
+    }
+    .testimonials-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 48px;
+    }
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: var(--wire);
+      border: 1px solid var(--wire);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .tcard {
+      background: var(--ink);
+      padding: 40px 36px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      transition: background .2s;
+    }
+    .tcard:hover { background: var(--ink-3); }
+    .tcard-quote {
+      font-family: 'Instrument Serif', serif;
+      font-style: italic;
+      font-size: clamp(18px, 2vw, 22px);
+      line-height: 1.5;
+      color: var(--ivory);
+      position: relative;
+      padding-top: 20px;
+    }
+    .tcard-quote::before {
+      content: '\201C';
+      position: absolute;
+      top: -10px; left: -4px;
+      font-size: 64px;
+      color: var(--gold);
+      opacity: .3;
+      line-height: 1;
+    }
+    .tcard-quote strong {
+      font-style: normal;
+      color: var(--gold);
+      font-weight: 700;
+    }
+    .tcard-author { display: flex; align-items: center; gap: 14px; }
+    .tcard-avatar {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: var(--ink-3);
+      border: 1px solid var(--wire);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--gold);
+      flex-shrink: 0;
+    }
+    .tcard-name {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--ivory);
+      letter-spacing: -.01em;
+    }
+    .tcard-role { font-size: 11px; color: var(--ivory-dim); margin-top: 2px; }
+    .tcard-stars { margin-top: auto; color: var(--gold); font-size: 11px; letter-spacing: 2px; }
+
+    /* ─────────────────────────────────────────
+       CTA FINAL
+    ───────────────────────────────────────── */
+    .section-cta {
+      border-top: 1px solid var(--wire);
+      padding: 120px 0;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .section-cta::before {
+      content: '';
+      position: absolute;
+      left: 50%; top: 50%;
+      transform: translate(-50%, -50%);
+      width: 700px; height: 400px;
+      background: radial-gradient(ellipse, rgba(212,168,83,.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .cta-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 20px;
+    }
+    .cta-title {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: clamp(36px, 5vw, 68px);
+      font-weight: 800;
+      letter-spacing: -.04em;
+      line-height: 1.0;
+      color: var(--ivory);
+      margin-bottom: 20px;
+    }
+    .cta-title em {
+      font-family: 'Instrument Serif', serif;
+      font-style: italic;
+      font-weight: 400;
+      color: var(--gold);
+    }
+    .cta-sub {
+      font-size: 16px;
+      color: var(--ivory-dim);
+      max-width: 420px;
+      margin: 0 auto 40px;
+      line-height: 1.7;
+    }
+    .cta-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+    /* ─────────────────────────────────────────
+       FOOTER
+    ───────────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--wire);
+      padding: 56px 0 32px;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 56px;
+      margin-bottom: 48px;
+    }
+    .footer-logo {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--ivory);
+      letter-spacing: -.03em;
+      margin-bottom: 12px;
+    }
+    .footer-tagline {
+      font-size: 13px;
+      color: var(--ivory-dim);
+      line-height: 1.7;
+      max-width: 220px;
+      margin-bottom: 20px;
+    }
+    .footer-social { display: flex; gap: 10px; }
+    .fsoc {
+      width: 32px; height: 32px;
+      border: 1px solid var(--wire);
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px;
+      color: var(--ivory-dim);
+      text-decoration: none;
+      transition: border-color .15s, color .15s;
+    }
+    .fsoc:hover { border-color: var(--gold); color: var(--gold); }
+    .footer-col-title {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--ivory);
+      margin-bottom: 16px;
+    }
+    .footer-links { list-style: none; }
+    .footer-links li { margin-bottom: 10px; }
+    .footer-links a {
+      font-size: 13px;
+      color: var(--ivory-dim);
+      text-decoration: none;
+      transition: color .15s;
+    }
+    .footer-links a:hover { color: var(--ivory); }
+    .footer-bottom {
+      border-top: 1px solid var(--wire);
+      padding-top: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .footer-copy { font-size: 11px; color: var(--ivory-faint); }
+    .footer-legal { display: flex; gap: 20px; }
+    .footer-legal a { font-size: 11px; color: var(--ivory-faint); text-decoration: none; transition: color .15s; }
+    .footer-legal a:hover { color: var(--ivory-dim); }
+
+    /* ─────────────────────────────────────────
+       ANIMATIONS
+    ───────────────────────────────────────── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .fade-up { opacity: 0; }
+    .fade-up.in { animation: fadeUp .6s ease forwards; }
+
+    /* Hero entrance */
+    .hero-left .section-marker { animation: fadeUp .6s ease .05s both; }
+    .hero-title                { animation: fadeUp .7s ease .1s both; }
+    .hero-sub                  { animation: fadeUp .7s ease .18s both; }
+    .hero-actions              { animation: fadeUp .7s ease .26s both; }
+    .hero-stats                { animation: fadeUp .7s ease .34s both; }
+    .hero-right                { animation: fadeUp .8s ease .2s both; }
+
+    /* ─────────────────────────────────────────
+       RESPONSIVE
+    ───────────────────────────────────────── */
+    @media (max-width: 1024px) {
+      .hero { grid-template-columns: 1fr; padding: 120px 32px 60px; }
+      .hero::after { display: none; }
+      .hero-right { padding-left: 0; }
+      .hero-left { padding-right: 0; }
+      .how-grid { grid-template-columns: 1fr; gap: 40px; }
+      .domains-grid { grid-template-columns: repeat(2, 1fr); }
+      .testimonials-grid { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 768px) {
+      .full-bleed, nav .nav-inner { padding-left: 24px; padding-right: 24px; }
+      .hero { padding-left: 24px; padding-right: 24px; }
+      .nav-links { display: none; }
+      .schools-table { display: block; overflow-x: auto; }
+      .footer-grid { grid-template-columns: 1fr; }
+      .domains-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--ink); }
+    ::-webkit-scrollbar-thumb { background: var(--wire-mid); border-radius: 2px; }
+  
+
+    /* ── NEWS V2 (compacte) ── */
+    .section-news-v2 { padding:56px 0; border-top:1px solid var(--wire); }
+    .news-v2-header {
+      display:flex; align-items:flex-end; justify-content:space-between;
+      margin-bottom:28px; flex-wrap:wrap; gap:12px;
+    }
+    .news-see-all {
+      font-size:13px; font-weight:600; color:var(--gold);
+      text-decoration:none; white-space:nowrap; transition:opacity .15s;
+    }
+    .news-see-all:hover { opacity:.7; }
+    .news-v2-grid {
+      display:grid; grid-template-columns:1fr 1fr;
+      gap:16px; margin-bottom:16px;
+    }
+    /* UNE */
+    .news-v2-une {
+      background:var(--ink-2); border:1px solid var(--wire-mid);
+      border-radius:14px; padding:24px;
+      display:flex; flex-direction:column; gap:10px;
+      text-decoration:none; transition:border-color .2s;
+      position:relative; overflow:hidden;
+    }
+    .news-v2-une::before {
+      content:''; position:absolute; top:0; left:0; right:0;
+      height:2px; background:var(--gold);
+    }
+    .news-v2-une:hover { border-color:var(--wire-hi); }
+    .news-v2-une-tag {
+      font-size:9px; font-weight:700; letter-spacing:.1em;
+      text-transform:uppercase; color:var(--gold);
+    }
+    .news-v2-une-title {
+      font-family:'Bricolage Grotesque',sans-serif;
+      font-size:clamp(16px,2vw,20px); font-weight:700;
+      color:var(--ivory); letter-spacing:-.02em; line-height:1.3; flex:1;
+    }
+    .news-v2-une-desc { font-size:13px; color:var(--ivory-dim); line-height:1.6; }
+    .news-v2-une-meta { font-size:11px; color:var(--ivory-faint); margin-top:auto; }
+    /* Cards compactes */
+    .news-v2-cards { display:flex; flex-direction:column; gap:8px; }
+    .news-v2-card {
+      background:var(--ink-3); border:1px solid var(--wire);
+      border-radius:10px; padding:14px 16px;
+      text-decoration:none; transition:all .15s;
+      display:flex; flex-direction:column; gap:5px;
+    }
+    .news-v2-card:hover { border-color:var(--wire-mid); padding-left:20px; }
+    .nvc-tag {
+      font-size:9px; font-weight:700; letter-spacing:.08em;
+      text-transform:uppercase; padding:2px 7px; border-radius:3px;
+      display:inline-block; width:fit-content;
+    }
+    .nvc-examen  { background:rgba(224,90,84,.12); color:#E05A54; }
+    .nvc-concours{ background:var(--gold-10); color:var(--gold); border:1px solid var(--gold-dim); }
+    .nvc-title { font-size:13px; font-weight:600; color:var(--ivory); line-height:1.35; }
+    .nvc-meta  { font-size:11px; color:var(--ivory-faint); }
+    /* Stats band */
+    .news-v2-stats {
+      display:flex; align-items:center;
+      background:var(--ink-2); border:1px solid var(--wire);
+      border-radius:12px; padding:14px 24px;
+    }
+    .nvs-item { flex:1; text-align:center; }
+    .nvs-val {
+      font-family:'Bricolage Grotesque',sans-serif;
+      font-size:18px; font-weight:800; color:var(--gold);
+      letter-spacing:-.03em; display:block;
+    }
+    .nvs-lbl { font-size:10px; color:var(--ivory-dim); text-transform:uppercase; letter-spacing:.06em; }
+    .nvs-sep { width:1px; height:32px; background:var(--wire); flex-shrink:0; }
+    @media(max-width:768px){
+      .news-v2-grid { grid-template-columns:1fr; }
+      .news-v2-stats { flex-wrap:wrap; gap:12px; }
+      .nvs-sep { display:none; }
+    }
+
+    /* ─── NEWS SECTION ─────────────────────────────── */
+    .section-news { padding: 80px 0; border-top: 1px solid var(--wire); }
+
+    .news-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    /* Une */
+    .news-une {
+      background: var(--ink-2);
+      border: 1px solid var(--wire-mid);
+      border-radius: 16px;
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      text-decoration: none;
+      cursor: none;
+      transition: border-color .2s, transform .2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .news-une::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--gold);
+    }
+    .news-une:hover { border-color: var(--wire-hi); transform: translateY(-2px); }
+    .news-une-eyebrow { display: flex; align-items: center; gap: 10px; }
+    .news-une-title {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: clamp(18px, 2vw, 24px);
+      font-weight: 800;
+      color: var(--ivory);
+      letter-spacing: -.03em;
+      line-height: 1.2;
+      flex: 1;
+    }
+    .news-une-desc { font-size: 13px; color: var(--ivory-dim); line-height: 1.7; }
+    .news-une-footer { display: flex; justify-content: space-between; font-size: 11px; color: var(--ivory-faint); margin-top: auto; padding-top: 12px; border-top: 1px solid var(--wire); }
+    .news-read-more { color: var(--gold); font-weight: 600; }
+
+    /* Secondary cards */
+    .news-secondary { display: flex; flex-direction: column; gap: 10px; }
+    .news-card {
+      background: var(--ink-3);
+      border: 1px solid var(--wire);
+      border-radius: 12px;
+      padding: 14px 16px;
+      text-decoration: none;
+      cursor: none;
+      transition: border-color .2s, padding-left .2s;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .news-card:hover { border-color: var(--wire-mid); padding-left: 20px; }
+    .news-card-top { display: flex; align-items: center; gap: 8px; }
+    .news-card-title { font-size: 13px; font-weight: 600; color: var(--ivory); line-height: 1.35; }
+    .news-card-meta { font-size: 11px; color: var(--ivory-faint); }
+    .news-date { font-size: 10px; color: var(--ivory-faint); }
+
+    /* Category badges */
+    .news-cat { font-size: 9px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; padding: 2px 8px; border-radius: 3px; }
+    .cat-examens  { background: rgba(224,90,84,.12); color: #E05A54; border: 1px solid rgba(224,90,84,.2); }
+    .cat-concours { background: rgba(79,122,232,.1); color: #4F7AE8; border: 1px solid rgba(79,122,232,.2); }
+    .cat-orientation { background: var(--gold-10); color: var(--gold); border: 1px solid var(--gold-dim); }
+    .cat-filieres { background: rgba(52,201,122,.1); color: #34C97A; border: 1px solid rgba(52,201,122,.2); }
+
+    /* Stats band */
+    .news-stats-band {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      background: var(--ink-2);
+      border: 1px solid var(--wire);
+      border-radius: 14px;
+      padding: 20px 32px;
+      margin-top: 4px;
+    }
+    .nsb-item { flex: 1; text-align: center; padding: 0 16px; }
+    .nsb-val { font-family: 'Bricolage Grotesque', sans-serif; font-size: 24px; font-weight: 800; color: var(--gold); letter-spacing: -.04em; }
+    .nsb-lbl { font-size: 11px; color: var(--ivory-dim); margin-top: 3px; }
+    .nsb-sep { width: 1px; height: 36px; background: var(--wire); flex-shrink: 0; }
+
+    @media (max-width: 768px) {
+      .news-grid { grid-template-columns: 1fr; }
+      .news-stats-band { flex-wrap: wrap; gap: 16px; }
+      .nsb-sep { display: none; }
+    }
+
+
+  
+  </style>
+</head>
+<body>
+
+<!-- ─── CURSOR ────────────────────────────────────── -->
+<div class="cursor" id="cur"></div>
+<div class="cursor-trail" id="trail"></div>
+
+<!-- ─── NAV ──────────────────────────────────────── -->
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">Avenir Étude<sup>CI</sup></a>
+    <ul class="nav-links">
+      <li><a href="avenir_etude_test_riasec_v2.html">Test</a></li>
+      <li><a href="avenir_etude_ecoles.html">Écoles</a></li>
+      <li><a href="avenir_etude_carrieres.html">Carrières</a></li>
+      <li><a href="avenir_etude_ressources.html">Ressources & Actualités</a></li>
+      <li><a href="avenir_etude_evenements.html">Événements</a></li>
+    </ul>
+    <div class="nav-auth">
+      <a href="avenir_etude_auth.html" class="nav-btn-ghost">Connexion</a>
+      <a href="avenir_etude_onboarding.html" class="nav-cta">
+        S'inscrire
+        <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- ─── HERO ──────────────────────────────────────── -->
+<section class="hero" id="top">
+
+  <!-- LEFT -->
+  <div class="hero-left">
+    <div class="section-marker">
+      <span class="section-marker-num">01</span>
+      <span class="section-marker-line"></span>
+      <span class="section-marker-label">Orientation intelligente</span>
+    </div>
+
+    <h1 class="hero-title">
+      Votre avenir<br>commence par<br>
+      <em>vous connaître.</em>
+    </h1>
+
+    <p class="hero-sub">Tests psychométriques scientifiques, recommandations de filières et classement indépendant des écoles — pour les étudiants d'Afrique francophone.</p>
+
+    <div class="hero-actions">
+      <a href="avenir_etude_test_riasec.html" class="btn-gold">
+        Faire mon test d'orientation
+        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a href="avenir_etude_ecoles.html" class="btn-ghost">Explorer les écoles</a>
+    </div>
+
+    <div class="hero-stats">
+      <div>
+        <div class="hero-stat-num">10<span>k+</span></div>
+        <div class="hero-stat-label">Étudiants orientés</div>
+      </div>
+      <div>
+        <div class="hero-stat-num">200<span>+</span></div>
+        <div class="hero-stat-label">Écoles référencées</div>
+      </div>
+      <div>
+        <div class="hero-stat-num">94<span>%</span></div>
+        <div class="hero-stat-label">Satisfaction</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="hero-right">
+
+    <!-- Destiny board -->
+    <div class="destiny-board">
+      <div class="destiny-label">Votre destinée en cours d'analyse…</div>
+      <div class="destiny-ticker">
+        <div class="destiny-ticker-inner" id="ticker">
+          <div class="destiny-item">
+            <div class="destiny-emoji">📊</div>
+            <div class="destiny-meta">
+              <div class="destiny-career">Data Scientist</div>
+              <div class="destiny-domain">Technologie · Analyse · IA</div>
+            </div>
+            <div class="destiny-match">96%</div>
+          </div>
+          <div class="destiny-item">
+            <div class="destiny-emoji">⚖️</div>
+            <div class="destiny-meta">
+              <div class="destiny-career">Juriste d'Affaires</div>
+              <div class="destiny-domain">Droit · Finance · Négoce</div>
+            </div>
+            <div class="destiny-match">89%</div>
+          </div>
+          <div class="destiny-item">
+            <div class="destiny-emoji">🏗️</div>
+            <div class="destiny-meta">
+              <div class="destiny-career">Ingénieur Civil</div>
+              <div class="destiny-domain">BTP · Infrastructure · Gestion</div>
+            </div>
+            <div class="destiny-match">84%</div>
+          </div>
+          <div class="destiny-item">
+            <div class="destiny-emoji">🌱</div>
+            <div class="destiny-meta">
+              <div class="destiny-career">Agronome Conseil</div>
+              <div class="destiny-domain">Agriculture · Développement</div>
+            </div>
+            <div class="destiny-match">91%</div>
+          </div>
+          <div class="destiny-item">
+            <div class="destiny-emoji">💡</div>
+            <div class="destiny-meta">
+              <div class="destiny-career">Entrepreneur Tech</div>
+              <div class="destiny-domain">Innovation · Management</div>
+            </div>
+            <div class="destiny-match">87%</div>
+          </div>
+          <!-- loop -->
+          <div class="destiny-item">
+            <div class="destiny-emoji">📊</div>
+            <div class="destiny-meta">
+              <div class="destiny-career">Data Scientist</div>
+              <div class="destiny-domain">Technologie · Analyse · IA</div>
+            </div>
+            <div class="destiny-match">96%</div>
+          </div>
+        </div>
+      </div>
+      <div class="destiny-progress" id="dp">
+        <div class="dp-dot active"></div>
+        <div class="dp-dot"></div>
+        <div class="dp-dot"></div>
+        <div class="dp-dot"></div>
+        <div class="dp-dot"></div>
+      </div>
+    </div>
+
+    <!-- RIASEC mini -->
+    <div class="profile-card">
+      <div class="profile-dim active">
+        <div class="profile-dim-letter">I</div>
+        <div class="profile-dim-name">Investigatif</div>
+        <div class="profile-dim-bar" style="width:94%"></div>
+      </div>
+      <div class="profile-dim active">
+        <div class="profile-dim-letter">A</div>
+        <div class="profile-dim-name">Artistique</div>
+        <div class="profile-dim-bar" style="width:82%"></div>
+      </div>
+      <div class="profile-dim active">
+        <div class="profile-dim-letter">S</div>
+        <div class="profile-dim-name">Social</div>
+        <div class="profile-dim-bar" style="width:65%"></div>
+      </div>
+      <div class="profile-dim">
+        <div class="profile-dim-letter">E</div>
+        <div class="profile-dim-name">Entrepren.</div>
+        <div class="profile-dim-bar" style="width:48%; background:var(--ivory-faint)"></div>
+      </div>
+      <div class="profile-dim">
+        <div class="profile-dim-letter">R</div>
+        <div class="profile-dim-name">Réaliste</div>
+        <div class="profile-dim-bar" style="width:31%; background:var(--ivory-faint)"></div>
+      </div>
+      <div class="profile-dim">
+        <div class="profile-dim-letter">C</div>
+        <div class="profile-dim-name">Convntnl</div>
+        <div class="profile-dim-bar" style="width:20%; background:var(--ivory-faint)"></div>
+      </div>
+    </div>
+
+    <!-- Aptitude scores -->
+    <div class="score-mini">
+      <div class="score-ring-wrap">
+        <svg width="56" height="56" viewBox="0 0 56 56">
+          <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(242,237,228,.08)" stroke-width="3"/>
+          <circle cx="28" cy="28" r="22" fill="none" stroke="#D4A853" stroke-width="3"
+            stroke-dasharray="117 21"
+            stroke-dashoffset="28"
+            stroke-linecap="round"
+            transform="rotate(-90 28 28)"/>
+        </svg>
+        <div class="score-ring-val">92</div>
+      </div>
+      <div class="score-mini-info">
+        <div class="score-mini-label">Profil d'aptitudes</div>
+        <div class="score-mini-bars">
+          <div class="smb-row">
+            <span class="smb-name">Logique</span>
+            <div class="smb-track"><div class="smb-fill" style="width:96%"></div></div>
+            <span class="smb-val">96</span>
+          </div>
+          <div class="smb-row">
+            <span class="smb-name">Verbal</span>
+            <div class="smb-track"><div class="smb-fill" style="width:88%; background:#D4A853"></div></div>
+            <span class="smb-val">88</span>
+          </div>
+          <div class="smb-row">
+            <span class="smb-name">Numérique</span>
+            <div class="smb-track"><div class="smb-fill" style="width:82%; background:var(--green)"></div></div>
+            <span class="smb-val">82</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ─── HOW IT WORKS ──────────────────────────────── -->
+<section class="section-how" id="test">
+  <div class="full-bleed">
+    <div class="sec-num">02 — Méthode</div>
+    <div class="how-grid">
+      <div class="how-left">
+        <h2 class="big-title fade-up">Une science<br><em>exacte</em><br>de l'avenir.</h2>
+        <p class="how-desc" style="margin-top:20px;">Deux tests complémentaires, construits sur des modèles psychométriques internationaux et adaptés à la réalité du marché africain.</p>
+        <a href="avenir_etude_test_riasec.html" class="btn-gold" style="display:inline-flex; gap:8px;">
+          Commencer maintenant
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+      <div class="how-steps fade-up">
+        <div class="how-step">
+          <div class="how-step-num">01</div>
+          <div class="how-step-body">
+            <div class="how-step-title">Test RIASEC — 100 questions</div>
+            <div class="how-step-desc">Identifiez votre profil d'intérêts professionnels en 6 dimensions : Réaliste, Investigatif, Artistique, Social, Entreprenant, Conventionnel. Durée : 15 min.</div>
+          </div>
+          <div class="how-step-arrow">→</div>
+        </div>
+        <div class="how-step">
+          <div class="how-step-num">02</div>
+          <div class="how-step-body">
+            <div class="how-step-title">Test d'aptitudes cognitives</div>
+            <div class="how-step-desc">Mesurez vos capacités en raisonnement logique, aptitude verbale, aptitude numérique et analyse. Un portrait cognitif complet en 15 min.</div>
+          </div>
+          <div class="how-step-arrow">→</div>
+        </div>
+        <div class="how-step">
+          <div class="how-step-num">03</div>
+          <div class="how-step-body">
+            <div class="how-step-title">Rapport d'orientation intelligent</div>
+            <div class="how-step-desc">Votre profil complet : métiers compatibles avec % de match, filières recommandées, et les 3 meilleures écoles pour votre trajectoire.</div>
+          </div>
+          <div class="how-step-arrow">→</div>
+        </div>
+        <div class="how-step" style="border-bottom:none;">
+          <div class="how-step-num">04</div>
+          <div class="how-step-body">
+            <div class="how-step-title">Validation humaine optionnelle</div>
+            <div class="how-step-desc">Un expert en orientation valide votre rapport et vous accompagne dans votre décision finale. Service premium disponible.</div>
+          </div>
+          <div class="how-step-arrow">→</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── SCHOOLS ────────────────────────────────────── -->
+<section class="section-schools" id="schools">
+  <div class="full-bleed">
+    <div class="schools-header">
+      <div>
+        <div class="sec-num">03 — Classement</div>
+        <h2 class="big-title fade-up">Le Top des <em>Écoles</em> 2025</h2>
+      </div>
+      <a href="#" class="btn-ghost" style="margin-bottom:4px;">Voir les 200 écoles →</a>
+    </div>
+
+    <table class="schools-table">
+      <thead>
+        <tr>
+          <th style="width:36px;">#</th>
+          <th style="width:52px;"></th>
+          <th>Établissement</th>
+          <th style="padding: 0 24px;">Domaines</th>
+          <th style="text-align:right; width:100px;">Insertion</th>
+          <th style="text-align:right; width:80px;">Note AE</th>
+          <th style="width:32px;"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="school-rank-cell gold">01</td>
+          <td class="school-logo-cell"><div class="school-logo-box">INP<br>HB</div></td>
+          <td class="school-name-cell"><div class="sn-name">Institut National Polytechnique FHB</div><div class="sn-loc">Yamoussoukro · Grande École Publique · Concours</div></td>
+          <td class="school-tags-cell"><div class="school-tags-wrap"><span class="stag">Ingénierie</span><span class="stag">Agronomie</span><span class="stag">BTP</span></div></td>
+          <td class="school-ins-cell"><div class="sins-val">100%</div><div class="sins-lbl">Insertion pro</div></td>
+          <td class="school-rating-cell"><div class="srat">4.8</div><div class="srat-lbl">/ 5.0</div></td>
+          <td class="school-arrow-cell">›</td>
+        </tr>
+        <tr>
+          <td class="school-rank-cell gold">02</td>
+          <td class="school-logo-cell"><div class="school-logo-box">ENS<br>EA</div></td>
+          <td class="school-name-cell"><div class="sn-name">École Nationale Supérieure de Statistique</div><div class="sn-loc">Abidjan (Cocody) · Grande École Publique · Concours</div></td>
+          <td class="school-tags-cell"><div class="school-tags-wrap"><span class="stag">Statistique</span><span class="stag">Data Science</span><span class="stag">Économie</span></div></td>
+          <td class="school-ins-cell"><div class="sins-val">95%</div><div class="sins-lbl">Insertion pro</div></td>
+          <td class="school-rating-cell"><div class="srat">4.7</div><div class="srat-lbl">/ 5.0</div></td>
+          <td class="school-arrow-cell">›</td>
+        </tr>
+        <tr>
+          <td class="school-rank-cell gold">03</td>
+          <td class="school-logo-cell"><div class="school-logo-box">ESA<br>TIC</div></td>
+          <td class="school-name-cell"><div class="sn-name">École Supérieure Africaine des TIC</div><div class="sn-loc">Abidjan (Treichville) · Grande École Publique · Gratuit</div></td>
+          <td class="school-tags-cell"><div class="school-tags-wrap"><span class="stag">Informatique</span><span class="stag">Télécoms</span><span class="stag">Cyber</span></div></td>
+          <td class="school-ins-cell"><div class="sins-val">90%</div><div class="sins-lbl">Insertion pro</div></td>
+          <td class="school-rating-cell"><div class="srat">4.5</div><div class="srat-lbl">/ 5.0</div></td>
+          <td class="school-arrow-cell">›</td>
+        </tr>
+        <tr>
+          <td class="school-rank-cell">04</td>
+          <td class="school-logo-cell"><div class="school-logo-box">HEC<br>ABJ</div></td>
+          <td class="school-name-cell"><div class="sn-name">Hautes Études Commerciales d'Abidjan</div><div class="sn-loc">Abidjan (Cocody) · Université Privée · Dossier</div></td>
+          <td class="school-tags-cell"><div class="school-tags-wrap"><span class="stag">Management</span><span class="stag">Finance</span><span class="stag">Marketing</span></div></td>
+          <td class="school-ins-cell"><div class="sins-val">80%</div><div class="sins-lbl">Insertion pro</div></td>
+          <td class="school-rating-cell"><div class="srat">4.1</div><div class="srat-lbl">/ 5.0</div></td>
+          <td class="school-arrow-cell">›</td>
+        </tr>
+        <tr>
+          <td class="school-rank-cell">05</td>
+          <td class="school-logo-cell"><div class="school-logo-box">UFH<br>B</div></td>
+          <td class="school-name-cell"><div class="sn-name">Université Félix Houphouët-Boigny</div><div class="sn-loc">Abidjan (Cocody) · Université Publique · Inscription libre</div></td>
+          <td class="school-tags-cell"><div class="school-tags-wrap"><span class="stag">Droit</span><span class="stag">Médecine</span><span class="stag">Sciences</span></div></td>
+          <td class="school-ins-cell"><div class="sins-val">60%</div><div class="sins-lbl">Insertion pro</div></td>
+          <td class="school-rating-cell"><div class="srat">3.8</div><div class="srat-lbl">/ 5.0</div></td>
+          <td class="school-arrow-cell">›</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ─── DOMAINS ───────────────────────────────────── -->
+<section class="section-domains">
+  <div class="full-bleed">
+    <div class="domains-header">
+      <div>
+        <div class="sec-num">04 — Explorer</div>
+        <h2 class="big-title fade-up">Domaines &amp;<br><em>Secteurs</em></h2>
+      </div>
+    </div>
+    <div class="domains-grid">
+      <div class="domain-cell" data-emoji="💻">
+        <div class="domain-icon">💻</div>
+        <div class="domain-name">Technologies<br>&amp; Informatique</div>
+        <div class="domain-meta">400+ métiers · 60+ filières</div>
+        <div class="domain-arrow">→</div>
+      </div>
+      <div class="domain-cell" data-emoji="📈">
+        <div class="domain-icon">📈</div>
+        <div class="domain-name">Économie<br>&amp; Management</div>
+        <div class="domain-meta">280+ métiers · 45+ filières</div>
+        <div class="domain-arrow">→</div>
+      </div>
+      <div class="domain-cell" data-emoji="⚕️">
+        <div class="domain-icon">⚕️</div>
+        <div class="domain-name">Santé<br>&amp; Sciences</div>
+        <div class="domain-meta">190+ métiers · 30+ filières</div>
+        <div class="domain-arrow">→</div>
+      </div>
+      <div class="domain-cell" data-emoji="⚖️">
+        <div class="domain-icon">⚖️</div>
+        <div class="domain-name">Droit<br>&amp; Sciences Politiques</div>
+        <div class="domain-meta">150+ métiers · 28+ filières</div>
+        <div class="domain-arrow">→</div>
+      </div>
+      <div class="domain-cell" data-emoji="🏗️">
+        <div class="domain-icon">🏗️</div>
+        <div class="domain-name">BTP<br>&amp; Génie Civil</div>
+        <div class="domain-meta">120+ métiers · 22+ filières</div>
+        <div class="domain-arrow">→</div>
+      </div>
+      <div class="domain-cell" data-emoji="🌱">
+        <div class="domain-icon">🌱</div>
+        <div class="domain-name">Agronomie<br>&amp; Environnement</div>
+        <div class="domain-meta">110+ métiers · 20+ filières</div>
+        <div class="domain-arrow">→</div>
+      </div>
+      <div class="domain-cell" data-emoji="🎨">
+        <div class="domain-icon">🎨</div>
+        <div class="domain-name">Arts, Design<br>&amp; Médias</div>
+        <div class="domain-meta">95+ métiers · 18+ filières</div>
+        <div class="domain-arrow">→</div>
+      </div>
+      <div class="domain-cell" data-emoji="✈️">
+        <div class="domain-icon">✈️</div>
+        <div class="domain-name">Tourisme<br>&amp; Hôtellerie</div>
+        <div class="domain-meta">80+ métiers · 15+ filières</div>
+        <div class="domain-arrow">→</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+    <!-- ─── ACTUALITÉS ──────────────────────────────── -->
+    <section class="section-news-v2">
+      <div class="container">
+
+        <!-- Header compact -->
+        <div class="news-v2-header">
+          <div>
+            <div class="section-eyebrow" style="margin-bottom:6px;">Intelligence éducative · CI</div>
+            <h2 class="section-title" style="font-size:clamp(20px,2.5vw,28px);margin-bottom:0;letter-spacing:-.03em;">
+              L'info qui change <em style="font-family:'Instrument Serif',serif;font-style:italic;color:var(--gold);">ta trajectoire</em>
+            </h2>
+          </div>
+          <a href="avenir_etude_ressources.html" class="news-see-all">Toutes les actualités →</a>
+        </div>
+
+        <!-- Grid 2 colonnes : UNE à gauche, 3 cards à droite -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;">
+
+          <!-- Article UNE -->
+          <a href="avenir_etude_ressources.html" class="news-v2-une" style="min-height:0;">
+            <div class="news-v2-une-tag">BAC 2026 · Examens</div>
+            <div class="news-v2-une-title">Épreuves du 15 au 19 juin — résultats le 6 juillet à 14h</div>
+            <div class="news-v2-une-desc">Tout ce que les candidats doivent savoir pour le BAC 2026. Calendrier officiel DECO.</div>
+            <div class="news-v2-une-meta">Source : men-deco.org · Mars 2026</div>
+          </a>
+
+          <!-- 3 cards compactes -->
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <a href="avenir_etude_ressources.html" class="news-v2-card">
+              <div style="display:flex;align-items:center;gap:8px;">
+                <span style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border-radius:3px;background:rgba(224,90,84,.12);color:#E05A54;">BAC 2025</span>
+                <span style="font-size:10px;color:var(--ivory-faint);">7 juil. 2025</span>
+              </div>
+              <div style="font-size:13px;font-weight:600;color:var(--ivory);line-height:1.3;">40,15% de réussite — 133 518 admis sur 332 515</div>
+            </a>
+            <a href="avenir_etude_ressources.html" class="news-v2-card">
+              <div style="display:flex;align-items:center;gap:8px;">
+                <span style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border-radius:3px;background:rgba(79,122,232,.12);color:#4F7AE8;">Concours</span>
+                <span style="font-size:10px;color:var(--ivory-faint);">Fév. 2026</span>
+              </div>
+              <div style="font-size:13px;font-weight:600;color:var(--ivory);line-height:1.3;">ESATIC 2026 — préinscriptions jusqu'au 8 mai</div>
+            </a>
+            <a href="avenir_etude_ressources.html" class="news-v2-card">
+              <div style="display:flex;align-items:center;gap:8px;">
+                <span style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border-radius:3px;background:rgba(52,201,122,.12);color:#34C97A;">BEPC 2025</span>
+                <span style="font-size:10px;color:var(--ivory-faint);">17 juin 2025</span>
+              </div>
+              <div style="font-size:13px;font-weight:600;color:var(--ivory);line-height:1.3;">51,41% — hausse historique de +11 points</div>
+            </a>
+          </div>
+        </div>
+
+        <!-- Stats band compact -->
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--wire);border-radius:12px;overflow:hidden;border:1px solid var(--wire);">
+          <div style="background:var(--ink-2);padding:14px 16px;text-align:center;">
+            <div style="font-family:'Bricolage Grotesque',sans-serif;font-size:22px;font-weight:800;color:var(--gold);letter-spacing:-.03em;">40,15%</div>
+            <div style="font-size:10px;color:var(--ivory-dim);margin-top:3px;">Réussite BAC 2025</div>
+          </div>
+          <div style="background:var(--ink-2);padding:14px 16px;text-align:center;">
+            <div style="font-family:'Bricolage Grotesque',sans-serif;font-size:22px;font-weight:800;color:var(--gold);letter-spacing:-.03em;">51,41%</div>
+            <div style="font-size:10px;color:var(--ivory-dim);margin-top:3px;">Réussite BEPC 2025</div>
+          </div>
+          <div style="background:var(--ink-2);padding:14px 16px;text-align:center;">
+            <div style="font-family:'Bricolage Grotesque',sans-serif;font-size:22px;font-weight:800;color:var(--gold);letter-spacing:-.03em;">1,566M</div>
+            <div style="font-size:10px;color:var(--ivory-dim);margin-top:3px;">Candidats examens 2025</div>
+          </div>
+          <div style="background:var(--ink-2);padding:14px 16px;text-align:center;">
+            <div style="font-family:'Bricolage Grotesque',sans-serif;font-size:22px;font-weight:800;color:var(--gold);letter-spacing:-.03em;">6 juil.</div>
+            <div style="font-size:10px;color:var(--ivory-dim);margin-top:3px;">Résultats BAC 2026</div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ─── TESTIMONIALS ──────────────────────────────── -->
+<section class="section-testimonials">
+  <div class="full-bleed">
+    <div class="testimonials-header">
+      <div>
+        <div class="sec-num">05 — Témoignages</div>
+        <h2 class="big-title fade-up">Ils ont trouvé<br><em>leur voie.</em></h2>
+      </div>
+    </div>
+    <div class="testimonials-grid">
+      <div class="tcard">
+        <p class="tcard-quote">"Le test m'a ouvert les yeux sur mes aptitudes réelles. Aujourd'hui <strong>je suis en Master Data Science</strong> à l'ENSEA et je m'épanouis pleinement."</p>
+        <div class="tcard-author">
+          <div class="tcard-avatar">GK</div>
+          <div>
+            <div class="tcard-name">Gérald K.</div>
+            <div class="tcard-role">Master Data Science · ENSEA Abidjan</div>
+          </div>
+        </div>
+        <div class="tcard-stars">★★★★★</div>
+      </div>
+      <div class="tcard">
+        <p class="tcard-quote">"Un outil indispensable. Les recommandations d'écoles sont <strong>extrêmement précises</strong> et le classement est très bien construit."</p>
+        <div class="tcard-author">
+          <div class="tcard-avatar">MN</div>
+          <div>
+            <div class="tcard-name">Marie N.</div>
+            <div class="tcard-role">Licence Commerce · HEC Abidjan</div>
+          </div>
+        </div>
+        <div class="tcard-stars">★★★★★</div>
+      </div>
+      <div class="tcard">
+        <p class="tcard-quote">"Grâce au profil RIASEC, j'ai enfin compris pourquoi le commerce ne me convenait pas. <strong>L'ingénierie était ma vraie vocation.</strong>"</p>
+        <div class="tcard-author">
+          <div class="tcard-avatar">AK</div>
+          <div>
+            <div class="tcard-name">Abdoulaye K.</div>
+            <div class="tcard-role">Génie Informatique · INP-HB</div>
+          </div>
+        </div>
+        <div class="tcard-stars">★★★★★</div>
+      </div>
+      <div class="tcard">
+        <p class="tcard-quote">"En tant que parent, j'ai apprécié la <strong>transparence totale sur les frais et l'insertion professionnelle</strong> de chaque école."</p>
+        <div class="tcard-author">
+          <div class="tcard-avatar">FC</div>
+          <div>
+            <div class="tcard-name">Fatou C.</div>
+            <div class="tcard-role">Parent d'élève · Abidjan</div>
+          </div>
+        </div>
+        <div class="tcard-stars">★★★★★</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── CTA ───────────────────────────────────────── -->
+<section class="section-cta">
+  <div class="full-bleed">
+    <div class="cta-label">Prêt à commencer ?</div>
+    <h2 class="cta-title">Dessinez votre<br><em>avenir</em> aujourd'hui.</h2>
+    <p class="cta-sub">Rejoignez des milliers d'étudiants d'Afrique francophone qui ont trouvé leur voie avec Avenir Étude.</p>
+    <div class="cta-actions">
+      <a href="avenir_etude_test_riasec.html" class="btn-gold" style="font-size:15px; padding:16px 32px;">
+        Commencer mon orientation
+        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a href="avenir_etude_ecoles.html" class="btn-ghost" style="font-size:15px; padding:15px 28px;">Voir les écoles</a>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FOOTER ────────────────────────────────────── -->
+<footer>
+  <div class="full-bleed">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">Avenir Étude</div>
+        <p class="footer-tagline">La boussole académique de référence pour les étudiants d'Afrique francophone.</p>
+        <div class="footer-social">
+          <a class="fsoc" href="#">𝕏</a>
+          <a class="fsoc" href="#">in</a>
+          <a class="fsoc" href="#">f</a>
+          <a class="fsoc" href="#">▶</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Plateforme</div>
+        <ul class="footer-links">
+          <li><a href="avenir_etude_test_riasec.html">Test d'orientation</a></li>
+          <li><a href="avenir_etude_ecoles.html">Base des écoles</a></li>
+          <li><a href="#">Carrières</a></li>
+          <li><a href="avenir_etude_ressources.html">Actualités & Concours</a></li>
+          <li><a href="avenir_etude_ressources.html">Ressources & Actualités</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Ressources</div>
+        <ul class="footer-links">
+          <li><a href="#">Blog orientation</a></li>
+          <li><a href="#">Histoires de succès</a></li>
+          <li><a href="#">Bourses d'études</a></li>
+          <li><a href="#">Rapports sectoriels</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Entreprise</div>
+        <ul class="footer-links">
+          <li><a href="#">À propos</a></li>
+          <li><a href="#">Contact</a></li>
+          <li><a href="#">Presse</a></li>
+          <li><a href="#">Partenaires</a></li>
+          <li><a href="#">Recrutement</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2025 Avenir Étude · Abidjan, Côte d'Ivoire</div>
+      <div class="footer-legal">
+        <a href="#">Confidentialité</a>
+        <a href="#">Conditions</a>
+        <a href="#">Mentions légales</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+
+    .nav-auth { display:flex; align-items:center; gap:10px; margin-left:8px; }
+    .nav-btn-ghost {
+      font-size:13px; font-weight:600; padding:8px 16px;
+      border:1px solid var(--wire-mid); border-radius:8px;
+      color:var(--ivory-dim); text-decoration:none;
+      transition:all .15s; white-space:nowrap;
+    }
+    .nav-btn-ghost:hover { border-color:var(--wire-hi); color:var(--ivory); }
+
+    /* ── CURSOR ──────────────────────────────────── */
+const cur   = document.getElementById('cur');
+const trail = document.getElementById('trail');
+let mx = 0, my = 0, tx = 0, ty = 0;
+
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cur.style.left = mx + 'px';
+  cur.style.top  = my + 'px';
+});
+
+function animTrail() {
+  tx += (mx - tx) * .1;
+  ty += (my - ty) * .1;
+  trail.style.left = tx + 'px';
+  trail.style.top  = ty + 'px';
+  requestAnimationFrame(animTrail);
+}
+animTrail();
+
+document.querySelectorAll('a, button, .domain-cell, .tcard, .how-step, tbody tr').forEach(el => {
+  el.addEventListener('mouseenter', () => cur.classList.add('hover'));
+  el.addEventListener('mouseleave', () => cur.classList.remove('hover'));
+});
+
+/* ── DESTINY DOTS ─────────────────────────────── */
+const dots   = document.querySelectorAll('.dp-dot');
+const period = 12000;
+const items  = 5;
+let   active = 0;
+setInterval(() => {
+  active = (active + 1) % items;
+  dots.forEach((d, i) => d.classList.toggle('active', i === active));
+}, period / items);
+
+/* ── SCROLL REVEAL ────────────────────────────── */
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('in');
+      io.unobserve(e.target);
+    }
+  });
+}, { threshold: .1 });
+document.querySelectorAll('.fade-up').forEach(el => io.observe(el));
+
+/* ── SMOOTH SCROLL ─────────────────────────────── */
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const t = document.querySelector(a.getAttribute('href'));
+    if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+  });
+});
+</script>
+</body>
+</html>
