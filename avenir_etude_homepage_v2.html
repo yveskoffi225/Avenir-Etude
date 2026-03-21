@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Avenir Étude — La boussole académique de l'Afrique</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,600;12..96,700;12..96,800&family=Instrument+Serif:ital@0;1&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    :root {
+      --ink:   #060B14;
+      --ink-2: #0C1220;
+      --ink-3: #111827;
+      --ink-4: #1C2535;
+      --gold:  #D4A853;
+      --gold-dim: #7A5E2A;
+      --gold-10: rgba(212,168,83,.10);
+      --gold-20: rgba(212,168,83,.20);
+      --ivory: #F2EDE4;
+      --ivory-dim: #8A8278;
+      --ivory-faint: #2E3545;
+      --wire: rgba(242,237,228,.07);
+      --wire-mid: rgba(242,237,228,.13);
+      --wire-hi: rgba(242,237,228,.24);
+      --green: #34C97A;
+      --green-10: rgba(52,201,122,.1);
+      --blue: #4F7AE8;
+      --blue-10: rgba(79,122,232,.1);
+      --red: #E05A54;
+      --orange: #F59E0B;
+      --max-w: 1200px;
+    }
+
+    body {
+      font-family: 'Instrument Sans', sans-serif;
+      background: var(--ink);
+      color: var(--ivory);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ── CURSOR ─────────────────────────────── */
+    .ae-cursor {
+      position: fixed;
+      width: 12px; height: 12px;
+      background: var(--gold);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: width .2s, height .2s, background .2s;
+      mix-blend-mode: screen;
+      top: -100px; left: -100px;
+    }
+    .ae-cursor.hover {
+      width: 36px; height: 36px;
+      background: transparent;
+      border: 1.5px solid var(--gold);
+    }
+
+    /* ── GRAIN OVERLAY ──────────────────────── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 8000;
+    }
+
+    /* ── NAV ────────────────────────────────── */
+    nav {
+      position: sticky; top: 0; z-index: 500;
+      height: 64px;
+      border-bottom: 1px solid var(--wire);
+      background: rgba(6,11,20,.94);
+      backdrop-filter: blur(20px);
+      display: flex; align-items: center;
+    }
+    .nav-inner {
+      max-width: var(--max-w); margin: 0 auto;
+      padding: 0 40px; width: 100%;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .nav-logo {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 17px; font-weight: 800;
+      color: var(--ivory); text-decoration: none;
+      letter-spacing: -.03em; margin-right: 20px;
+      flex-shrink: 0;
+    }
+    .nav-logo em { font-style: italic; color: var(--gold); }
+    .nav-links { display: flex; gap: 2px; flex: 1; }
+    .nav-link {
+      font-size: 13px; font-weight: 500;
+      color: var(--ivory-dim); text-decoration: none;
+      padding: 7px 13px; border-radius: 7px;
+      transition: all .15s; white-space: nowrap;
+    }
+    .nav-link:hover { color: var(--ivory); background: var(--ink-3); }
+    .nav-link.active { color: var(--gold); }
+    .nav-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+    .btn-connexion {
+      font-family: 'Instrument Sans', sans-serif;
+      font-size: 13px; font-weight: 600;
+      padding: 8px 18px;
+      border: 1.5px solid var(--wire-mid);
+      border-radius: 8px;
+      background: transparent;
+      color: var(--ivory-dim);
+      text-decoration: none;
+      transition: all .15s; cursor: none;
+    }
+    .btn-connexion:hover { border-color: var(--wire-hi); color: var(--ivory); }
+    .btn-inscrire {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 13px; font-weight: 700;
+      padding: 9px 20px;
+      background: var(--gold); color: var(--ink);
+      border: none; border-radius: 8px;
+      text-decoration: none; cursor: none;
+      transition: all .15s;
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .btn-inscrire:hover { background: #e0b55e; transform: translateY(-1px); }
+
+    /* ── HERO ───────────────────────────────── */
+    .hero {
+      padding: 80px 0 60px;
+      border-bottom: 1px solid var(--wire);
+      position: relative; overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse 60% 50% at 80% 40%, rgba(212,168,83,.06) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 60% at 20% 80%, rgba(79,122,232,.04) 0%, transparent 70%);
+    }
+    .hero-inner {
+      max-width: var(--max-w); margin: 0 auto; padding: 0 40px;
+      display: grid; grid-template-columns: 1fr 420px; gap: 60px; align-items: center;
+      position: relative; z-index: 1;
+    }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 11px; font-weight: 700;
+      letter-spacing: .12em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 18px;
+    }
+    .hero-eyebrow-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: blink 2s ease-in-out infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+    .hero-title {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: clamp(36px, 5vw, 62px);
+      font-weight: 800; line-height: 1.03;
+      letter-spacing: -.04em; color: var(--ivory);
+      margin-bottom: 20px;
+    }
+    .hero-title em { font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400; color: var(--gold); }
+    .hero-sub {
+      font-size: 16px; color: var(--ivory-dim);
+      line-height: 1.75; margin-bottom: 32px; max-width: 500px;
+    }
+    .hero-ctas { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+    .btn-hero-primary {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 15px; font-weight: 700;
+      padding: 14px 30px; background: var(--gold); color: var(--ink);
+      border: none; border-radius: 10px; cursor: none;
+      text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+      transition: all .2s;
+    }
+    .btn-hero-primary:hover { background: #e0b55e; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(212,168,83,.25); }
+    .btn-hero-ghost {
+      font-size: 14px; font-weight: 500; color: var(--ivory-dim);
+      text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+      transition: all .15s;
+    }
+    .btn-hero-ghost:hover { color: var(--ivory); gap: 10px; }
+    .hero-proof { display: flex; align-items: center; gap: 12px; margin-top: 28px; }
+    .hero-avatars { display: flex; }
+    .hero-av {
+      width: 30px; height: 30px; border-radius: 50%;
+      border: 2px solid var(--ink); margin-left: -8px;
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 10px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center; color: var(--ink);
+    }
+    .hero-av:first-child { margin-left: 0; }
+    .hero-proof-text { font-size: 12px; color: var(--ivory-dim); }
+    .hero-proof-text strong { color: var(--ivory); }
+
+    /* Hero visual — radar animé */
+    .hero-visual { position: relative; }
+    .hero-radar-wrap {
+      width: 100%; aspect-ratio: 1;
+      background: var(--ink-2);
+      border: 1px solid var(--wire-mid);
+      border-radius: 20px; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+    }
+    .hero-radar-wrap::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(circle at 50% 50%, rgba(212,168,83,.05) 0%, transparent 70%);
+    }
+    .hero-float {
+      position: absolute; background: var(--ink-3);
+      border: 1px solid var(--wire-mid); border-radius: 10px;
+      padding: 10px 14px; font-size: 11px;
+      animation: float 4s ease-in-out infinite;
+      backdrop-filter: blur(10px);
+    }
+    .hero-float strong { font-family: 'Bricolage Grotesque', sans-serif; font-size: 15px; font-weight: 800; }
+    .hf-1 { top: 12%; right: -8px; animation-delay: 0s; }
+    .hf-2 { bottom: 14%; left: -8px; animation-delay: 1.6s; }
+    .hf-3 { top: 50%; right: -12px; animation-delay: .9s; }
+    .hf-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--ivory-faint); margin-bottom: 2px; }
+    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+
+    /* ── TRUSTED BAR ────────────────────────── */
+    .trusted-bar {
+      background: var(--ink-2); border-bottom: 1px solid var(--wire);
+      padding: 16px 0;
+    }
+    .trusted-inner {
+      max-width: var(--max-w); margin: 0 auto; padding: 0 40px;
+      display: flex; align-items: center; gap: 32px; flex-wrap: wrap;
+    }
+    .trusted-label {
+      font-size: 10px; font-weight: 700; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--ivory-faint); white-space: nowrap;
+    }
+    .trusted-items { display: flex; gap: 24px; flex-wrap: wrap; align-items: center; }
+    .trusted-item {
+      font-size: 12px; font-weight: 600; color: var(--ivory-faint);
+      display: flex; align-items: center; gap: 7px;
+    }
+    .ti-dot { width: 6px; height: 6px; border-radius: 50%; }
+
+    /* ── SECTION SYSTEM ─────────────────────── */
+    .section { padding: 80px 0; border-top: 1px solid var(--wire); }
+    .section-inner { max-width: var(--max-w); margin: 0 auto; padding: 0 40px; }
+    .section-eyebrow {
+      font-size: 10px; font-weight: 700; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--gold);
+      margin-bottom: 10px; display: flex; align-items: center; gap: 10px;
+    }
+    .section-eyebrow::before { content: ''; width: 20px; height: 1px; background: var(--gold-dim); }
+    .section-title {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: clamp(26px, 3.5vw, 42px); font-weight: 800;
+      letter-spacing: -.04em; color: var(--ivory); line-height: 1.1;
+      margin-bottom: 12px;
+    }
+    .section-title em { font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400; color: var(--gold); }
+    .section-sub { font-size: 14px; color: var(--ivory-dim); line-height: 1.75; max-width: 520px; }
+    .section-header { display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 16px; margin-bottom: 40px; }
+    .see-all { font-size: 13px; font-weight: 600; color: var(--gold); text-decoration: none; transition: opacity .15s; }
+    .see-all:hover { opacity: .7; }
+
+    /* ── HOW IT WORKS ───────────────────────── */
+    .steps-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    .step-card {
+      background: var(--ink-2); border: 1px solid var(--wire);
+      border-radius: 14px; padding: 24px;
+      transition: all .25s; cursor: none; position: relative; overflow: hidden;
+    }
+    .step-card:hover { border-color: var(--gold-dim); transform: translateY(-3px); box-shadow: 0 12px 32px rgba(212,168,83,.08); }
+    .step-num {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: var(--gold-10); border: 1px solid var(--gold-dim);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 14px; font-weight: 800; color: var(--gold);
+      margin-bottom: 16px;
+    }
+    .step-title { font-family: 'Bricolage Grotesque', sans-serif; font-size: 16px; font-weight: 700; color: var(--ivory); margin-bottom: 8px; letter-spacing: -.01em; }
+    .step-desc { font-size: 12px; color: var(--ivory-dim); line-height: 1.7; }
+
+    /* ── TESTS SECTION ──────────────────────── */
+    .tests-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    .test-card {
+      background: var(--ink-2); border: 1px solid var(--wire-mid);
+      border-radius: 16px; padding: 28px; cursor: none;
+      transition: all .25s; position: relative; overflow: hidden;
+      text-decoration: none; display: block;
+    }
+    .test-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0;
+      height: 2px; background: var(--gold); transform: scaleX(0);
+      transition: transform .3s; transform-origin: left;
+    }
+    .test-card:hover { border-color: var(--gold-dim); transform: translateY(-3px); }
+    .test-card:hover::before { transform: scaleX(1); }
+    .tc-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+      padding: 4px 12px; border-radius: 20px;
+      margin-bottom: 16px;
+    }
+    .tcb-riasec { background: var(--gold-10); border: 1px solid var(--gold-dim); color: var(--gold); }
+    .tcb-aptitudes { background: var(--blue-10); border: 1px solid rgba(79,122,232,.2); color: var(--blue); }
+    .tcb-skills { background: var(--green-10); border: 1px solid rgba(52,201,122,.2); color: var(--green); }
+    .tc-icon { font-size: 36px; margin-bottom: 14px; }
+    .tc-title { font-family: 'Bricolage Grotesque', sans-serif; font-size: 20px; font-weight: 800; color: var(--ivory); letter-spacing: -.02em; margin-bottom: 8px; }
+    .tc-desc { font-size: 13px; color: var(--ivory-dim); line-height: 1.7; margin-bottom: 16px; }
+    .tc-meta { display: flex; gap: 16px; flex-wrap: wrap; }
+    .tc-meta-item { font-size: 11px; color: var(--ivory-faint); display: flex; align-items: center; gap: 5px; }
+    .tc-timer {
+      position: absolute; top: 20px; right: 20px;
+      font-size: 10px; font-weight: 700;
+      padding: 3px 10px; border-radius: 20px;
+    }
+    .tt-gold { background: var(--gold-10); border: 1px solid var(--gold-dim); color: var(--gold); }
+    .tt-blue { background: var(--blue-10); border: 1px solid rgba(79,122,232,.2); color: var(--blue); }
+    .tc-cta {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 13px; font-weight: 700;
+      color: var(--gold); margin-top: 8px;
+    }
+    /* 3rd test full width */
+    .test-card-wide { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: center; }
+
+    /* ── NEWS COMPACT ───────────────────────── */
+    .news-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 14px; margin-bottom: 12px; }
+    .news-une {
+      background: var(--ink-2); border: 1px solid var(--wire-mid);
+      border-radius: 14px; padding: 24px; text-decoration: none;
+      display: flex; flex-direction: column; gap: 10px;
+      position: relative; overflow: hidden; transition: border-color .2s;
+    }
+    .news-une::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--gold); }
+    .news-une:hover { border-color: var(--wire-hi); }
+    .news-tag { font-size: 9px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; padding: 2px 8px; border-radius: 3px; display: inline-block; }
+    .nt-examens { background: rgba(224,90,84,.12); color: var(--red); }
+    .nt-concours { background: var(--blue-10); color: var(--blue); }
+    .nt-resultats { background: var(--green-10); color: var(--green); }
+    .nt-orientation { background: var(--gold-10); color: var(--gold); }
+    .news-une-title { font-family: 'Bricolage Grotesque', sans-serif; font-size: clamp(15px,2vw,20px); font-weight: 700; color: var(--ivory); letter-spacing: -.02em; line-height: 1.3; flex: 1; }
+    .news-une-desc { font-size: 12px; color: var(--ivory-dim); line-height: 1.65; }
+    .news-une-meta { font-size: 10px; color: var(--ivory-faint); margin-top: auto; padding-top: 10px; border-top: 1px solid var(--wire); }
+    .news-cards { display: flex; flex-direction: column; gap: 8px; }
+    .news-card {
+      background: var(--ink-3); border: 1px solid var(--wire); border-radius: 10px;
+      padding: 12px 14px; text-decoration: none; cursor: none;
+      transition: all .15s; display: flex; flex-direction: column; gap: 5px;
+    }
+    .news-card:hover { border-color: var(--wire-mid); padding-left: 18px; }
+    .nc-top { display: flex; align-items: center; gap: 8px; }
+    .nc-title { font-size: 12px; font-weight: 600; color: var(--ivory); line-height: 1.35; }
+    .nc-date { font-size: 10px; color: var(--ivory-faint); }
+
+    /* Stats band compact */
+    .stats-band {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      border: 1px solid var(--wire); border-radius: 12px; overflow: hidden;
+    }
+    .sb-item { background: var(--ink-2); padding: 14px 16px; text-align: center; border-right: 1px solid var(--wire); }
+    .sb-item:last-child { border-right: none; }
+    .sb-val { font-family: 'Bricolage Grotesque', sans-serif; font-size: 22px; font-weight: 800; color: var(--gold); letter-spacing: -.03em; }
+    .sb-lbl { font-size: 10px; color: var(--ivory-dim); margin-top: 3px; }
+
+    /* ── TOP SCHOOLS ────────────────────────── */
+    .schools-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .school-card {
+      background: var(--ink-2); border: 1px solid var(--wire);
+      border-radius: 14px; padding: 20px; cursor: none;
+      transition: all .2s; text-decoration: none; display: block;
+    }
+    .school-card:hover { border-color: var(--gold-dim); transform: translateY(-2px); }
+    .sc-top { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+    .sc-logo {
+      width: 44px; height: 44px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 9px; font-weight: 800; text-align: center; line-height: 1.2;
+      flex-shrink: 0;
+    }
+    .sc-name { font-family: 'Bricolage Grotesque', sans-serif; font-size: 14px; font-weight: 700; color: var(--ivory); letter-spacing: -.01em; }
+    .sc-type { font-size: 11px; color: var(--ivory-dim); margin-top: 2px; }
+    .sc-stats { display: flex; gap: 6px; }
+    .sc-stat { flex: 1; background: var(--ink-3); border-radius: 8px; padding: 8px; text-align: center; }
+    .sc-stat-val { font-family: 'Bricolage Grotesque', sans-serif; font-size: 15px; font-weight: 800; color: var(--gold); }
+    .sc-stat-lbl { font-size: 9px; color: var(--ivory-faint); text-transform: uppercase; letter-spacing: .04em; margin-top: 2px; }
+
+    /* ── GPS SECTION ────────────────────────── */
+    .gps-section { padding: 80px 0; background: var(--ink-2); border-top: 1px solid var(--wire); }
+    .gps-inner { max-width: var(--max-w); margin: 0 auto; padding: 0 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+    .gps-road {
+      background: var(--ink-3); border: 1px solid var(--wire-mid);
+      border-radius: 16px; padding: 24px;
+    }
+    .gps-profile { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+    .gps-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--gold); display: flex; align-items: center; justify-content: center; font-family: 'Bricolage Grotesque', sans-serif; font-size: 14px; font-weight: 800; color: var(--ink); }
+    .gps-profile-name { font-size: 14px; font-weight: 700; color: var(--ivory); }
+    .gps-profile-level { font-size: 11px; color: var(--ivory-dim); }
+    .gps-dream { background: var(--gold-10); border: 1px solid var(--gold-dim); border-radius: 10px; padding: 12px 16px; margin-bottom: 18px; }
+    .gps-dream-lbl { font-size: 9px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--gold); margin-bottom: 4px; }
+    .gps-dream-val { font-family: 'Bricolage Grotesque', sans-serif; font-size: 18px; font-weight: 800; color: var(--ivory); }
+    .gps-steps { display: flex; flex-direction: column; gap: 0; }
+    .gps-step { display: flex; gap: 14px; padding: 10px 0; border-bottom: 1px solid var(--wire); }
+    .gps-step:last-child { border-bottom: none; }
+    .gps-dot { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+    .gd-done { background: var(--green); }
+    .gd-now { background: var(--gold); animation: pulse-dot 2s ease-in-out infinite; }
+    .gd-future { background: var(--ink-4); border: 1px solid var(--wire-mid); }
+    @keyframes pulse-dot { 0%,100%{box-shadow:0 0 0 0 rgba(212,168,83,.4)} 50%{box-shadow:0 0 0 8px rgba(212,168,83,0)} }
+    .gps-step-title { font-size: 13px; font-weight: 600; color: var(--ivory); margin-bottom: 2px; }
+    .gps-step-desc { font-size: 11px; color: var(--ivory-dim); line-height: 1.5; }
+    .gps-tag { display: inline-block; font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 4px; margin-top: 4px; }
+    .gt-done { background: var(--green-10); color: var(--green); }
+    .gt-now { background: var(--gold-10); color: var(--gold); }
+    .gt-future { background: var(--ink-4); color: var(--ivory-faint); }
+    .gps-features { display: flex; flex-direction: column; gap: 12px; }
+    .gps-feat { display: flex; gap: 14px; padding: 14px 16px; background: var(--ink-3); border: 1px solid var(--wire); border-radius: 10px; transition: border-color .2s; }
+    .gps-feat:hover { border-color: var(--wire-mid); }
+    .gps-feat-icon { font-size: 20px; flex-shrink: 0; }
+    .gps-feat-title { font-size: 13px; font-weight: 700; color: var(--ivory); margin-bottom: 3px; }
+    .gps-feat-desc { font-size: 12px; color: var(--ivory-dim); line-height: 1.6; }
+
+    /* ── TESTIMONIALS ───────────────────────── */
+    .testi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .testi-card {
+      background: var(--ink-2); border: 1px solid var(--wire);
+      border-radius: 14px; padding: 22px; transition: all .2s;
+    }
+    .testi-card:hover { border-color: var(--wire-mid); }
+    .testi-stars { color: var(--gold); font-size: 12px; letter-spacing: 2px; margin-bottom: 12px; }
+    .testi-text { font-size: 13px; color: var(--ivory-dim); line-height: 1.75; margin-bottom: 14px; font-style: italic; }
+    .testi-author { display: flex; align-items: center; gap: 10px; }
+    .testi-av { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Bricolage Grotesque', sans-serif; font-size: 11px; font-weight: 800; color: var(--ink); flex-shrink: 0; }
+    .testi-name { font-size: 13px; font-weight: 700; color: var(--ivory); }
+    .testi-role { font-size: 10px; color: var(--ivory-dim); margin-top: 1px; }
+
+    /* ── CTA FINAL ──────────────────────────── */
+    .cta-section {
+      padding: 80px 0; background: var(--ink-2); border-top: 1px solid var(--wire);
+      text-align: center;
+    }
+    .cta-inner { max-width: 580px; margin: 0 auto; padding: 0 40px; }
+    .cta-title { font-family: 'Bricolage Grotesque', sans-serif; font-size: clamp(28px,4vw,46px); font-weight: 800; color: var(--ivory); letter-spacing: -.04em; line-height: 1.1; margin-bottom: 14px; }
+    .cta-title em { font-family: 'Instrument Serif', serif; font-style: italic; color: var(--gold); }
+    .cta-sub { font-size: 15px; color: var(--ivory-dim); line-height: 1.7; margin-bottom: 32px; }
+    .cta-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .btn-cta-main { font-family: 'Bricolage Grotesque', sans-serif; font-size: 15px; font-weight: 700; padding: 14px 32px; background: var(--gold); color: var(--ink); border: none; border-radius: 10px; cursor: none; text-decoration: none; transition: all .2s; display: inline-flex; align-items: center; gap: 8px; }
+    .btn-cta-main:hover { background: #e0b55e; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(212,168,83,.25); }
+    .btn-cta-ghost { font-size: 14px; font-weight: 500; padding: 14px 24px; color: var(--ivory-dim); border: 1.5px solid var(--wire-mid); border-radius: 10px; cursor: none; text-decoration: none; transition: all .15s; }
+    .btn-cta-ghost:hover { border-color: var(--wire-hi); color: var(--ivory); }
+
+    /* ── FOOTER ─────────────────────────────── */
+    footer { background: var(--ink); border-top: 1px solid var(--wire); padding: 56px 0 32px; }
+    .footer-inner { max-width: var(--max-w); margin: 0 auto; padding: 0 40px; }
+    .footer-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 48px; }
+    .footer-logo { font-family: 'Bricolage Grotesque', sans-serif; font-size: 18px; font-weight: 800; color: var(--ivory); letter-spacing: -.03em; margin-bottom: 10px; }
+    .footer-logo em { font-style: italic; color: var(--gold); }
+    .footer-desc { font-size: 12px; color: var(--ivory-faint); line-height: 1.75; max-width: 220px; }
+    .footer-col-title { font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--ivory-faint); margin-bottom: 14px; }
+    .footer-links { display: flex; flex-direction: column; gap: 9px; }
+    .footer-links a { font-size: 12px; color: var(--ivory-dim); text-decoration: none; transition: color .15s; }
+    .footer-links a:hover { color: var(--ivory); }
+    .footer-bottom { border-top: 1px solid var(--wire); padding-top: 22px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+    .footer-copy { font-size: 11px; color: var(--ivory-faint); }
+    .footer-badges { display: flex; gap: 8px; }
+    .footer-badge { font-size: 10px; font-weight: 600; padding: 3px 9px; border-radius: 4px; background: var(--ink-3); border: 1px solid var(--wire); color: var(--ivory-faint); }
+
+    /* ── RESPONSIVE ─────────────────────────── */
+    @media (max-width: 1024px) {
+      .hero-inner { grid-template-columns: 1fr; }
+      .hero-visual { display: none; }
+      .steps-grid { grid-template-columns: 1fr 1fr; }
+      .tests-grid { grid-template-columns: 1fr; }
+      .test-card-wide { grid-template-columns: 1fr; }
+      .news-grid { grid-template-columns: 1fr; }
+      .schools-grid { grid-template-columns: 1fr 1fr; }
+      .gps-inner { grid-template-columns: 1fr; }
+      .testi-grid { grid-template-columns: 1fr 1fr; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .nav-inner, .section-inner, .footer-inner, .hero-inner, .gps-inner, .trusted-inner, .cta-inner { padding-left: 20px; padding-right: 20px; }
+      .steps-grid, .tests-grid, .schools-grid, .testi-grid { grid-template-columns: 1fr; }
+      .stats-band { grid-template-columns: 1fr 1fr; }
+      .footer-grid { grid-template-columns: 1fr; }
+    }
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: var(--ink); }
+    ::-webkit-scrollbar-thumb { background: var(--wire-mid); border-radius: 3px; }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+    .reveal { opacity: 0; }
+    .reveal.in { animation: fadeUp .6s ease forwards; }
+  </style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div class="ae-cursor" id="ae-cursor"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="avenir_etude_homepage_v2.html" class="nav-logo">Avenir <em>Étude</em></a>
+    <div class="nav-links">
+      <a href="avenir_etude_test_riasec_v2.html" class="nav-link">Tests</a>
+      <a href="avenir_etude_ecoles.html" class="nav-link">Écoles & Universités</a>
+      <a href="avenir_etude_carrieres.html" class="nav-link">Carrières</a>
+      <a href="avenir_etude_gps_academique.html" class="nav-link">GPS Académique</a>
+      <a href="avenir_etude_ressources.html" class="nav-link">Actualités</a>
+      <a href="avenir_etude_evenements.html" class="nav-link">Événements</a>
+    </div>
+    <div class="nav-right">
+      <a href="avenir_etude_auth.html" class="btn-connexion">Connexion</a>
+      <a href="avenir_etude_auth.html" class="btn-inscrire">
+        S'inscrire
+        <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-inner">
+    <div>
+      <div class="hero-eyebrow">
+        <span class="hero-eyebrow-dot"></span>
+        La boussole académique de l'Afrique
+      </div>
+      <h1 class="hero-title">
+        Trouve ta voie.<br>
+        Construis ton<br>
+        <em>avenir.</em>
+      </h1>
+      <p class="hero-sub">Tests scientifiques d'orientation, GPS académique personnalisé et base de données de 1 472 établissements de Côte d'Ivoire. L'outil qu'on aurait voulu avoir.</p>
+      <div class="hero-ctas">
+        <a href="avenir_etude_auth.html" class="btn-hero-primary">
+          Commencer gratuitement
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="avenir_etude_ecoles.html" class="btn-hero-ghost">
+          Explorer les écoles
+          <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+      <div class="hero-proof">
+        <div class="hero-avatars">
+          <div class="hero-av" style="background:#4F7AE8;">KA</div>
+          <div class="hero-av" style="background:#34C97A;">MY</div>
+          <div class="hero-av" style="background:#D4A853;">FS</div>
+          <div class="hero-av" style="background:#8B5CF6;">AB</div>
+          <div class="hero-av" style="background:#F59E0B;">CK</div>
+        </div>
+        <p class="hero-proof-text"><strong>+2 400 étudiants</strong> ont trouvé leur voie ce mois</p>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-radar-wrap">
+        <svg id="hero-radar" width="340" height="340" viewBox="0 0 340 340"></svg>
+        <div class="hero-float hf-1">
+          <div class="hf-label">Profil RIASEC</div>
+          <strong style="color:var(--gold);">IAS</strong>
+          <div style="font-size:10px;color:var(--ivory-dim);margin-top:2px;">Investigatif · Artistique</div>
+        </div>
+        <div class="hero-float hf-2">
+          <div class="hf-label">Compatibilité</div>
+          <strong style="color:var(--green);font-size:20px;">96%</strong>
+          <div style="font-size:10px;color:var(--ivory-dim);">Data Scientist · ENSEA</div>
+        </div>
+        <div class="hero-float hf-3">
+          <div class="hf-label">BAC 2025</div>
+          <strong style="color:var(--gold);font-size:18px;">40,15%</strong>
+          <div style="font-size:10px;color:var(--green);">↑ +5,98 pts</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Trusted bar -->
+  <div class="trusted-bar" style="margin-top:60px;">
+    <div class="trusted-inner">
+      <span class="trusted-label">Références CI</span>
+      <div class="trusted-items">
+        <div class="trusted-item"><div class="ti-dot" style="background:#5cb85c;"></div>INP-HB</div>
+        <div class="trusted-item"><div class="ti-dot" style="background:#4a9edd;"></div>ENSEA</div>
+        <div class="trusted-item"><div class="ti-dot" style="background:#3b82f6;"></div>ESATIC</div>
+        <div class="trusted-item"><div class="ti-dot" style="background:#f59e0b;"></div>UFHB</div>
+        <div class="trusted-item"><div class="ti-dot" style="background:#8b5cf6;"></div>HEC Abidjan</div>
+        <div class="trusted-item"><div class="ti-dot" style="background:#ef4444;"></div>ENA CI</div>
+        <div class="trusted-item"><div class="ti-dot" style="background:#34C97A;"></div>1 472 établissements</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section">
+  <div class="section-inner">
+    <div class="section-header">
+      <div>
+        <div class="section-eyebrow">Comment ça marche</div>
+        <h2 class="section-title">4 étapes vers<br><em>votre orientation</em></h2>
+      </div>
+    </div>
+    <div class="steps-grid reveal">
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <div class="step-title">Crée ton profil</div>
+        <div class="step-desc">Niveau, série BAC, moyennes par matière, métier de rêve. L'inscription est obligatoire pour personnaliser les résultats.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <div class="step-title">Passe les tests</div>
+        <div class="step-desc">RIASEC 100 questions (8s/question) + Test d'aptitudes cognitives (45s/question). Chrono automatique. Résultats immédiats.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <div class="step-title">Découvre ton profil</div>
+        <div class="step-desc">Radar RIASEC + scores d'aptitudes + 5 métiers les plus compatibles + 3 écoles qui correspondent à ton profil réel.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">4</div>
+        <div class="step-title">Suis ton GPS</div>
+        <div class="step-desc">Plan de route complet vers ton métier de rêve. Mis à jour chaque trimestre selon tes nouvelles moyennes.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTS -->
+<section class="section" style="background:var(--ink-2);">
+  <div class="section-inner">
+    <div class="section-header">
+      <div>
+        <div class="section-eyebrow">Tests scientifiques</div>
+        <h2 class="section-title">Deux tests.<br><em>Un profil complet.</em></h2>
+        <p class="section-sub" style="margin-top:8px;">Basés sur les modèles RIASEC et les tests d'aptitudes cognitives utilisés par les universités mondiales.</p>
+      </div>
+      <a href="avenir_etude_test_riasec_v2.html" class="see-all">Voir tous les tests →</a>
+    </div>
+
+    <div class="tests-grid reveal">
+      <!-- Test 1 RIASEC -->
+      <a href="avenir_etude_test_riasec_v2.html" class="test-card">
+        <span class="tc-timer tt-gold">⏱ 8s / question</span>
+        <div class="tc-badge tcb-riasec">Test RIASEC</div>
+        <div class="tc-icon">🧩</div>
+        <div class="tc-title">Intérêts Professionnels</div>
+        <div class="tc-desc">100 questions pour identifier tes intérêts dominants sur 6 dimensions contextualisées pour la Côte d'Ivoire. Réalistic, Investigatif, Artistique, Social, Entreprenant, Conventionnel.</div>
+        <div class="tc-meta">
+          <div class="tc-meta-item">🕐 15 minutes</div>
+          <div class="tc-meta-item">📊 6 dimensions</div>
+          <div class="tc-meta-item">✓ Gratuit</div>
+        </div>
+        <div class="tc-cta">Commencer le test <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+      </a>
+
+      <!-- Test 2 Aptitudes -->
+      <a href="avenir_etude_test_riasec_v2.html" class="test-card">
+        <span class="tc-timer tt-blue">⏱ 45s / question</span>
+        <div class="tc-badge tcb-aptitudes">Test Aptitudes</div>
+        <div class="tc-icon">⚡</div>
+        <div class="tc-title">Aptitudes Cognitives</div>
+        <div class="tc-desc">Mesure tes capacités réelles : raisonnement logique, aptitude verbale, aptitude numérique et capacité analytique. Les scores affinent les recommandations de filières.</div>
+        <div class="tc-meta">
+          <div class="tc-meta-item">🕐 15 minutes</div>
+          <div class="tc-meta-item">🧠 4 dimensions</div>
+          <div class="tc-meta-item">📈 Score /100</div>
+        </div>
+        <div class="tc-cta">Commencer le test <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+      </a>
+    </div>
+
+    <!-- Test 3 GPS skills (bonus) -->
+    <div style="margin-top:14px;">
+      <a href="avenir_etude_gps_academique.html" class="test-card test-card-wide" style="display:grid;">
+        <div>
+          <div class="tc-badge tcb-skills" style="margin-bottom:12px;">GPS Académique</div>
+          <div class="tc-title" style="font-size:22px;">Ton plan de route vers ton métier de rêve</div>
+          <div class="tc-desc">Déclare ton objectif — médecin, ingénieur, data scientist. On génère un plan d'action complet : série BAC, matières à renforcer, concours à préparer, universités à viser.</div>
+          <div class="tc-cta" style="margin-top:16px;">Activer mon GPS <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;align-content:start;">
+          <div style="background:var(--ink-3);border:1px solid var(--wire);border-radius:10px;padding:14px;text-align:center;">
+            <div style="font-size:22px;margin-bottom:6px;">🏫</div>
+            <div style="font-family:'Bricolage Grotesque',sans-serif;font-size:13px;font-weight:700;color:var(--ivory);">3ème</div>
+            <div style="font-size:10px;color:var(--ivory-dim);margin-top:3px;">Plan 4 ans</div>
+          </div>
+          <div style="background:var(--ink-3);border:1px solid var(--wire);border-radius:10px;padding:14px;text-align:center;">
+            <div style="font-size:22px;margin-bottom:6px;">📚</div>
+            <div style="font-family:'Bricolage Grotesque',sans-serif;font-size:13px;font-weight:700;color:var(--ivory);">Lycéen</div>
+            <div style="font-size:10px;color:var(--ivory-dim);margin-top:3px;">Suivi trimestriel</div>
+          </div>
+          <div style="background:var(--ink-3);border:1px solid var(--gold-dim);border-radius:10px;padding:14px;text-align:center;">
+            <div style="font-size:22px;margin-bottom:6px;">🎓</div>
+            <div style="font-family:'Bricolage Grotesque',sans-serif;font-size:13px;font-weight:700;color:var(--gold);">Bachelier</div>
+            <div style="font-size:10px;color:var(--ivory-dim);margin-top:3px;">Actions J+30</div>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- GPS SECTION -->
+<section class="gps-section">
+  <div class="gps-inner">
+    <div>
+      <div class="section-eyebrow">🗺️ GPS Académique</div>
+      <h2 class="section-title">Tu sais ce que tu veux<br>devenir. <em>On t'y amène.</em></h2>
+      <p class="section-sub" style="margin-bottom:28px;">Déclare ton métier de rêve. On génère ton plan de route complet avec chaque étape détaillée — et un Plan B si le chemin principal se ferme.</p>
+      <div class="gps-features">
+        <div class="gps-feat"><div class="gps-feat-icon">🎯</div><div><div class="gps-feat-title">Plan de route personnalisé</div><div class="gps-feat-desc">De la 3ème jusqu'à l'université — chaque étape selon ton niveau actuel.</div></div></div>
+        <div class="gps-feat"><div class="gps-feat-icon">📊</div><div><div class="gps-feat-title">Suivi par trimestre</div><div class="gps-feat-desc">Mets à jour tes moyennes — le plan s'ajuste et t'alerte si tu dévies.</div></div></div>
+        <div class="gps-feat"><div class="gps-feat-icon">🔔</div><div><div class="gps-feat-title">Alertes intelligentes</div><div class="gps-feat-desc">"Les inscriptions ESATIC ouvrent dans 30 jours." Rien n'est manqué.</div></div></div>
+        <div class="gps-feat"><div class="gps-feat-icon">🔄</div><div><div class="gps-feat-title">Plan B automatique</div><div class="gps-feat-desc">Alternatives cohérentes si le chemin principal se ferme.</div></div></div>
+      </div>
+    </div>
+    <div class="gps-road">
+      <div class="gps-profile">
+        <div class="gps-avatar">AK</div>
+        <div><div class="gps-profile-name">Aminata Koné</div><div class="gps-profile-level">Élève de 3ème · Abidjan</div></div>
+      </div>
+      <div class="gps-dream">
+        <div class="gps-dream-lbl">🌟 Objectif</div>
+        <div class="gps-dream-val">Médecin Chirurgienne</div>
+      </div>
+      <div class="gps-steps">
+        <div class="gps-step">
+          <div class="gps-dot gd-done"><svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="#060B14" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></div>
+          <div><div class="gps-step-title">Choisir la série D au BAC</div><div class="gps-step-desc">Sciences Naturelles — obligatoire pour médecine</div><span class="gps-tag gt-done">✓ Complété</span></div>
+        </div>
+        <div class="gps-step">
+          <div class="gps-dot gd-now"><div style="width:8px;height:8px;border-radius:50%;background:var(--ink);"></div></div>
+          <div><div class="gps-step-title">Renforcer SVT & Chimie</div><div class="gps-step-desc">SVT : 13/20 → objectif 17/20</div><span class="gps-tag gt-now">⚡ En cours</span></div>
+        </div>
+        <div class="gps-step">
+          <div class="gps-dot gd-future"><span style="font-size:9px;color:var(--ivory-faint);font-weight:700;">3</span></div>
+          <div><div class="gps-step-title">BAC D mention Bien minimum</div><div class="gps-step-desc">Seuil pour le concours UFHB Médecine</div><span class="gps-tag gt-future">Dans 2 ans</span></div>
+        </div>
+        <div class="gps-step">
+          <div class="gps-dot gd-future"><span style="font-size:9px;color:var(--ivory-faint);font-weight:700;">4</span></div>
+          <div><div class="gps-step-title">Concours UFHB — Faculté Médecine</div><div class="gps-step-desc">S'inscrire dès les résultats BAC</div><span class="gps-tag gt-future">Dans 3 ans</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TOP SCHOOLS -->
+<section class="section">
+  <div class="section-inner">
+    <div class="section-header">
+      <div>
+        <div class="section-eyebrow">Écoles & Universités</div>
+        <h2 class="section-title">Les meilleures écoles<br><em>de Côte d'Ivoire</em></h2>
+      </div>
+      <a href="avenir_etude_ecoles.html" class="see-all">Voir les 1 472 établissements →</a>
+    </div>
+    <div class="schools-grid reveal">
+      <a href="avenir_etude_fiche_ecole.html?id=CI-001" class="school-card">
+        <div class="sc-top">
+          <div class="sc-logo" style="background:#1a3a1a;color:#5cb85c;">INP-HB</div>
+          <div><div class="sc-name">INP-HB</div><div class="sc-type">Grande École · Yamoussoukro</div></div>
+        </div>
+        <div class="sc-stats">
+          <div class="sc-stat"><div class="sc-stat-val">4.8</div><div class="sc-stat-lbl">Note AE</div></div>
+          <div class="sc-stat"><div class="sc-stat-val">100%</div><div class="sc-stat-lbl">Insertion</div></div>
+          <div class="sc-stat"><div class="sc-stat-val">#1</div><div class="sc-stat-lbl">Classement</div></div>
+        </div>
+      </a>
+      <a href="avenir_etude_fiche_ecole.html?id=CI-002" class="school-card">
+        <div class="sc-top">
+          <div class="sc-logo" style="background:#0a2244;color:#4a9edd;">ENSEA</div>
+          <div><div class="sc-name">ENSEA</div><div class="sc-type">Centre d'Excellence · Abidjan</div></div>
+        </div>
+        <div class="sc-stats">
+          <div class="sc-stat"><div class="sc-stat-val">4.7</div><div class="sc-stat-lbl">Note AE</div></div>
+          <div class="sc-stat"><div class="sc-stat-val">95%</div><div class="sc-stat-lbl">Insertion</div></div>
+          <div class="sc-stat"><div class="sc-stat-val">#2</div><div class="sc-stat-lbl">Classement</div></div>
+        </div>
+      </a>
+      <a href="avenir_etude_fiche_ecole.html?id=CI-003" class="school-card">
+        <div class="sc-top">
+          <div class="sc-logo" style="background:#0d1f3a;color:#3b82f6;">ESATIC</div>
+          <div><div class="sc-name">ESATIC</div><div class="sc-type">Grande École · Abidjan</div></div>
+        </div>
+        <div class="sc-stats">
+          <div class="sc-stat"><div class="sc-stat-val">4.5</div><div class="sc-stat-lbl">Note AE</div></div>
+          <div class="sc-stat"><div class="sc-stat-val">90%</div><div class="sc-stat-lbl">Insertion</div></div>
+          <div class="sc-stat"><div class="sc-stat-val">#3</div><div class="sc-stat-lbl">Classement</div></div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- NEWS COMPACT -->
+<section class="section" style="background:var(--ink-2);">
+  <div class="section-inner">
+    <div class="section-header">
+      <div>
+        <div class="section-eyebrow">Intelligence éducative</div>
+        <h2 class="section-title">L'info qui change<br><em>ta trajectoire</em></h2>
+      </div>
+      <a href="avenir_etude_ressources.html" class="see-all">Toutes les actualités →</a>
+    </div>
+    <div class="news-grid">
+      <a href="avenir_etude_ressources.html" class="news-une">
+        <span class="news-tag nt-examens">BAC 2026</span>
+        <div class="news-une-title">Épreuves du 15 au 19 juin — résultats le 6 juillet à 14h sur men-deco.org</div>
+        <div class="news-une-desc">Calendrier officiel DECO. Tout ce que les candidats au BAC 2026 doivent savoir pour se préparer.</div>
+        <div class="news-une-meta">Source : men-deco.org · Mars 2026</div>
+      </a>
+      <div class="news-cards">
+        <a href="avenir_etude_ressources.html" class="news-card">
+          <div class="nc-top"><span class="news-tag nt-resultats">BAC 2025</span><span class="nc-date">7 juil. 2025</span></div>
+          <div class="nc-title">40,15% de réussite — 133 518 admis sur 332 515 candidats</div>
+        </a>
+        <a href="avenir_etude_ressources.html" class="news-card">
+          <div class="nc-top"><span class="news-tag nt-concours">Concours</span><span class="nc-date">Fév. 2026</span></div>
+          <div class="nc-title">ESATIC 2026 — préinscriptions ouvertes jusqu'au 8 mai</div>
+        </a>
+        <a href="avenir_etude_ressources.html" class="news-card">
+          <div class="nc-top"><span class="news-tag nt-resultats">BEPC 2025</span><span class="nc-date">17 juin 2025</span></div>
+          <div class="nc-title">51,41% — hausse historique de 11 points</div>
+        </a>
+        <a href="avenir_etude_ressources.html" class="news-card">
+          <div class="nc-top"><span class="news-tag nt-concours">INP-HB</span><span class="nc-date">Fév. 2026</span></div>
+          <div class="nc-title">Concours ingénieurs 2026 ouvert — max 25 ans</div>
+        </a>
+      </div>
+    </div>
+    <div class="stats-band" style="margin-top:14px;">
+      <div class="sb-item"><div class="sb-val">40,15%</div><div class="sb-lbl">Réussite BAC 2025</div></div>
+      <div class="sb-item"><div class="sb-val">51,41%</div><div class="sb-lbl">Réussite BEPC 2025</div></div>
+      <div class="sb-item"><div class="sb-val">1,566M</div><div class="sb-lbl">Candidats examens 2025</div></div>
+      <div class="sb-item"><div class="sb-val">6 juil.</div><div class="sb-lbl">Résultats BAC 2026</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="section">
+  <div class="section-inner">
+    <div class="section-header">
+      <div>
+        <div class="section-eyebrow">Témoignages</div>
+        <h2 class="section-title">Ils ont trouvé<br><em>leur voie</em></h2>
+      </div>
+    </div>
+    <div class="testi-grid reveal">
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"Le test m'a révélé que j'étais fait pour la data science. J'ai trouvé l'ENSEA sur la plateforme — gratuit, insertion 95%. C'est exactement ce qu'il me fallait."</p>
+        <div class="testi-author"><div class="testi-av" style="background:#4F7AE8;">KD</div><div><div class="testi-name">Koffi D.</div><div class="testi-role">Étudiant ISE · ENSEA</div></div></div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"Mon fils voulait devenir médecin mais avait des lacunes en SVT. Le GPS lui a montré exactement quoi travailler. Il est aujourd'hui en Terminale D avec 16 de moyenne."</p>
+        <div class="testi-author"><div class="testi-av" style="background:#34C97A;">MC</div><div><div class="testi-name">Marie C.</div><div class="testi-role">Parent · Abidjan-Cocody</div></div></div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"J'avais le BAC D mais je ne savais pas quoi choisir. En 15 minutes de test, j'avais mon profil et 3 écoles recommandées. J'ai choisi l'ESATIC — c'était le bon choix."</p>
+        <div class="testi-author"><div class="testi-av" style="background:#D4A853;">FA</div><div><div class="testi-name">Fatou A.</div><div class="testi-role">Étudiante L2 · ESATIC</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-section">
+  <div class="cta-inner">
+    <h2 class="cta-title">Prêt à dessiner<br><em>ton avenir ?</em></h2>
+    <p class="cta-sub">Rejoins les étudiants qui ont transformé leur ambition en plan d'action concret. Gratuit. Sans engagement. Résultats immédiats.</p>
+    <div class="cta-buttons">
+      <a href="avenir_etude_auth.html" class="btn-cta-main">Créer mon compte gratuit →</a>
+      <a href="avenir_etude_ecoles.html" class="btn-cta-ghost">Explorer les écoles</a>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">Avenir <em>Étude</em></div>
+        <p class="footer-desc">La boussole académique de référence en Afrique francophone. Tests scientifiques, GPS académique et base de données éducative CI.</p>
+      </div>
+      <div>
+        <div class="footer-col-title">Plateforme</div>
+        <div class="footer-links">
+          <a href="avenir_etude_test_riasec_v2.html">Tests d'orientation</a>
+          <a href="avenir_etude_ecoles.html">Écoles & Universités</a>
+          <a href="avenir_etude_carrieres.html">Explorateur carrières</a>
+          <a href="avenir_etude_gps_academique.html">GPS Académique</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Ressources</div>
+        <div class="footer-links">
+          <a href="avenir_etude_ressources.html">Actualités & Concours</a>
+          <a href="avenir_etude_evenements.html">Événements</a>
+          <a href="avenir_etude_ressources.html">Calendrier académique</a>
+          <a href="avenir_etude_ressources.html">Statistiques BAC/BEPC</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Entreprise</div>
+        <div class="footer-links">
+          <a href="#">À propos</a>
+          <a href="#">Contact</a>
+          <a href="#">Confidentialité</a>
+          <a href="#">CGU</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2026 Avenir Étude · Côte d'Ivoire · Tous droits réservés</div>
+      <div class="footer-badges">
+        <span class="footer-badge">🇨🇮 Made in CI</span>
+        <span class="footer-badge">🔒 Données sécurisées</span>
+        <span class="footer-badge">📊 Sources DECO officielles</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ── CURSOR ─────────────────────────────── */
+const cur = document.getElementById('ae-cursor');
+document.addEventListener('mousemove', e => {
+  cur.style.left = e.clientX + 'px';
+  cur.style.top  = e.clientY + 'px';
+});
+document.addEventListener('mouseleave', () => cur.style.opacity = '0');
+document.addEventListener('mouseenter', () => cur.style.opacity = '1');
+document.querySelectorAll('a, button, .step-card, .test-card, .school-card, .testi-card, .news-card, .news-une, .gps-feat').forEach(el => {
+  el.addEventListener('mouseenter', () => cur.classList.add('hover'));
+  el.addEventListener('mouseleave', () => cur.classList.remove('hover'));
+});
+
+/* ── HERO RADAR ─────────────────────────── */
+(function buildRadar() {
+  const svg = document.getElementById('hero-radar');
+  if (!svg) return;
+  const cx = 170, cy = 170, r = 120;
+  const labels = ['R','I','A','S','E','C'];
+  const vals   = [0.32, 0.94, 0.82, 0.65, 0.48, 0.20];
+  const colors = ['#E05A54','#4F7AE8','#8B5CF6','#34C97A','#D4A853','#F59E0B'];
+  const angles = labels.map((_, i) => -Math.PI / 2 + (i / 6) * 2 * Math.PI);
+
+  // Grid rings
+  [0.25, 0.5, 0.75, 1].forEach(f => {
+    const pts = angles.map(a => ({ x: cx + r*f*Math.cos(a), y: cy + r*f*Math.sin(a) }));
+    const d = pts.map((p,i) => (i?'L':'M') + p.x.toFixed(1) + ' ' + p.y.toFixed(1)).join(' ') + 'Z';
+    const path = document.createElementNS('http://www.w3.org/2000/svg','path');
+    path.setAttribute('d', d); path.setAttribute('fill', 'none');
+    path.setAttribute('stroke', 'rgba(242,237,228,.06)'); path.setAttribute('stroke-width','1');
+    svg.appendChild(path);
+  });
+
+  // Axes + labels
+  angles.forEach((a, i) => {
+    const x = cx + r * Math.cos(a), y = cy + r * Math.sin(a);
+    const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute('x1', cx); line.setAttribute('y1', cy);
+    line.setAttribute('x2', x.toFixed(1)); line.setAttribute('y2', y.toFixed(1));
+    line.setAttribute('stroke', 'rgba(242,237,228,.07)'); line.setAttribute('stroke-width','1');
+    svg.appendChild(line);
+    const lx = cx + (r+22)*Math.cos(a), ly = cy + (r+22)*Math.sin(a);
+    const t = document.createElementNS('http://www.w3.org/2000/svg','text');
+    t.setAttribute('x', lx.toFixed(1)); t.setAttribute('y', ly.toFixed(1));
+    t.setAttribute('text-anchor','middle'); t.setAttribute('dominant-baseline','central');
+    t.setAttribute('font-family',"'Bricolage Grotesque',sans-serif");
+    t.setAttribute('font-size','13'); t.setAttribute('font-weight','700');
+    t.setAttribute('fill', vals[i] > 0.6 ? colors[i] : 'rgba(242,237,228,.25)');
+    t.textContent = labels[i]; svg.appendChild(t);
+  });
+
+  // Polygon
+  const pts = angles.map((a, i) => ({ x: cx + r*vals[i]*Math.cos(a), y: cy + r*vals[i]*Math.sin(a) }));
+  const d = pts.map((p,i) => (i?'L':'M') + p.x.toFixed(1) + ' ' + p.y.toFixed(1)).join(' ') + 'Z';
+  const fill = document.createElementNS('http://www.w3.org/2000/svg','path');
+  fill.setAttribute('d', d); fill.setAttribute('fill','rgba(212,168,83,.08)');
+  svg.appendChild(fill);
+  const stroke = document.createElementNS('http://www.w3.org/2000/svg','path');
+  stroke.setAttribute('d', d); stroke.setAttribute('fill','none');
+  stroke.setAttribute('stroke','#D4A853'); stroke.setAttribute('stroke-width','2');
+  stroke.setAttribute('stroke-linecap','round');
+  const len = 700;
+  stroke.setAttribute('stroke-dasharray', len); stroke.setAttribute('stroke-dashoffset', len);
+  stroke.style.transition = 'stroke-dashoffset 2s cubic-bezier(.4,0,.2,1) .3s';
+  svg.appendChild(stroke);
+  pts.forEach((p, i) => {
+    const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    c.setAttribute('cx', p.x.toFixed(1)); c.setAttribute('cy', p.y.toFixed(1));
+    c.setAttribute('r', '4'); c.setAttribute('fill', vals[i] > 0.6 ? colors[i] : 'rgba(242,237,228,.25)');
+    c.style.opacity = '0'; c.style.transition = `opacity .3s ease ${2+i*.1}s`;
+    svg.appendChild(c); setTimeout(() => c.style.opacity = '1', 100);
+  });
+  setTimeout(() => stroke.setAttribute('stroke-dashoffset','0'), 200);
+})();
+
+/* ── SCROLL REVEAL ──────────────────────── */
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('in');
+      const children = e.target.querySelectorAll('.step-card, .school-card, .testi-card, .test-card, .news-card');
+      children.forEach((el, i) => {
+        el.style.animationDelay = (i * 0.08) + 's';
+        el.classList.add('reveal');
+        setTimeout(() => el.classList.add('in'), i * 80);
+      });
+      io.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+</script>
+</body>
+</html>
