@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Avenir Étude — Ressources & Actualités</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Instrument+Serif:ital@0;1&family=Instrument+Sans:ital,wght@0,400;0,500;0,600&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    :root{
+      --ink:#060B14;--ink-2:#0C1220;--ink-3:#111827;--ink-4:#1C2535;
+      --gold:#D4A853;--gold-dim:#7A5E2A;--gold-10:rgba(212,168,83,.10);
+      --ivory:#F2EDE4;--ivory-dim:#8A8278;--ivory-faint:#2E3545;
+      --wire:rgba(242,237,228,.07);--wire-mid:rgba(242,237,228,.13);--wire-hi:rgba(242,237,228,.24);
+      --green:#34C97A;--green-10:rgba(52,201,122,.1);
+      --blue:#4F7AE8;--blue-10:rgba(79,122,232,.1);
+      --red:#E05A54;--red-10:rgba(224,90,84,.1);
+      --orange:#F59E0B;--purple:#8B5CF6;
+      --max-w:1200px;
+    }
+    body{font-family:'Instrument Sans',sans-serif;background:var(--ink);color:var(--ivory);-webkit-font-smoothing:antialiased;cursor:none;overflow-x:hidden;}
+    .ae-cursor{position:fixed;width:10px;height:10px;background:var(--gold);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);mix-blend-mode:screen;transition:width .18s,height .18s;top:-100px;left:-100px;}
+    .ae-cursor.hover{width:32px;height:32px;background:transparent;border:1.5px solid var(--gold);}
+    body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:8000;}
+
+    /* NAV */
+    nav{position:sticky;top:0;z-index:500;height:64px;border-bottom:1px solid var(--wire);background:rgba(6,11,20,.94);backdrop-filter:blur(20px);display:flex;align-items:center;}
+    .nav-inner{max-width:var(--max-w);margin:0 auto;padding:0 40px;width:100%;display:flex;align-items:center;gap:8px;}
+    .nav-logo{font-family:'Bricolage Grotesque',sans-serif;font-size:17px;font-weight:800;color:var(--ivory);text-decoration:none;letter-spacing:-.03em;margin-right:16px;flex-shrink:0;}
+    .nav-logo em{font-style:italic;color:var(--gold);}
+    .nav-links{display:flex;gap:2px;flex:1;}
+    .nav-link{font-size:13px;font-weight:500;color:var(--ivory-dim);text-decoration:none;padding:7px 12px;border-radius:7px;transition:all .15s;white-space:nowrap;}
+    .nav-link:hover{color:var(--ivory);background:var(--ink-3);}
+    .nav-link.active{color:var(--gold);}
+    .nav-right{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+    .btn-cx{font-size:13px;font-weight:600;padding:8px 18px;border:1.5px solid var(--wire-mid);border-radius:8px;background:transparent;color:var(--ivory-dim);text-decoration:none;transition:all .15s;cursor:none;}
+    .btn-cx:hover{border-color:var(--wire-hi);color:var(--ivory);}
+    .btn-ins{font-family:'Bricolage Grotesque',sans-serif;font-size:13px;font-weight:700;padding:9px 20px;background:var(--gold);color:var(--ink);border:none;border-radius:8px;text-decoration:none;cursor:none;transition:all .15s;display:inline-flex;align-items:center;gap:6px;}
+    .btn-ins:hover{background:#e0b55e;}
+
+    /* WRAP */
+    .wrap{max-width:var(--max-w);margin:0 auto;padding:0 40px;}
+
+    /* PAGE HEADER */
+    .page-header{padding:48px 0 36px;border-bottom:1px solid var(--wire);background:var(--ink-2);}
+    .ph-eyebrow{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+    .ph-eyebrow::before{content:'';width:16px;height:1px;background:var(--gold-dim);}
+    .ph-title{font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(28px,4vw,44px);font-weight:800;color:var(--ivory);letter-spacing:-.04em;line-height:1.05;margin-bottom:8px;}
+    .ph-title em{font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;color:var(--gold);}
+    .ph-sub{font-size:14px;color:var(--ivory-dim);line-height:1.7;max-width:560px;}
+
+    /* TICKER */
+    .ticker{background:var(--ink-3);border-bottom:1px solid var(--wire);padding:10px 0;overflow:hidden;}
+    .ticker-inner{max-width:var(--max-w);margin:0 auto;padding:0 40px;display:flex;align-items:center;gap:16px;}
+    .ticker-label{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 10px;border-radius:4px;background:var(--gold);color:var(--ink);white-space:nowrap;flex-shrink:0;}
+    .ticker-content{overflow:hidden;flex:1;}
+    .ticker-track{display:flex;gap:32px;animation:ticker 30s linear infinite;white-space:nowrap;}
+    @keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+    .ticker-item{font-size:12px;color:var(--ivory-dim);display:flex;align-items:center;gap:8px;white-space:nowrap;}
+    .ticker-dot{width:5px;height:5px;border-radius:50%;background:var(--gold);flex-shrink:0;}
+
+    /* TABS */
+    .tabs-bar{background:var(--ink-2);border-bottom:1px solid var(--wire);position:sticky;top:64px;z-index:100;}
+    .tabs-inner{max-width:var(--max-w);margin:0 auto;padding:0 40px;display:flex;}
+    .tab-btn{display:flex;align-items:center;gap:8px;padding:15px 22px;font-size:13px;font-weight:600;color:var(--ivory-dim);background:transparent;border:none;border-bottom:2px solid transparent;cursor:none;transition:all .2s;white-space:nowrap;font-family:'Instrument Sans',sans-serif;margin-bottom:-1px;}
+    .tab-btn:hover{color:var(--ivory);}
+    .tab-btn.active{color:var(--gold);border-bottom-color:var(--gold);}
+    .tab-count{font-size:10px;background:var(--ink-3);border:1px solid var(--wire-mid);color:var(--ivory-faint);padding:2px 8px;border-radius:10px;font-weight:700;}
+    .tab-btn.active .tab-count{background:var(--gold-10);border-color:var(--gold-dim);color:var(--gold);}
+
+    /* PANELS */
+    .panels{padding:32px 0 60px;}
+    .panel{display:none;}
+    .panel.active{display:block;}
+
+    /* ── ACTUALITÉS ── */
+    .actu-toolbar{display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap;align-items:center;}
+    .actu-chips{display:flex;gap:6px;flex-wrap:wrap;flex:1;}
+    .cat-chip{font-size:11px;font-weight:600;padding:6px 14px;border-radius:6px;border:1px solid var(--wire);background:var(--ink-3);color:var(--ivory-dim);cursor:none;transition:all .15s;}
+    .cat-chip:hover{border-color:var(--wire-mid);color:var(--ivory);}
+    .cat-chip.active{background:var(--gold-10);border-color:var(--gold-dim);color:var(--gold);}
+    .actu-search{padding:9px 14px;background:var(--ink-3);border:1px solid var(--wire-mid);border-radius:8px;font-family:'Instrument Sans',sans-serif;font-size:13px;color:var(--ivory);outline:none;transition:border-color .2s;cursor:none;min-width:200px;}
+    .actu-search:focus{border-color:var(--gold);}
+    .actu-search::placeholder{color:var(--ivory-faint);}
+
+    /* Articles grid */
+    .articles-layout{display:grid;grid-template-columns:1.4fr 1fr;gap:16px;margin-bottom:16px;}
+    .article-une{
+      background:var(--ink-2);border:1px solid var(--wire-mid);border-radius:16px;
+      padding:28px;display:flex;flex-direction:column;gap:12px;
+      text-decoration:none;cursor:none;transition:all .2s;position:relative;overflow:hidden;
+    }
+    .article-une::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--gold);}
+    .article-une:hover{border-color:var(--wire-hi);}
+    .articles-list{display:flex;flex-direction:column;gap:10px;}
+    .article-card{
+      background:var(--ink-3);border:1px solid var(--wire);border-radius:12px;
+      padding:16px;text-decoration:none;cursor:none;transition:all .15s;
+      display:flex;flex-direction:column;gap:7px;
+    }
+    .article-card:hover{border-color:var(--wire-mid);padding-left:20px;}
+    .art-meta{display:flex;align-items:center;gap:8px;}
+    .art-cat{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border-radius:3px;}
+    .ac-examens{background:var(--red-10);color:var(--red);border:1px solid rgba(224,90,84,.2);}
+    .ac-concours{background:var(--blue-10);color:var(--blue);border:1px solid rgba(79,122,232,.2);}
+    .ac-resultats{background:var(--green-10);color:var(--green);border:1px solid rgba(52,201,122,.2);}
+    .ac-orientation{background:var(--gold-10);color:var(--gold);border:1px solid var(--gold-dim);}
+    .ac-bourses{background:rgba(139,92,246,.1);color:var(--purple);border:1px solid rgba(139,92,246,.2);}
+    .ac-insertion{background:rgba(245,158,11,.1);color:var(--orange);border:1px solid rgba(245,158,11,.2);}
+    .art-date{font-size:10px;color:var(--ivory-faint);}
+    .art-title-une{font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(16px,2vw,22px);font-weight:700;color:var(--ivory);letter-spacing:-.02em;line-height:1.3;flex:1;}
+    .art-resume{font-size:13px;color:var(--ivory-dim);line-height:1.7;}
+    .art-title{font-size:13px;font-weight:600;color:var(--ivory);line-height:1.35;}
+    .art-source{font-size:10px;color:var(--ivory-faint);}
+    .art-lire{font-size:11px;font-weight:600;color:var(--gold);margin-top:auto;}
+
+    /* Articles grid rows (après la une) */
+    .articles-grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px;}
+    .art-grid-card{background:var(--ink-2);border:1px solid var(--wire);border-radius:12px;padding:18px;text-decoration:none;cursor:none;transition:all .2s;display:flex;flex-direction:column;gap:8px;}
+    .art-grid-card:hover{border-color:var(--wire-mid);transform:translateY(-2px);}
+
+    /* ── CONCOURS ── */
+    .concours-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+    .concours-card{
+      background:var(--ink-2);border:1px solid var(--wire);border-radius:14px;
+      padding:22px;cursor:none;transition:all .2s;display:flex;flex-direction:column;gap:12px;
+    }
+    .concours-card:hover{border-color:var(--wire-mid);transform:translateY(-2px);}
+    .cc-header{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
+    .cc-nom{font-family:'Bricolage Grotesque',sans-serif;font-size:16px;font-weight:700;color:var(--ivory);letter-spacing:-.01em;}
+    .cc-ecole{font-size:12px;color:var(--ivory-dim);margin-top:2px;}
+    .cc-urgence{font-size:10px;font-weight:700;padding:3px 9px;border-radius:4px;}
+    .cu-hot{background:var(--red-10);color:var(--red);border:1px solid rgba(224,90,84,.2);}
+    .cu-ok{background:var(--green-10);color:var(--green);border:1px solid rgba(52,201,122,.2);}
+    .cu-soon{background:var(--gold-10);color:var(--gold);border:1px solid var(--gold-dim);}
+    .cc-dates{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+    .cc-date-item{background:var(--ink-3);border:1px solid var(--wire);border-radius:8px;padding:10px 12px;}
+    .cd-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ivory-faint);margin-bottom:3px;}
+    .cd-val{font-size:13px;font-weight:600;color:var(--ivory);}
+    .cc-details{display:flex;flex-wrap:wrap;gap:8px;}
+    .cc-detail{font-size:11px;color:var(--ivory-dim);display:flex;align-items:center;gap:4px;}
+    .cc-lien{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--gold);text-decoration:none;transition:opacity .15s;margin-top:auto;}
+    .cc-lien:hover{opacity:.7;}
+
+    /* ── STATISTIQUES ── */
+    .stats-kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:28px;}
+    .kpi-card{background:var(--ink-2);border:1px solid var(--wire);border-radius:12px;padding:18px;}
+    .kpi-val{font-family:'Bricolage Grotesque',sans-serif;font-size:28px;font-weight:800;letter-spacing:-.04em;line-height:1;}
+    .kpi-lbl{font-size:11px;color:var(--ivory-dim);margin-top:5px;line-height:1.4;}
+    .kpi-src{font-size:9px;color:var(--ivory-faint);margin-top:3px;}
+    .kpi-trend{font-size:10px;font-weight:600;margin-top:4px;}
+    .trend-up{color:var(--green);}
+    .trend-down{color:var(--red);}
+    .trend-neu{color:var(--ivory-faint);}
+
+    /* Charts sections */
+    .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+    .stats-card{background:var(--ink-2);border:1px solid var(--wire);border-radius:14px;padding:22px;}
+    .sc-title{font-family:'Bricolage Grotesque',sans-serif;font-size:15px;font-weight:700;color:var(--ivory);margin-bottom:16px;letter-spacing:-.01em;}
+    /* Bar chart */
+    .bar-list{display:flex;flex-direction:column;gap:10px;}
+    .bar-row{display:flex;align-items:center;gap:12px;}
+    .bar-label{font-size:12px;color:var(--ivory-dim);min-width:140px;flex-shrink:0;}
+    .bar-track{flex:1;height:6px;background:var(--ink-3);border-radius:3px;overflow:hidden;}
+    .bar-fill{height:100%;border-radius:3px;transition:width 1s ease;}
+    .bar-val{font-family:'Bricolage Grotesque',sans-serif;font-size:13px;font-weight:700;min-width:48px;text-align:right;}
+    /* Evolution table */
+    .evo-table{width:100%;border-collapse:collapse;}
+    .evo-table th{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ivory-faint);padding:8px 12px;border-bottom:1px solid var(--wire);text-align:left;}
+    .evo-table td{font-size:13px;color:var(--ivory-dim);padding:10px 12px;border-bottom:1px solid var(--wire);}
+    .evo-table td:first-child{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;color:var(--ivory);}
+    .evo-table tr:last-child td{border-bottom:none;}
+    .evo-pct{font-family:'Bricolage Grotesque',sans-serif;font-size:14px;font-weight:800;}
+
+    /* ── CALENDRIER ── */
+    .cal-list{display:flex;flex-direction:column;gap:10px;}
+    .cal-item{display:flex;gap:16px;align-items:flex-start;padding:16px 20px;background:var(--ink-2);border:1px solid var(--wire);border-radius:12px;transition:border-color .15s;}
+    .cal-item:hover{border-color:var(--wire-mid);}
+    .cal-date{text-align:center;flex-shrink:0;width:52px;}
+    .cal-day{font-family:'Bricolage Grotesque',sans-serif;font-size:24px;font-weight:800;color:var(--gold);line-height:1;}
+    .cal-month{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ivory-dim);margin-top:2px;}
+    .cal-body{flex:1;}
+    .cal-title{font-size:14px;font-weight:600;color:var(--ivory);margin-bottom:3px;}
+    .cal-detail{font-size:12px;color:var(--ivory-dim);}
+    .cal-type{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border-radius:3px;margin-top:6px;display:inline-block;}
+    .ct-exam{background:var(--red-10);color:var(--red);}
+    .ct-concours{background:var(--blue-10);color:var(--blue);}
+    .ct-resultats{background:var(--green-10);color:var(--green);}
+    .ct-rentree{background:var(--gold-10);color:var(--gold);}
+
+    /* SOURCE BANNER */
+    .source-banner{background:var(--ink-3);border:1px solid var(--wire);border-radius:10px;padding:14px 18px;margin-bottom:20px;font-size:12px;color:var(--ivory-dim);display:flex;align-items:center;gap:10px;}
+    .sb-icon{font-size:16px;flex-shrink:0;}
+
+    /* FOOTER */
+    footer{background:var(--ink);border-top:1px solid var(--wire);padding:56px 0 32px;}
+    .footer-inner{max-width:var(--max-w);margin:0 auto;padding:0 40px;}
+    .footer-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:40px;margin-bottom:48px;}
+    .footer-logo{font-family:'Bricolage Grotesque',sans-serif;font-size:18px;font-weight:800;color:var(--ivory);letter-spacing:-.03em;margin-bottom:10px;}
+    .footer-logo em{font-style:italic;color:var(--gold);}
+    .footer-desc{font-size:12px;color:var(--ivory-faint);line-height:1.75;max-width:220px;}
+    .footer-col-title{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ivory-faint);margin-bottom:14px;}
+    .footer-links{display:flex;flex-direction:column;gap:9px;}
+    .footer-links a{font-size:12px;color:var(--ivory-dim);text-decoration:none;transition:color .15s;}
+    .footer-links a:hover{color:var(--ivory);}
+    .footer-bottom{border-top:1px solid var(--wire);padding-top:22px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;}
+    .footer-copy{font-size:11px;color:var(--ivory-faint);}
+    .footer-badges{display:flex;gap:8px;}
+    .footer-badge{font-size:10px;font-weight:600;padding:3px 9px;border-radius:4px;background:var(--ink-3);border:1px solid var(--wire);color:var(--ivory-faint);}
+
+    @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+    .panel.active{animation:fadeUp .4s ease;}
+
+    @media(max-width:1024px){.articles-layout{grid-template-columns:1fr;} .concours-grid{grid-template-columns:1fr;} .stats-kpi{grid-template-columns:1fr 1fr;} .stats-grid{grid-template-columns:1fr;} .footer-grid{grid-template-columns:1fr 1fr;}}
+    @media(max-width:768px){.nav-links{display:none;} .wrap,.nav-inner,.footer-inner,.ticker-inner,.tabs-inner{padding-left:20px;padding-right:20px;} .stats-kpi{grid-template-columns:1fr 1fr;} .articles-grid-3{grid-template-columns:1fr;} .footer-grid{grid-template-columns:1fr;}}
+    ::-webkit-scrollbar{width:4px;} ::-webkit-scrollbar-track{background:var(--ink);} ::-webkit-scrollbar-thumb{background:var(--wire-mid);border-radius:2px;}
+  </style>
+</head>
+<body>
+<div class="ae-cursor" id="ae-cursor"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="avenir_etude_homepage_v2.html" class="nav-logo">Avenir <em>Étude</em></a>
+    <div class="nav-links">
+      <a href="avenir_etude_test_riasec_v2.html" class="nav-link">Tests</a>
+      <a href="avenir_etude_ecoles.html" class="nav-link">Écoles & Universités</a>
+      <a href="avenir_etude_carrieres.html" class="nav-link">Carrières</a>
+      <a href="avenir_etude_gps_academique.html" class="nav-link">GPS Académique</a>
+      <a href="avenir_etude_ressources.html" class="nav-link active">Actualités</a>
+      <a href="avenir_etude_evenements.html" class="nav-link">Événements</a>
+    </div>
+    <div class="nav-right">
+      <a href="avenir_etude_auth.html" class="btn-cx">Connexion</a>
+      <a href="avenir_etude_auth.html" class="btn-ins">S'inscrire <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+    </div>
+  </div>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="wrap">
+    <div class="ph-eyebrow">Intelligence éducative · CI 2026</div>
+    <h1 class="ph-title">Ressources &<br><em>Actualités</em></h1>
+    <p class="ph-sub">Actualités éducatives, concours officiels, statistiques BAC/BEPC et calendrier académique de Côte d'Ivoire. Sources officielles DECO, MESRS et MENA-CI.</p>
+  </div>
+</div>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-inner">
+    <span class="ticker-label">LIVE</span>
+    <div class="ticker-content">
+      <div class="ticker-track" id="ticker-track"></div>
+    </div>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs-bar">
+  <div class="tabs-inner">
+    <button class="tab-btn active" id="tab-actu" onclick="showTab('actu')">📰 Actualités <span class="tab-count" id="tc-actu">12</span></button>
+    <button class="tab-btn" id="tab-concours" onclick="showTab('concours')">🏆 Concours <span class="tab-count" id="tc-concours">6</span></button>
+    <button class="tab-btn" id="tab-stats" onclick="showTab('stats')">📊 Statistiques</button>
+    <button class="tab-btn" id="tab-calendrier" onclick="showTab('calendrier')">📅 Calendrier académique</button>
+  </div>
+</div>
+
+<!-- PANELS -->
+<div class="panels">
+  <div class="wrap">
+
+    <!-- ══ ACTUALITÉS ══ -->
+    <div class="panel active" id="panel-actu">
+      <div class="actu-toolbar">
+        <div class="actu-chips" id="cat-chips"></div>
+        <input class="actu-search" type="text" id="actu-search" placeholder="Rechercher..." oninput="filterArticles()">
+      </div>
+      <div id="articles-container"></div>
+    </div>
+
+    <!-- ══ CONCOURS ══ -->
+    <div class="panel" id="panel-concours">
+      <div class="source-banner">
+        <span class="sb-icon">📋</span>
+        Concours officiels de Côte d'Ivoire — Mis à jour mars 2026. Sources : sites officiels des établissements.
+      </div>
+      <div class="concours-grid" id="concours-grid"></div>
+    </div>
+
+    <!-- ══ STATISTIQUES ══ -->
+    <div class="panel" id="panel-stats">
+      <div class="source-banner">
+        <span class="sb-icon">📊</span>
+        Données officielles DECO, MENA-CI, MESRS. Sessions 2025 publiées officiellement. Mise à jour : juillet 2025.
+      </div>
+      <div class="stats-kpi" id="stats-kpi"></div>
+      <div class="stats-grid" id="stats-grid"></div>
+    </div>
+
+    <!-- ══ CALENDRIER ══ -->
+    <div class="panel" id="panel-calendrier">
+      <div class="source-banner">
+        <span class="sb-icon">📅</span>
+        Calendrier académique officiel 2025-2026 · Sources : MENA-CI, DECO, MESRS CI
+      </div>
+      <div class="cal-list" id="cal-list"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">Avenir <em>Étude</em></div>
+        <p class="footer-desc">La boussole académique de référence en Afrique francophone.</p>
+      </div>
+      <div>
+        <div class="footer-col-title">Plateforme</div>
+        <div class="footer-links">
+          <a href="avenir_etude_test_riasec_v2.html">Tests d'orientation</a>
+          <a href="avenir_etude_ecoles.html">Écoles & Universités</a>
+          <a href="avenir_etude_carrieres.html">Explorateur carrières</a>
+          <a href="avenir_etude_gps_academique.html">GPS Académique</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Ressources</div>
+        <div class="footer-links">
+          <a href="avenir_etude_ressources.html">Actualités & Concours</a>
+          <a href="avenir_etude_evenements.html">Événements</a>
+          <a href="avenir_etude_ressources.html">Calendrier académique</a>
+          <a href="avenir_etude_ressources.html">Statistiques BAC/BEPC</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Entreprise</div>
+        <div class="footer-links">
+          <a href="#">À propos</a>
+          <a href="#">Contact</a>
+          <a href="#">Confidentialité</a>
+          <a href="avenir_etude_auth.html">Connexion</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2026 Avenir Étude · Sources officielles : DECO · MENA-CI · MESRS CI</div>
+      <div class="footer-badges">
+        <span class="footer-badge">🇨🇮 Sources officielles CI</span>
+        <span class="footer-badge">📊 Données vérifiées</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* CURSOR */
+const cur = document.getElementById('ae-cursor');
+document.addEventListener('mousemove', e => { cur.style.left=e.clientX+'px'; cur.style.top=e.clientY+'px'; });
+document.addEventListener('mouseleave', () => cur.style.opacity='0');
+document.addEventListener('mouseenter', () => cur.style.opacity='1');
+function addHover() {
+  document.querySelectorAll('a,button,.article-une,.article-card,.art-grid-card,.concours-card,.cal-item,.cat-chip').forEach(el => {
+    el.addEventListener('mouseenter', () => cur.classList.add('hover'));
+    el.addEventListener('mouseleave', () => cur.classList.remove('hover'));
+  });
+}
+
+/* ══ TABS ══ */
+function showTab(tab) {
+  ['actu','concours','stats','calendrier'].forEach(t => {
+    document.getElementById('tab-'+t).classList.toggle('active', t===tab);
+    document.getElementById('panel-'+t).classList.toggle('active', t===tab);
+    const p = document.getElementById('panel-'+t);
+    p.style.display = t===tab ? 'block' : 'none';
+    if (t===tab) p.classList.add('active');
+    else p.classList.remove('active');
+  });
+  // Ensure active panel is visible
+  document.getElementById('panel-'+tab).style.display = 'block';
+}
+
+/* ══════════════════════════════════════
+   DONNÉES ARTICLES
+══════════════════════════════════════ */
+const ARTICLES_DATA = [
+  {id:"art-001",titre:"BAC 2026 en Côte d'Ivoire : calendrier officiel complet",categorie:"Examens",date:"2026-03-01",auteur:"Équipe Avenir Étude",image_emoji:"🎓",resume:"Les épreuves écrites du BAC 2026 auront lieu du 15 au 19 juin. Les résultats seront publiés le 6 juillet à 14h sur men-deco.org. Voici tout ce que les candidats doivent savoir.",source:"DECO / men-deco.org",lien:"https://men-deco.org",une:true},
+  {id:"art-002",titre:"ESATIC 2026 : préinscriptions ouvertes jusqu'au 8 mai",categorie:"Concours",date:"2026-02-25",auteur:"Équipe Avenir Étude",image_emoji:"💻",resume:"Préinscriptions ESATIC 2026 ouvertes depuis le 20 février. Dépôt dossiers du 10 mars au 8 mai. Épreuves du 3 au 5 juin. Résultats le 26 juin. École quasi-gratuite.",source:"concours.esatic.ci",lien:"https://concours.esatic.ci",une:false},
+  {id:"art-003",titre:"BAC 2025 : taux de réussite de 40,15% — +5,98 points vs 2024",categorie:"Résultats",date:"2025-07-07",auteur:"Rédaction AE",image_emoji:"📊",resume:"133 518 candidats admis sur 332 515 présents. Le taux national progresse significativement par rapport à 2024 (34,17%). Résultats disponibles sur men-deco.org.",source:"DECO CI — Juillet 2025",lien:"https://men-deco.org",une:false},
+  {id:"art-004",titre:"BEPC 2025 : 51,41% de réussite — hausse historique de 11 points",categorie:"Résultats",date:"2025-06-17",auteur:"Rédaction AE",image_emoji:"📈",resume:"312 041 candidats admis sur 606 922 présents aux épreuves du BEPC 2025. Une progression sans précédent.",source:"DECO CI — Juin 2025",lien:"https://men-deco.org",une:false},
+  {id:"art-005",titre:"INP-HB 2026 : concours ingénieurs ouvert, max 25 ans",categorie:"Concours",date:"2026-02-23",auteur:"Équipe Avenir Étude",image_emoji:"🏗️",resume:"Le concours d'admission aux écoles d'ingénieurs de l'INP-HB est ouvert depuis le 23 février 2026. Inscriptions sur ings.concours.inphb.app. Limite d'âge : 25 ans.",source:"INP-HB Officiel",lien:"https://inphb.edu.ci",une:false},
+  {id:"art-006",titre:"ENA CI 2027 : 600 places, inscriptions jusqu'au 30 avril",categorie:"Concours",date:"2026-03-16",auteur:"Équipe Avenir Étude",image_emoji:"🏛️",resume:"L'École Nationale d'Administration de Côte d'Ivoire ouvre son concours 2027 avec 600 places. Inscriptions du 16 mars au 30 avril sur fonctionpublique.gouv.ci.",source:"Fonction Publique CI",lien:"https://fonctionpublique.gouv.ci",une:false},
+  {id:"art-007",titre:"CEPE 2025 : 86,58% de réussite pour 856 477 candidats",categorie:"Résultats",date:"2025-06-05",auteur:"Rédaction AE",image_emoji:"🏫",resume:"Le Certificat d'Études Primaires et Élémentaires 2025 enregistre un excellent taux de 86,58% avec 856 477 candidats à l'échelle nationale.",source:"DECO CI — Juin 2025",lien:"https://men-deco.org",une:false},
+  {id:"art-008",titre:"Guide : Comment préparer le concours ENSEA 2026",categorie:"Orientation",date:"2026-02-10",auteur:"Équipe Avenir Étude",image_emoji:"📚",resume:"L'ENSEA est le centre d'excellence africain en statistiques. Concours très sélectif : mathématiques, physique, français. Voici la méthode pour maximiser vos chances.",source:"Avenir Étude",lien:"#",une:false},
+  {id:"art-009",titre:"Les 10 métiers les plus recrutés en Côte d'Ivoire en 2026",categorie:"Orientation",date:"2026-01-15",auteur:"Équipe Avenir Étude",image_emoji:"💼",resume:"Data Scientists, Ingénieurs télécoms, Experts cybersécurité… Découvrez les profils les plus demandés par les entreprises ivoiriennes cette année.",source:"Grey Search Africa 2025",lien:"#",une:false},
+  {id:"art-010",titre:"Bourses d'études Côte d'Ivoire 2026 : guide complet",categorie:"Bourses",date:"2026-01-28",auteur:"Équipe Avenir Étude",image_emoji:"🎯",resume:"MESRS, Campus France, bourses belges, canadiennes… Tout ce que les bacheliers ivoiriens doivent savoir pour financer leurs études supérieures.",source:"MESRS CI / Campus France",lien:"#",une:false},
+  {id:"art-011",titre:"Taux d'insertion professionnelle : les grandes écoles CI à la loupe",categorie:"Orientation",date:"2026-02-05",auteur:"Équipe Avenir Étude",image_emoji:"🔬",resume:"INP-HB : 100% · ENSEA : 95% · ESATIC : 90%... Analyse comparative du taux d'insertion professionnelle des grandes écoles publiques de Côte d'Ivoire.",source:"MESRS CI 2025",lien:"#",une:false},
+  {id:"art-012",titre:"INFAS 2026 : formation agents de santé, dossiers ouverts",categorie:"Concours",date:"2026-03-05",auteur:"Équipe Avenir Étude",image_emoji:"🏥",resume:"L'Institut National de Formation des Agents de Santé ouvre ses inscriptions pour la rentrée 2026. Infirmiers, sages-femmes, techniciens de laboratoire.",source:"INFAS CI",lien:"#",une:false},
+];
+
+const CONCOURS_DATA = [
+  {id:"c-001",nom:"BAC 2026",ecole:"Enseignement secondaire national",date_epreuves:"15–19 juin 2026",date_resultats:"6 juillet 2026",site:"men-deco.org",details:"Épreuves écrites nationales. Résultats à 14h sur men-deco.org.",series:["Toutes séries"],gratuit:true,urgence:"hot"},
+  {id:"c-002",nom:"Concours ESATIC 2026",ecole:"ESATIC — Treichville, Abidjan",date_epreuves:"3–5 juin 2026",date_inscriptions:"Jusqu'au 8 mai 2026",site:"concours.esatic.ci",details:"École publique gratuite. Informatique, Cybersécurité, Réseaux. Épreuves : Maths, Physique, Français.",series:["Série C","D","E","F2"],gratuit:true,urgence:"soon"},
+  {id:"c-003",nom:"Concours INP-HB 2026",ecole:"INP-HB — Yamoussoukro",date_epreuves:"Mai–Juin 2026",date_inscriptions:"Ouvert — max 25 ans",site:"ings.concours.inphb.app",details:"Génie Civil, Génie Informatique, Agronomie, Commerce. École publique gratuite. Limite d'âge : 25 ans.",series:["Série C","D","E"],gratuit:true,urgence:"soon"},
+  {id:"c-004",nom:"ENA CI — Concours 2027",ecole:"ENA — École Nationale d'Administration",date_epreuves:"Fin 2026",date_inscriptions:"16 mars – 30 avril 2026",site:"fonctionpublique.gouv.ci",details:"600 places. Formation des hauts fonctionnaires de l'État. Très sélectif.",series:["Toutes séries"],gratuit:true,urgence:"hot"},
+  {id:"c-005",nom:"Concours ENSEA 2026",ecole:"ENSEA — Cocody-Angré, Abidjan",date_epreuves:"Juin 2026",date_inscriptions:"À confirmer — site officiel",site:"ensea.ed.ci",details:"ISE, ASS, ISEP. Centre d'Excellence Africain reconnu Banque Mondiale. Maths très importantes.",series:["Série C","D"],gratuit:true,urgence:"ok"},
+  {id:"c-006",nom:"Concours INFAS 2026",ecole:"INFAS — Formation agents de santé",date_epreuves:"Juin 2026",date_inscriptions:"Mars–Mai 2026",site:"infas.ci",details:"Infirmiers, Sages-femmes, Techniciens labo. École publique gratuite. BAC D exigé.",series:["Série D","C"],gratuit:true,urgence:"ok"},
+];
+
+const STATS_DATA = {
+  chiffres_cles: [
+    {valeur:"1,566M",label:"Candidats examens 2025 (CEPE+BEPC+BAC)",tendance:"hausse",color:"gold"},
+    {valeur:"40,15%",label:"Taux réussite BAC 2025 · +5,98 pts",tendance:"hausse",color:"green"},
+    {valeur:"51,41%",label:"Taux réussite BEPC 2025 · +11 pts",tendance:"hausse",color:"green"},
+    {valeur:"86,58%",label:"Taux réussite CEPE 2025",tendance:"stable",color:"blue"},
+  ],
+  filieres:[
+    {nom:"Série D (Sciences de la vie)",pct:34,color:"var(--green)"},
+    {nom:"Série A2 (Lettres/Humaines)",pct:22,color:"var(--blue)"},
+    {nom:"Série C (Maths/Sciences)",pct:18,color:"var(--gold)"},
+    {nom:"Série B (Économie)",pct:12,color:"var(--orange)"},
+    {nom:"Autres séries",pct:14,color:"var(--ivory-faint)"},
+  ],
+  insertion:[
+    {ecole:"INP-HB",pct:100},
+    {ecole:"ENSEA",pct:95},
+    {ecole:"ESATIC",pct:90},
+    {ecole:"ENA CI",pct:100},
+    {ecole:"INFAS",pct:95},
+    {ecole:"HEC Abidjan",pct:88},
+  ],
+  evolution_bac:[
+    {annee:"2021",taux:28.4,admis:"85k"},
+    {annee:"2022",taux:31.2,admis:"99k"},
+    {annee:"2023",taux:33.1,admis:"105k"},
+    {annee:"2024",taux:34.17,admis:"107k"},
+    {annee:"2025",taux:40.15,admis:"133k"},
+  ]
+};
+
+const CALENDRIER_DATA = [
+  {jour:6,mois:"Juil.",annee:2026,titre:"Résultats BAC 2026 — 14h00",detail:"Publication sur men-deco.org et dans les établissements",type:"resultats"},
+  {jour:19,mois:"Juin",annee:2026,titre:"Fin des épreuves BAC 2026",detail:"Dernière journée des épreuves écrites du Baccalauréat national",type:"exam"},
+  {jour:15,mois:"Juin",annee:2026,titre:"Début des épreuves BAC 2026",detail:"Début des épreuves écrites nationales du Baccalauréat",type:"exam"},
+  {jour:8,mois:"Mai",annee:2026,titre:"Clôture inscriptions ESATIC 2026",detail:"Dernière date pour déposer son dossier sur concours.esatic.ci",type:"concours"},
+  {jour:30,mois:"Avr.",annee:2026,titre:"Clôture inscriptions ENA CI 2027",detail:"Date limite sur fonctionpublique.gouv.ci — 600 places",type:"concours"},
+  {jour:"Mai",mois:"",annee:2026,titre:"Épreuves concours INP-HB 2026",detail:"Dates à confirmer — ings.concours.inphb.app",type:"concours"},
+  {jour:"Sept.",mois:"",annee:2026,titre:"Rentrée universitaire 2026-2027",detail:"Rentrée des universités publiques et grandes écoles CI",type:"rentree"},
+  {jour:"Oct.",mois:"",annee:2025,titre:"Rentrée lycées 2025-2026",detail:"Rentrée de l'enseignement secondaire public",type:"rentree"},
+  {jour:17,mois:"Juin",annee:2025,titre:"Résultats BEPC 2025 — 51,41%",detail:"312 041 admis sur 606 922 présents — record historique",type:"resultats"},
+  {jour:7,mois:"Juil.",annee:2025,titre:"Résultats BAC 2025 — 40,15%",detail:"133 518 admis sur 332 515 présents — progression notable",type:"resultats"},
+];
+
+/* ══ TICKER ══ */
+function buildTicker() {
+  const items = [
+    "BAC 2026 : épreuves du 15 au 19 juin",
+    "Résultats BAC 2026 le 6 juillet à 14h sur men-deco.org",
+    "ESATIC 2026 : clôture inscriptions le 8 mai",
+    "INP-HB 2026 : concours ouvert — max 25 ans",
+    "ENA CI 2027 : 600 places — inscriptions jusqu'au 30 avril",
+    "BAC 2025 : 40,15% de réussite — +5,98 points",
+    "BEPC 2025 : 51,41% — hausse record de 11 points",
+  ];
+  const doubled = [...items, ...items];
+  document.getElementById('ticker-track').innerHTML = doubled.map(i =>
+    `<span class="ticker-item"><span class="ticker-dot"></span>${i}</span>`
+  ).join('');
+}
+
+/* ══ CAT CHIPS ══ */
+let activeCat = 'all';
+function buildCatChips() {
+  const cats = ['all', ...new Set(ARTICLES_DATA.map(a => a.categorie))];
+  const container = document.getElementById('cat-chips');
+  container.innerHTML = cats.map(c =>
+    `<button class="cat-chip ${c==='all'?'active':''}" onclick="setCat('${c}',this)">${c==='all'?'Tout':c}</button>`
+  ).join('');
+}
+
+function setCat(cat, btn) {
+  activeCat = cat;
+  document.querySelectorAll('.cat-chip').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  filterArticles();
+}
+
+/* ══ ARTICLES ══ */
+function getCatClass(cat) {
+  const map = {Examens:'ac-examens',Concours:'ac-concours',Résultats:'ac-resultats',Orientation:'ac-orientation',Bourses:'ac-bourses','Insertion':'ac-insertion'};
+  return map[cat] || 'ac-orientation';
+}
+
+function filterArticles() {
+  const q = document.getElementById('actu-search').value.toLowerCase().trim();
+  let data = ARTICLES_DATA.filter(a => {
+    const cOk = activeCat === 'all' || a.categorie === activeCat;
+    const qOk = !q || a.titre.toLowerCase().includes(q) || a.resume.toLowerCase().includes(q);
+    return cOk && qOk;
+  });
+  renderArticles(data);
+}
+
+function renderArticles(data) {
+  const container = document.getElementById('articles-container');
+  if (!data.length) {
+    container.innerHTML = '<div style="text-align:center;padding:60px;color:var(--ivory-dim);">Aucun article trouvé.</div>';
+    return;
+  }
+  const une = data.find(a => a.une) || data[0];
+  const rest = data.filter(a => a.id !== une.id);
+  const secondary = rest.slice(0, 3);
+  const grid = rest.slice(3);
+
+  container.innerHTML = `
+    <div class="articles-layout">
+      <a href="${une.lien||'#'}" class="article-une">
+        <div class="art-meta">
+          <span class="art-cat ${getCatClass(une.categorie)}">${une.categorie}</span>
+          <span class="art-date">${une.date}</span>
+        </div>
+        <div class="art-title-une">${une.titre}</div>
+        <div class="art-resume">${une.resume}</div>
+        <div style="font-size:11px;color:var(--ivory-faint);margin-top:auto;padding-top:12px;border-top:1px solid var(--wire);">
+          Source : ${une.source} · ${une.auteur}
+        </div>
+      </a>
+      <div class="articles-list">
+        ${secondary.map(a => `
+        <a href="${a.lien||'#'}" class="article-card">
+          <div class="art-meta">
+            <span class="art-cat ${getCatClass(a.categorie)}">${a.categorie}</span>
+            <span class="art-date">${a.date}</span>
+          </div>
+          <div class="art-title">${a.titre}</div>
+          <div class="art-source">${a.source}</div>
+        </a>`).join('')}
+      </div>
+    </div>
+    ${grid.length ? `
+    <div class="articles-grid-3">
+      ${grid.map(a => `
+      <a href="${a.lien||'#'}" class="art-grid-card">
+        <div style="font-size:28px;">${a.image_emoji}</div>
+        <div class="art-meta">
+          <span class="art-cat ${getCatClass(a.categorie)}">${a.categorie}</span>
+          <span class="art-date">${a.date}</span>
+        </div>
+        <div class="art-title">${a.titre}</div>
+        <div class="art-source" style="margin-top:4px;">${a.source}</div>
+      </a>`).join('')}
+    </div>` : ''}`;
+  addHover();
+}
+
+/* ══ CONCOURS ══ */
+function renderConcours() {
+  const urgLabels = {hot:'🔴 Urgent',soon:'⏳ Bientôt',ok:'✓ Ouvert'};
+  const urgCls = {hot:'cu-hot',soon:'cu-soon',ok:'cu-ok'};
+  document.getElementById('concours-grid').innerHTML = CONCOURS_DATA.map(c => `
+    <div class="concours-card">
+      <div class="cc-header">
+        <div>
+          <div class="cc-nom">${c.nom}</div>
+          <div class="cc-ecole">${c.ecole}</div>
+        </div>
+        <span class="cc-urgence ${urgCls[c.urgence]}">${urgLabels[c.urgence]}</span>
+      </div>
+      <div class="cc-dates">
+        <div class="cc-date-item">
+          <div class="cd-label">Épreuves</div>
+          <div class="cd-val">${c.date_epreuves}</div>
+        </div>
+        <div class="cc-date-item">
+          <div class="cd-label">Inscriptions</div>
+          <div class="cd-val">${c.date_inscriptions||c.date_resultats||'—'}</div>
+        </div>
+      </div>
+      <div class="cc-details">
+        <div class="cc-detail">📚 ${c.series.join(' · ')}</div>
+        ${c.gratuit ? '<div class="cc-detail" style="color:var(--green);">✓ École gratuite</div>' : ''}
+        <div class="cc-detail">🌐 ${c.site}</div>
+      </div>
+      <div class="cc-detail" style="font-size:12px;color:var(--ivory-dim);line-height:1.6;">${c.details}</div>
+      <a href="https://${c.site}" target="_blank" class="cc-lien">
+        S'inscrire sur ${c.site} <svg width="11" height="11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      </a>
+    </div>`).join('');
+  addHover();
+}
+
+/* ══ STATISTIQUES ══ */
+function renderStats() {
+  const colorMap = {gold:'var(--gold)',green:'var(--green)',blue:'var(--blue)',red:'var(--red)'};
+  // KPIs
+  document.getElementById('stats-kpi').innerHTML = STATS_DATA.chiffres_cles.map(k => `
+    <div class="kpi-card">
+      <div class="kpi-val" style="color:${colorMap[k.color]||'var(--ivory)'};">${k.valeur}</div>
+      <div class="kpi-lbl">${k.label}</div>
+      <div class="kpi-trend ${k.tendance==='hausse'?'trend-up':'trend-neu'}">${k.tendance==='hausse'?'↑ En hausse':'→ Stable'}</div>
+    </div>`).join('');
+
+  // Grid charts
+  const maxIns = Math.max(...STATS_DATA.insertion.map(i=>i.pct));
+  document.getElementById('stats-grid').innerHTML = `
+    <div class="stats-card">
+      <div class="sc-title">Répartition des candidats par série BAC 2025</div>
+      <div class="bar-list">
+        ${STATS_DATA.filieres.map(f => `
+        <div class="bar-row">
+          <div class="bar-label">${f.nom}</div>
+          <div class="bar-track"><div class="bar-fill" style="width:${f.pct}%;background:${f.color};"></div></div>
+          <div class="bar-val" style="color:${f.color};">${f.pct}%</div>
+        </div>`).join('')}
+      </div>
+    </div>
+    <div class="stats-card">
+      <div class="sc-title">Taux insertion professionnelle grandes écoles CI</div>
+      <div class="bar-list">
+        ${STATS_DATA.insertion.map(i => `
+        <div class="bar-row">
+          <div class="bar-label">${i.ecole}</div>
+          <div class="bar-track"><div class="bar-fill" style="width:${i.pct/maxIns*100}%;background:var(--green);"></div></div>
+          <div class="bar-val" style="color:var(--green);">${i.pct}%</div>
+        </div>`).join('')}
+      </div>
+    </div>
+    <div class="stats-card" style="grid-column:1/-1;">
+      <div class="sc-title">Évolution du taux de réussite au BAC 2021–2025</div>
+      <table class="evo-table">
+        <thead><tr><th>Année</th><th>Taux de réussite</th><th>Admis (estimé)</th><th>Tendance</th></tr></thead>
+        <tbody>
+          ${STATS_DATA.evolution_bac.map((e,i,arr) => {
+            const prev = arr[i-1];
+            const diff = prev ? (e.taux - prev.taux).toFixed(2) : null;
+            const trend = diff ? (diff>0?`<span style="color:var(--green);">↑ +${diff} pts</span>`:`<span style="color:var(--red);">↓ ${diff} pts</span>`) : '—';
+            return `<tr>
+              <td>${e.annee}</td>
+              <td><span class="evo-pct" style="color:var(--gold);">${e.taux}%</span></td>
+              <td>${e.admis} candidats</td>
+              <td>${trend}</td>
+            </tr>`;
+          }).join('')}
+        </tbody>
+      </table>
+    </div>`;
+  // Animate bars
+  setTimeout(() => {
+    document.querySelectorAll('.bar-fill').forEach(b => {
+      const w = b.style.width; b.style.width='0';
+      setTimeout(() => b.style.width=w, 50);
+    });
+  }, 100);
+  addHover();
+}
+
+/* ══ CALENDRIER ══ */
+function renderCalendrier() {
+  const typeCls = {exam:'ct-exam',concours:'ct-concours',resultats:'ct-resultats',rentree:'ct-rentree'};
+  const typeLabel = {exam:'Examen',concours:'Concours',resultats:'Résultats',rentree:'Rentrée'};
+  document.getElementById('cal-list').innerHTML = CALENDRIER_DATA.map(c => `
+    <div class="cal-item">
+      <div class="cal-date">
+        ${typeof c.jour==='number' ? `<div class="cal-day">${c.jour}</div><div class="cal-month">${c.mois}</div>` :
+          `<div class="cal-day" style="font-size:14px;">${c.jour}</div><div class="cal-month">${c.annee}</div>`}
+      </div>
+      <div class="cal-body">
+        <div class="cal-title">${c.titre}</div>
+        <div class="cal-detail">${c.detail}</div>
+        <span class="cal-type ${typeCls[c.type]}">${typeLabel[c.type]}</span>
+      </div>
+    </div>`).join('');
+  addHover();
+}
+
+/* ══ PANEL OVERRIDE ══ */
+function showTab(tab) {
+  ['actu','concours','stats','calendrier'].forEach(t => {
+    const btn = document.getElementById('tab-'+t);
+    const panel = document.getElementById('panel-'+t);
+    btn.classList.toggle('active', t===tab);
+    panel.style.display = t===tab ? 'block' : 'none';
+    if (t===tab) panel.classList.add('active');
+    else panel.classList.remove('active');
+  });
+}
+
+/* ══ INIT ══ */
+buildTicker();
+buildCatChips();
+renderArticles(ARTICLES_DATA);
+renderConcours();
+renderStats();
+renderCalendrier();
+// Ensure panels correct initial state
+['concours','stats','calendrier'].forEach(t => {
+  document.getElementById('panel-'+t).style.display = 'none';
+});
+addHover();
+</script>
+</body>
+</html>
