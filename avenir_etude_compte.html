@@ -826,7 +826,7 @@ select.form-input{-webkit-appearance:none;cursor:none;}
                     <div class="pdf-name" id="pdf-name">Aminata Koné</div>
                     <div class="pdf-subtitle" id="pdf-subtitle">Terminale D · Lycée Classique · Abidjan</div>
                     <div style="margin-top:12px;font-size:10px;color:#555;line-height:1.6;" id="pdf-contact">
-                      📧 aminata@email.com &nbsp;|&nbsp; 📱 +225 07 00 00 00 00<br>
+                      📧 <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="1c7d7175727d687d5c79717d7570327f7371">[email&#160;protected]</a> &nbsp;|&nbsp; 📱 +225 07 00 00 00 00<br>
                       🎯 Métier cible : Ingénieur IA
                     </div>
                   </div>
@@ -907,7 +907,7 @@ select.form-input{-webkit-appearance:none;cursor:none;}
             <div style="margin-bottom:10px;"><strong style="color:var(--ivory);">Avenir Étude v2.0</strong><br>Plateforme d'intelligence éducative pour l'Afrique francophone.</div>
             <div style="margin-bottom:10px;"><strong style="color:var(--gold);">Données locales</strong><br>Toutes tes données sont stockées dans ton navigateur (localStorage). Rien n'est envoyé à un serveur sans ton accord.</div>
             <div style="margin-bottom:10px;"><strong style="color:var(--ivory);">Sources salaires</strong><br>Grey Search Africa — Guide des Salaires CI 2024-2025 · 5 000 répondants.</div>
-            <div><strong style="color:var(--ivory);">Contact</strong><br>info@aveniretude.ci · Abidjan, Côte d'Ivoire</div>
+            <div><strong style="color:var(--ivory);">Contact</strong><br><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="9af3f4fcf5dafbecfff4f3e8ffeeeffeffb4f9f3">[email&#160;protected]</a> · Abidjan, Côte d'Ivoire</div>
           </div>
         </div>
       </div>
@@ -916,7 +916,7 @@ select.form-input{-webkit-appearance:none;cursor:none;}
   </div><!-- /main-content -->
 </div><!-- /page-wrap -->
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 /* ══ CURSOR ══ */
 const cur = document.getElementById('ae-cursor');
 document.addEventListener('mousemove', e=>{cur.style.left=e.clientX+'px';cur.style.top=e.clientY+'px';});
@@ -1005,6 +1005,20 @@ function autoSave(){
   localStorage.setItem(STORAGE_KEY, JSON.stringify({...existing, ...data}));
   calcCompletion(data);
   calcCandidabilityScore(data);
+  syncToUsersDB(data);
+}
+
+function syncToUsersDB(profileData){
+  try{
+    const cur = JSON.parse(localStorage.getItem('ae_current_user')||'null');
+    if(!cur||!cur.email) return;
+    const users = JSON.parse(localStorage.getItem('ae_users_db')||'{}');
+    if(users[cur.email]){
+      const merged = {...(users[cur.email].profile||{}), ...profileData};
+      users[cur.email].profile = merged;
+      localStorage.setItem('ae_users_db', JSON.stringify(users));
+    }
+  }catch(e){}
 }
 
 function collectFormData(){
@@ -1697,20 +1711,4 @@ function exportData(){
   a.click();
 }
 
-function clearData(){
-  localStorage.removeItem(STORAGE_KEY);
-  localStorage.removeItem('ae_candi_status');
-  SCHOOLS_CANDI.forEach(s=>localStorage.removeItem(`ae_candi_checks_${s.id}`));
-  sessionStorage.clear();
-  location.reload();
-}
-
-/* ══ INIT ══ */
-loadProfile();
-renderTests();
-renderSchools();
-renderBourses();
-addHover();
-</script>
-</body>
-</html>
+function clearD
