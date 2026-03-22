@@ -1,880 +1,1716 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Avenir Étude — Mon Compte</title>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Avenir Étude — Mon Profil & Candidatures</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Instrument+Serif:ital@0;1&family=Instrument+Sans:ital,wght@0,400;0,500;0,600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-    html{scroll-behavior:smooth;}
-        :root{
-      --ink:#060B14;
-      --ink-2:#0C1220;
-      --ink-3:#111827;
-      --ink-4:#1C2535;
-      --gold:#D4A853;
-      --gold-dim:#7A5E2A;
-      --gold-10:rgba(212,168,83,.10);
-      --gold-20:rgba(212,168,83,.20);
-      --ivory:#F2EDE4;
-      --ivory-dim:#8A8278;
-      --ivory-faint:#2E3545;
-      --wire:rgba(242,237,228,.07);
-      --wire-mid:rgba(242,237,228,.13);
-      --wire-hi:rgba(242,237,228,.24);
-      --green:#34C97A;
-      --green-10:rgba(52,201,122,.1);
-      --blue:#4F7AE8;
-      --blue-10:rgba(79,122,232,.1);
-      --red:#E05A54;
-      --red-10:rgba(224,90,84,.1);
-      --orange:#F59E0B;
-      --purple:#8B5CF6;
-      --max-w:1200px;
-      --nav-h:64px;
-      --radius:12px;
-    }
-    body{font-family:'Instrument Sans',sans-serif;background:var(--ink);color:var(--ivory);-webkit-font-smoothing:antialiased;cursor:none;overflow-x:hidden;}
-    .cursor{position:fixed;width:8px;height:8px;background:var(--gold);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);mix-blend-mode:screen;transition:width .18s,height .18s;}
-    .cursor.big{width:28px;height:28px;background:transparent;border:1.5px solid var(--gold);}
-    body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:8000;opacity:.5;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+:root{
+  --ink:#060B14;--ink-2:#0C1220;--ink-3:#111827;--ink-4:#1C2535;
+  --gold:#D4A853;--gold-dim:#7A5E2A;--gold-10:rgba(212,168,83,.10);--gold-20:rgba(212,168,83,.20);
+  --ivory:#F2EDE4;--ivory-dim:#8A8278;--ivory-faint:#2E3545;
+  --wire:rgba(242,237,228,.07);--wire-mid:rgba(242,237,228,.13);--wire-hi:rgba(242,237,228,.24);
+  --green:#34C97A;--green-10:rgba(52,201,122,.1);
+  --blue:#4F7AE8;--blue-10:rgba(79,122,232,.1);
+  --red:#E05A54;--orange:#F59E0B;--purple:#8B5CF6;
+  --max-w:1280px;
+}
+body{font-family:'Instrument Sans',sans-serif;background:var(--ink);color:var(--ivory);-webkit-font-smoothing:antialiased;cursor:none;overflow-x:hidden;}
+.ae-cursor{position:fixed;width:10px;height:10px;background:var(--gold);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);mix-blend-mode:screen;top:-100px;left:-100px;transition:width .18s,height .18s;}
+.ae-cursor.hover{width:30px;height:30px;background:transparent;border:1.5px solid var(--gold);}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:8000;}
 
-    /* NAV */
-    nav{position:sticky;top:0;z-index:500;height:var(--nav-h);border-bottom:1px solid var(--wire);background:rgba(6,11,20,.9);backdrop-filter:blur(16px);display:flex;align-items:center;}
-    .nav-inner{max-width:var(--max-w);margin:0 auto;padding:0 40px;width:100%;display:flex;align-items:center;gap:16px;}
-    .nav-logo{font-family:'Bricolage Grotesque',sans-serif;font-size:16px;font-weight:700;color:var(--ivory);letter-spacing:-.03em;text-decoration:none;}
-    .nav-logo em{font-style:italic;}
-    .nav-right{margin-left:auto;display:flex;align-items:center;gap:10px;}
-    .nav-btn{font-size:12px;font-weight:600;padding:8px 16px;background:transparent;color:var(--ivory-dim);border:1px solid var(--wire-mid);border-radius:6px;cursor:none;text-decoration:none;transition:all .15s;}
-    .nav-btn:hover{border-color:var(--wire-hi);color:var(--ivory);}
-    .nav-btn-gold{background:var(--gold);color:var(--ink);border-color:var(--gold);}
-    .nav-btn-gold:hover{background:#e0b55e;}
-    .nav-avatar-btn{width:34px;height:34px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-family:'Bricolage Grotesque',sans-serif;font-size:12px;font-weight:700;color:var(--ink);cursor:none;border:none;}
+/* NAV */
+nav{position:sticky;top:0;z-index:500;height:64px;border-bottom:1px solid var(--wire);background:rgba(6,11,20,.96);backdrop-filter:blur(20px);display:flex;align-items:center;}
+.nav-inner{max-width:var(--max-w);margin:0 auto;padding:0 40px;width:100%;display:flex;align-items:center;gap:8px;}
+.nav-logo{font-family:'Bricolage Grotesque',sans-serif;font-size:17px;font-weight:800;color:var(--ivory);text-decoration:none;letter-spacing:-.03em;margin-right:16px;}
+.nav-logo em{font-style:italic;color:var(--gold);}
+.nav-links{display:flex;gap:2px;flex:1;}
+.nav-link{font-size:13px;font-weight:500;color:var(--ivory-dim);text-decoration:none;padding:7px 12px;border-radius:7px;transition:all .15s;white-space:nowrap;}
+.nav-link:hover{color:var(--ivory);background:var(--ink-3);}
+.nav-link.active{color:var(--gold);}
 
-    /* LAYOUT */
-    .dash-shell{display:grid;grid-template-columns:var(--side-w) 1fr;min-height:calc(100vh - var(--nav-h));}
+/* LAYOUT */
+.page-wrap{max-width:var(--max-w);margin:0 auto;padding:0 40px;display:grid;grid-template-columns:260px 1fr;gap:28px;padding-top:28px;padding-bottom:80px;min-height:calc(100vh - 64px);}
 
-    /* SIDEBAR */
-    .dash-sidebar{
-      border-right:1px solid var(--wire);
-      padding:28px 20px;
-      position:sticky;top:var(--nav-h);
-      height:calc(100vh - var(--nav-h));
-      overflow-y:auto;scrollbar-width:none;
-      display:flex;flex-direction:column;gap:0;
-    }
-    .dash-sidebar::-webkit-scrollbar{display:none;}
+/* SIDEBAR */
+.sidebar{display:flex;flex-direction:column;gap:16px;}
+.profile-card{background:var(--ink-2);border:1px solid var(--wire-mid);border-radius:16px;padding:24px;text-align:center;position:relative;overflow:hidden;}
+.profile-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--orange),var(--gold));}
+.avatar-wrap{position:relative;width:80px;height:80px;margin:0 auto 14px;}
+.avatar{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--orange));display:flex;align-items:center;justify-content:center;font-family:'Bricolage Grotesque',sans-serif;font-size:26px;font-weight:800;color:var(--ink);border:3px solid var(--gold-dim);}
+.avatar-edit{position:absolute;bottom:0;right:0;width:26px;height:26px;border-radius:50%;background:var(--ink-3);border:2px solid var(--wire-mid);display:flex;align-items:center;justify-content:center;font-size:12px;cursor:none;transition:all .15s;}
+.avatar-edit:hover{border-color:var(--gold-dim);}
+.profile-name{font-family:'Bricolage Grotesque',sans-serif;font-size:17px;font-weight:800;color:var(--ivory);letter-spacing:-.02em;margin-bottom:3px;}
+.profile-level{font-size:11px;color:var(--ivory-dim);margin-bottom:12px;}
+.profile-completion{margin-bottom:14px;}
+.pc-label{display:flex;justify-content:space-between;font-size:10px;color:var(--ivory-faint);margin-bottom:5px;}
+.pc-bar{height:4px;background:var(--ink-4);border-radius:2px;}
+.pc-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--green),var(--gold));transition:width 1s ease;}
+.profile-badges{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;}
+.badge{font-size:9px;font-weight:700;padding:3px 8px;border-radius:4px;letter-spacing:.04em;}
+.badge-gold{background:var(--gold-10);border:1px solid var(--gold-dim);color:var(--gold);}
+.badge-green{background:var(--green-10);border:1px solid rgba(52,201,122,.2);color:var(--green);}
+.badge-blue{background:var(--blue-10);border:1px solid rgba(79,122,232,.2);color:var(--blue);}
+.badge-purple{background:rgba(139,92,246,.1);border:1px solid rgba(139,92,246,.2);color:var(--purple);}
 
-    /* User card */
-    .user-card{
-      background:var(--ink-3);border:1px solid var(--wire);border-radius:12px;
-      padding:16px;margin-bottom:24px;text-align:center;
-    }
-    .user-avatar{
-      width:56px;height:56px;border-radius:50%;background:var(--gold);
-      display:flex;align-items:center;justify-content:center;
-      font-family:'Bricolage Grotesque',sans-serif;font-size:20px;font-weight:800;
-      color:var(--ink);margin:0 auto 10px;
-    }
-    .user-name{font-family:'Bricolage Grotesque',sans-serif;font-size:15px;font-weight:700;color:var(--ivory);letter-spacing:-.01em;}
-    .user-email{font-size:11px;color:var(--ivory-dim);margin-top:2px;}
-    .user-badge{display:inline-block;font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;background:var(--gold-10);border:1px solid var(--gold-dim);color:var(--gold);margin-top:8px;}
+/* CANDIDABILITY SCORE */
+.candi-score-card{background:var(--ink-2);border:1px solid var(--wire-mid);border-radius:16px;padding:20px;}
+.cs-title{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ivory-faint);margin-bottom:12px;}
+.cs-ring{position:relative;width:90px;height:90px;margin:0 auto 12px;}
+.cs-ring svg{transform:rotate(-90deg);}
+.cs-num{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;}
+.cs-num-val{font-family:'Bricolage Grotesque',sans-serif;font-size:22px;font-weight:800;color:var(--gold);line-height:1;}
+.cs-num-lbl{font-size:9px;color:var(--ivory-faint);}
+.cs-countries{display:flex;flex-direction:column;gap:6px;}
+.cs-country{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--ivory-dim);}
+.cs-flag{font-size:16px;flex-shrink:0;}
+.cs-bar-mini{flex:1;height:3px;background:var(--ink-4);border-radius:2px;}
+.cs-bar-fill{height:100%;border-radius:2px;background:var(--green);}
+.cs-pct{font-family:'Bricolage Grotesque',sans-serif;font-size:11px;font-weight:800;color:var(--ivory);min-width:28px;text-align:right;}
 
-    /* Nav items */
-    .sidebar-nav{display:flex;flex-direction:column;gap:2px;flex:1;}
-    .snav-item{
-      display:flex;align-items:center;gap:10px;
-      padding:10px 12px;border-radius:8px;
-      font-size:13px;font-weight:500;color:var(--ivory-dim);
-      cursor:none;transition:all .15s;border:none;background:transparent;
-      text-align:left;width:100%;font-family:'Instrument Sans',sans-serif;
-    }
-    .snav-item:hover{background:var(--ink-3);color:var(--ivory);}
-    .snav-item.active{background:var(--gold-10);color:var(--gold);border:1px solid var(--gold-dim);}
-    .snav-icon{font-size:15px;flex-shrink:0;width:20px;text-align:center;}
-    .snav-badge{margin-left:auto;font-size:9px;font-weight:700;padding:2px 6px;border-radius:10px;background:var(--red);color:var(--ivory);}
+/* SIDEBAR NAV */
+.snav{background:var(--ink-2);border:1px solid var(--wire-mid);border-radius:16px;overflow:hidden;}
+.snav-item{width:100%;display:flex;align-items:center;gap:10px;padding:12px 16px;font-size:13px;font-weight:500;color:var(--ivory-dim);background:none;border:none;cursor:none;transition:all .15s;text-align:left;border-bottom:1px solid var(--wire);}
+.snav-item:last-child{border-bottom:none;}
+.snav-item:hover{color:var(--ivory);background:var(--ink-3);}
+.snav-item.active{color:var(--gold);background:var(--gold-10);}
+.snav-item.active .snav-icon{color:var(--gold);}
+.snav-icon{font-size:16px;flex-shrink:0;width:20px;text-align:center;}
+.snav-badge{margin-left:auto;font-size:9px;font-weight:700;padding:2px 7px;border-radius:10px;background:var(--red);color:#fff;}
+.snav-badge-green{background:var(--green);color:var(--ink);}
 
-    .sidebar-divider{height:1px;background:var(--wire);margin:16px 0;}
-    .snav-item.logout{color:var(--red);margin-top:auto;}
-    .snav-item.logout:hover{background:rgba(224,90,84,.08);}
+/* MAIN PANELS */
+.main-content{min-width:0;}
+.panel{display:none;animation:fadeIn .3s ease;}
+.panel.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 
-    /* MAIN */
-    .dash-main{padding:32px 40px;display:flex;flex-direction:column;gap:28px;}
+/* PANEL HEADER */
+.panel-header{margin-bottom:24px;}
+.panel-title{font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(22px,3vw,32px);font-weight:800;color:var(--ivory);letter-spacing:-.04em;margin-bottom:4px;}
+.panel-title em{font-style:italic;color:var(--gold);}
+.panel-sub{font-size:13px;color:var(--ivory-dim);}
 
-    /* Page tabs */
-    .dash-panels > div{display:none;}
-    .dash-panels > div.active{display:block;}
+/* GRID HELPERS */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+.col{display:flex;flex-direction:column;gap:14px;}
 
-    /* SECTION TITLE */
-    .sec-title{font-family:'Bricolage Grotesque',sans-serif;font-size:22px;font-weight:800;color:var(--ivory);letter-spacing:-.03em;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;}
-    .sec-title em{font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;color:var(--gold);}
+/* CARD */
+.card{background:var(--ink-2);border:1px solid var(--wire-mid);border-radius:14px;padding:20px;}
+.card-title{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.card-title::before{content:'';width:14px;height:1px;background:var(--gold-dim);}
 
-    /* STATS GRID */
-    .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:28px;}
-    .stat-card{
-      background:var(--ink-2);border:1px solid var(--wire);border-radius:12px;
-      padding:18px 20px;
-    }
-    .sc-val{font-family:'Bricolage Grotesque',sans-serif;font-size:28px;font-weight:800;letter-spacing:-.04em;line-height:1;}
-    .sc-val.gold{color:var(--gold);}
-    .sc-val.green{color:var(--green);}
-    .sc-val.blue{color:var(--blue);}
-    .sc-lbl{font-size:11px;color:var(--ivory-dim);margin-top:5px;}
-    .sc-trend{font-size:10px;font-weight:600;margin-top:4px;}
-    .trend-up{color:var(--green);}
-    .trend-neutral{color:var(--ivory-faint);}
+/* KPI CARDS */
+.kpi-val{font-family:'Bricolage Grotesque',sans-serif;font-size:32px;font-weight:800;letter-spacing:-.04em;line-height:1;}
+.kpi-lbl{font-size:11px;color:var(--ivory-dim);margin-top:4px;}
+.kpi-trend{font-size:10px;margin-top:6px;}
+.trend-up{color:var(--green);}
+.trend-warn{color:var(--orange);}
 
-    /* PROFILE SUMMARY */
-    .profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px;}
-    .profile-card{background:var(--ink-2);border:1px solid var(--wire);border-radius:14px;padding:22px;}
-    .pc-title{font-family:'Bricolage Grotesque',sans-serif;font-size:15px;font-weight:700;color:var(--ivory);letter-spacing:-.01em;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+/* TESTS GRID */
+.test-result-row{display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--ink-3);border:1px solid var(--wire);border-radius:10px;margin-bottom:8px;}
+.tr-icon{font-size:18px;flex-shrink:0;}
+.tr-name{font-size:12px;font-weight:600;color:var(--ivory);flex:1;}
+.tr-score{font-family:'Bricolage Grotesque',sans-serif;font-size:16px;font-weight:800;}
+.tr-bar{width:80px;height:3px;background:var(--ink-4);border-radius:2px;flex-shrink:0;}
+.tr-bar-fill{height:100%;border-radius:2px;transition:width 1s ease;}
+.tr-status{font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;flex-shrink:0;}
+.ts-done{background:var(--green-10);color:var(--green);border:1px solid rgba(52,201,122,.2);}
+.ts-todo{background:var(--ink-4);color:var(--ivory-faint);border:1px solid var(--wire);}
 
-    /* RIASEC mini bars */
-    .riasec-bars{display:flex;flex-direction:column;gap:8px;}
-    .rb-row{display:flex;align-items:center;gap:10px;}
-    .rb-letter{font-family:'Bricolage Grotesque',sans-serif;font-size:13px;font-weight:800;width:14px;flex-shrink:0;}
-    .rb-letter.dom{color:var(--gold);}
-    .rb-letter.sub{color:var(--ivory-faint);}
-    .rb-track{flex:1;height:4px;background:var(--wire);border-radius:2px;}
-    .rb-fill{height:100%;border-radius:2px;transition:width 1s ease;}
-    .rb-pct{font-size:11px;font-weight:600;min-width:32px;text-align:right;}
-    .rb-pct.dom{color:var(--gold);}
-    .rb-pct.sub{color:var(--ivory-faint);}
+/* FORM ELEMENTS */
+.form-group{margin-bottom:16px;}
+.form-label{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ivory-faint);margin-bottom:6px;display:block;}
+.form-input{width:100%;padding:10px 14px;background:var(--ink-3);border:1px solid var(--wire-mid);border-radius:9px;font-family:'Instrument Sans',sans-serif;font-size:13px;color:var(--ivory);outline:none;transition:border-color .2s;cursor:none;}
+.form-input:focus{border-color:var(--gold);}
+.form-input::placeholder{color:var(--ivory-faint);}
+select.form-input{-webkit-appearance:none;cursor:none;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.form-section{margin-bottom:24px;padding-bottom:24px;border-bottom:1px solid var(--wire);}
+.form-section:last-child{border-bottom:none;}
+.form-section-title{font-size:12px;font-weight:700;color:var(--ivory);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
 
-    /* Top métiers */
-    .metiers-list{display:flex;flex-direction:column;gap:8px;}
-    .metier-item{display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--ink-3);border:1px solid var(--wire);border-radius:8px;transition:border-color .15s;}
-    .metier-item:hover{border-color:var(--wire-mid);}
-    .mi-rank{font-family:'Bricolage Grotesque',sans-serif;font-size:11px;font-weight:700;color:var(--gold);width:20px;}
-    .mi-icon{font-size:18px;}
-    .mi-name{font-size:13px;font-weight:600;color:var(--ivory);flex:1;}
-    .mi-match{font-family:'Bricolage Grotesque',sans-serif;font-size:15px;font-weight:800;color:var(--green);}
+/* MATIERE TABLE */
+.matieres-table{width:100%;}
+.mt-header{display:grid;grid-template-columns:1fr 80px 80px 80px 80px;gap:8px;padding:8px 12px;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ivory-faint);}
+.mt-row{display:grid;grid-template-columns:1fr 80px 80px 80px 80px;gap:8px;padding:10px 12px;background:var(--ink-3);border:1px solid var(--wire);border-radius:8px;margin-bottom:6px;align-items:center;}
+.mt-name{font-size:13px;font-weight:600;color:var(--ivory);}
+.mt-input{width:100%;padding:5px 8px;background:var(--ink-4);border:1px solid var(--wire);border-radius:6px;font-size:13px;font-weight:700;color:var(--gold);text-align:center;outline:none;cursor:none;}
+.mt-input:focus{border-color:var(--gold-dim);}
+.mt-avg{font-family:'Bricolage Grotesque',sans-serif;font-size:14px;font-weight:800;text-align:center;}
 
-    /* TEST HISTORY */
-    .history-list{display:flex;flex-direction:column;gap:10px;}
-    .history-item{
-      display:grid;grid-template-columns:auto 1fr auto;
-      gap:16px;align-items:center;
-      padding:16px 20px;background:var(--ink-2);border:1px solid var(--wire);border-radius:12px;
-      transition:border-color .15s;cursor:none;
-    }
-    .history-item:hover{border-color:var(--wire-mid);}
-    .hi-icon{font-size:24px;}
-    .hi-title{font-family:'Bricolage Grotesque',sans-serif;font-size:14px;font-weight:700;color:var(--ivory);}
-    .hi-date{font-size:11px;color:var(--ivory-dim);margin-top:2px;}
-    .hi-score{text-align:right;}
-    .hi-score-val{font-family:'Bricolage Grotesque',sans-serif;font-size:18px;font-weight:800;color:var(--gold);}
-    .hi-score-lbl{font-size:10px;color:var(--ivory-faint);text-transform:uppercase;letter-spacing:.04em;}
-    .hi-badge{font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;margin-top:4px;display:inline-block;}
-    .hb-done{background:var(--green-10);color:var(--green);}
-    .hb-partial{background:var(--gold-10);color:var(--gold);}
+/* CANDIDATURE ECOLES */
+.school-candi-card{background:var(--ink-2);border:1px solid var(--wire-mid);border-radius:16px;padding:20px;position:relative;overflow:hidden;transition:all .2s;cursor:none;}
+.school-candi-card:hover{border-color:var(--wire-hi);transform:translateY(-2px);}
+.scc-country-bar{position:absolute;top:0;left:0;right:0;height:3px;}
+.scc-header{display:flex;align-items:flex-start;gap:14px;margin-bottom:14px;}
+.scc-logo{width:48px;height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:'Bricolage Grotesque',sans-serif;font-size:9px;font-weight:800;text-align:center;flex-shrink:0;line-height:1.2;}
+.scc-info{flex:1;}
+.scc-name{font-family:'Bricolage Grotesque',sans-serif;font-size:15px;font-weight:800;color:var(--ivory);letter-spacing:-.02em;margin-bottom:2px;}
+.scc-location{font-size:11px;color:var(--ivory-dim);}
+.scc-badges{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px;}
+.scc-score{text-align:right;flex-shrink:0;}
+.scc-score-val{font-family:'Bricolage Grotesque',sans-serif;font-size:22px;font-weight:800;line-height:1;}
+.scc-score-lbl{font-size:9px;color:var(--ivory-dim);}
+.scc-body{font-size:12px;color:var(--ivory-dim);line-height:1.65;margin-bottom:12px;}
+.scc-requirements{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
+.scc-req{font-size:10px;font-weight:600;padding:3px 9px;border-radius:4px;background:var(--ink-3);border:1px solid var(--wire);color:var(--ivory-dim);}
+.scc-req.met{background:var(--green-10);border-color:rgba(52,201,122,.2);color:var(--green);}
+.scc-req.unmet{background:rgba(224,90,84,.08);border-color:rgba(224,90,84,.2);color:var(--red);}
+.scc-checklist{display:flex;flex-direction:column;gap:5px;margin-bottom:14px;}
+.scl-item{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--ivory-dim);}
+.scl-check{width:16px;height:16px;border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:9px;}
+.scl-done{background:var(--green);color:var(--ink);}
+.scl-todo{background:var(--ink-3);border:1px solid var(--wire);}
+.scc-actions{display:flex;gap:8px;}
+.btn-candi{flex:1;font-family:'Bricolage Grotesque',sans-serif;font-size:13px;font-weight:700;padding:10px;border-radius:9px;cursor:none;transition:all .15s;text-align:center;border:none;}
+.btn-candi-primary{background:var(--gold);color:var(--ink);}
+.btn-candi-primary:hover{background:#e0b55e;}
+.btn-candi-ghost{background:var(--ink-3);border:1px solid var(--wire-mid);color:var(--ivory-dim);}
+.btn-candi-ghost:hover{border-color:var(--wire-hi);color:var(--ivory);}
+.btn-candi-disabled{background:var(--ink-3);border:1px solid var(--wire);color:var(--ivory-faint);}
 
-    /* FAVORIS */
-    .favoris-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
-    .favori-card{
-      background:var(--ink-2);border:1px solid var(--wire);border-radius:12px;padding:16px;
-      display:flex;align-items:center;gap:12px;cursor:none;transition:all .2s;
-    }
-    .favori-card:hover{border-color:var(--wire-mid);transform:translateY(-2px);}
-    .fav-logo{width:40px;height:40px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'Bricolage Grotesque',sans-serif;font-size:8px;font-weight:700;color:var(--ivory-dim);text-align:center;line-height:1.3;flex-shrink:0;}
-    .fav-info{flex:1;}
-    .fav-name{font-size:13px;font-weight:600;color:var(--ivory);}
-    .fav-meta{font-size:11px;color:var(--ivory-dim);margin-top:2px;}
-    .fav-note{font-family:'Bricolage Grotesque',sans-serif;font-size:15px;font-weight:800;color:var(--gold);}
-    .fav-remove{color:var(--ivory-faint);background:none;border:none;cursor:none;font-size:14px;transition:color .15s;}
-    .fav-remove:hover{color:var(--red);}
+/* STATUS TRACKER */
+.candi-status{display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;}
+.cs-draft{background:var(--ink-4);border:1px solid var(--wire);color:var(--ivory-faint);}
+.cs-inprog{background:var(--blue-10);border:1px solid rgba(79,122,232,.2);color:var(--blue);}
+.cs-sent{background:rgba(139,92,246,.1);border:1px solid rgba(139,92,246,.2);color:var(--purple);}
+.cs-accepted{background:var(--green-10);border:1px solid rgba(52,201,122,.2);color:var(--green);}
+.cs-refused{background:rgba(224,90,84,.08);border:1px solid rgba(224,90,84,.2);color:var(--red);}
 
-    /* RECOMMENDATIONS */
-    .reco-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
-    .reco-card{background:var(--ink-2);border:1px solid var(--wire);border-radius:12px;padding:16px;transition:all .2s;cursor:none;}
-    .reco-card:hover{border-color:var(--wire-mid);transform:translateY(-2px);}
-    .reco-card.featured{border-color:var(--gold-dim);}
-    .reco-card.featured::before{/* gold top bar */ }
-    .rc-badge{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border-radius:3px;margin-bottom:10px;display:inline-block;}
-    .rcb-gold{background:var(--gold-10);color:var(--gold);border:1px solid var(--gold-dim);}
-    .rcb-blue{background:var(--blue-10);color:var(--blue);border:1px solid rgba(79,122,232,.2);}
-    .rc-name{font-family:'Bricolage Grotesque',sans-serif;font-size:14px;font-weight:700;color:var(--ivory);letter-spacing:-.01em;margin-bottom:4px;}
-    .rc-meta{font-size:11px;color:var(--ivory-dim);margin-bottom:10px;}
-    .rc-match{font-family:'Bricolage Grotesque',sans-serif;font-size:22px;font-weight:800;color:var(--green);}
-    .rc-match-lbl{font-size:9px;text-transform:uppercase;letter-spacing:.06em;color:var(--ivory-faint);}
+/* BOURSE SECTION */
+.bourse-card{background:var(--ink-2);border:1px solid var(--wire-mid);border-radius:14px;padding:18px;display:flex;gap:14px;transition:border-color .15s;}
+.bourse-card:hover{border-color:var(--wire-hi);}
+.bc-icon{font-size:28px;flex-shrink:0;}
+.bc-name{font-size:13px;font-weight:700;color:var(--ivory);margin-bottom:3px;}
+.bc-org{font-size:11px;color:var(--ivory-dim);margin-bottom:8px;}
+.bc-amount{font-family:'Bricolage Grotesque',sans-serif;font-size:16px;font-weight:800;color:var(--gold);margin-bottom:5px;}
+.bc-deadline{font-size:10px;font-weight:600;padding:2px 8px;border-radius:4px;}
+.bc-open{background:var(--green-10);color:var(--green);}
+.bc-soon{background:rgba(245,158,11,.1);color:var(--orange);}
+.bc-closed{background:var(--ink-3);color:var(--ivory-faint);}
+.bc-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:8px;}
+.bc-tag{font-size:9px;padding:2px 7px;border-radius:3px;background:var(--ink-3);border:1px solid var(--wire);color:var(--ivory-dim);}
+.bc-btn{margin-left:auto;flex-shrink:0;font-size:11px;font-weight:700;padding:6px 14px;background:var(--ink-3);border:1px solid var(--wire-mid);border-radius:7px;color:var(--ivory-dim);cursor:none;transition:all .15s;height:fit-content;}
+.bc-btn:hover{border-color:var(--gold-dim);color:var(--gold);}
 
-    /* PROGRESS CIRCLE */
-    .progress-circle-wrap{display:flex;align-items:center;gap:20px;padding:16px;background:var(--ink-3);border:1px solid var(--wire);border-radius:12px;margin-bottom:16px;}
-    .pcw-svg{flex-shrink:0;}
-    .pcw-info{}
-    .pcw-title{font-family:'Bricolage Grotesque',sans-serif;font-size:15px;font-weight:700;color:var(--ivory);}
-    .pcw-sub{font-size:12px;color:var(--ivory-dim);margin-top:3px;}
-    .pcw-cta{font-size:12px;font-weight:600;color:var(--gold);text-decoration:none;margin-top:8px;display:inline-flex;align-items:center;gap:4px;}
+/* PDF DOSSIER */
+.pdf-preview{background:var(--ink-3);border:1px solid var(--wire-mid);border-radius:12px;overflow:hidden;}
+.pdf-page{background:#fff;margin:16px;border-radius:8px;padding:24px;color:#111;min-height:200px;box-shadow:0 4px 24px rgba(0,0,0,.4);}
+.pdf-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;padding-bottom:14px;border-bottom:2px solid #D4A853;}
+.pdf-logo{font-family:'Bricolage Grotesque',sans-serif;font-size:14px;font-weight:800;color:#060B14;}
+.pdf-logo em{font-style:italic;color:#D4A853;}
+.pdf-section-title{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#D4A853;margin-bottom:8px;}
+.pdf-name{font-family:'Bricolage Grotesque',sans-serif;font-size:22px;font-weight:800;color:#060B14;}
+.pdf-subtitle{font-size:11px;color:#666;margin-top:2px;}
 
-    /* EMPTY STATE */
-    .empty-state-sm{text-align:center;padding:40px 20px;color:var(--ivory-dim);}
-    .esm-icon{font-size:36px;opacity:.3;margin-bottom:10px;}
-    .esm-title{font-size:14px;font-weight:600;color:var(--ivory);margin-bottom:6px;}
-    .esm-sub{font-size:12px;line-height:1.6;}
+/* SAVE BUTTON */
+.btn-save{font-family:'Bricolage Grotesque',sans-serif;font-size:14px;font-weight:700;padding:12px 28px;background:var(--gold);color:var(--ink);border:none;border-radius:10px;cursor:none;transition:all .15s;display:inline-flex;align-items:center;gap:8px;}
+.btn-save:hover{background:#e0b55e;transform:translateY(-1px);}
+.btn-secondary{font-size:13px;font-weight:600;padding:10px 20px;background:transparent;border:1.5px solid var(--wire-mid);border-radius:9px;color:var(--ivory-dim);cursor:none;transition:all .15s;}
+.btn-secondary:hover{border-color:var(--wire-hi);color:var(--ivory);}
+.btn-danger{font-size:12px;font-weight:600;padding:8px 16px;background:rgba(224,90,84,.08);border:1px solid rgba(224,90,84,.2);border-radius:8px;color:var(--red);cursor:none;transition:all .15s;}
+.btn-danger:hover{background:rgba(224,90,84,.15);}
 
-    /* ANIM */
-    @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
-    .dash-main>*{animation:fadeUp .5s ease both;}
-    .dash-main>*:nth-child(1){animation-delay:.05s;}
-    .dash-main>*:nth-child(2){animation-delay:.1s;}
-    .dash-main>*:nth-child(3){animation-delay:.15s;}
+/* ALERT */
+.alert{padding:12px 16px;border-radius:9px;font-size:12px;color:var(--ivory-dim);margin-bottom:14px;display:flex;align-items:flex-start;gap:10px;}
+.alert-warn{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);}
+.alert-info{background:var(--blue-10);border:1px solid rgba(79,122,232,.2);}
+.alert-success{background:var(--green-10);border:1px solid rgba(52,201,122,.2);}
+.alert-icon{font-size:16px;flex-shrink:0;}
 
-    /* RESPONSIVE */
-    @media(max-width:1024px){.stats-grid{grid-template-columns:repeat(2,1fr);}  .profile-grid{grid-template-columns:1fr;} .reco-grid{grid-template-columns:repeat(2,1fr);}}
-    @media(max-width:768px){.dash-shell{grid-template-columns:1fr;} .dash-sidebar{display:none;} .dash-main{padding:20px;} .nav-inner{padding:0 20px;} .favoris-grid{grid-template-columns:1fr;} .reco-grid{grid-template-columns:1fr;}}
-    ::-webkit-scrollbar{width:4px;}
-    ::-webkit-scrollbar-track{background:var(--ink);}
-    ::-webkit-scrollbar-thumb{background:var(--wire-mid);border-radius:2px;}
-  
-  
-    /* Colours */
-    --bg: var(--ink);
-    --bg-2: var(--ink-2);
-    --bg-3: var(--ink-3);
-    --white: var(--ink-2);
-    --ink: #060B14;
-    --ink-2:     #2A2A2A !important;
-    --ink-3:     #555555 !important;
-    --ink-4:     #888888 !important;
-    --ink-5:     #BBBBBB !important;
-    --border: var(--wire);
-    --border-2: var(--wire-mid);
-    --blue:      #D4A853 !important;
-    --blue-10:   rgba(27,79,255,.08) !important;
-    --blue-20:   rgba(27,79,255,.15) !important;
-    --blue-dk:   #7A5E2A !important;
-    --orange:    #FF6B35 !important;
-    --orange-10: rgba(255,107,53,.08) !important;
-    --green:     #00C853 !important;
-    --green-10:  rgba(0,200,83,.08) !important;
-    --purple:    #7C3AED !important;
-    --purple-10: rgba(124,58,237,.08) !important;
-    --yellow:    #F59E0B !important;
-    --gold: #D4A853;
-    --gold-dim:  #A07830 !important;
-    --gold-10:   rgba(212,168,83,.10) !important;
-    /* Legacy dark vars kept for compatibility */
-    --ink-old:   #060B14;
-    --wire: rgba(242,237,228,.07);
-    --wire-mid: rgba(242,237,228,.13);
-    --wire-hi: rgba(242,237,228,.24);
-    --ivory: #F2EDE4;
-    --ivory-dim: #8A8278;
-    --ivory-faint: #2E3545;
-    /* Layout */
-    --radius:    16px;
-    --radius-lg: 24px;
-    --shadow-sm: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
-    --shadow:    0 4px 16px rgba(0,0,0,.08), 0 2px 4px rgba(0,0,0,.04);
-    --shadow-lg: 0 12px 40px rgba(0,0,0,.12), 0 4px 12px rgba(0,0,0,.06);
-  }
+/* PROGRESS STEPS */
+.progress-steps{display:flex;align-items:center;gap:0;margin-bottom:20px;}
+.ps-step{display:flex;align-items:center;gap:0;flex:1;}
+.ps-circle{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Bricolage Grotesque',sans-serif;font-size:11px;font-weight:800;flex-shrink:0;}
+.ps-done{background:var(--green);color:var(--ink);}
+.ps-active{background:var(--gold);color:var(--ink);}
+.ps-todo{background:var(--ink-3);border:1px solid var(--wire-mid);color:var(--ivory-faint);}
+.ps-line{flex:1;height:2px;background:var(--wire);}
+.ps-line.done{background:var(--green);}
+.ps-label{font-size:9px;color:var(--ivory-dim);text-align:center;margin-top:4px;}
 
-  /* BASE RESET FOR V3 LIGHT THEME */
-  body {
-    font-family: 'DM Sans', 'Instrument Sans', sans-serif !important;
-    background: #060B14 !important;
-    color: #0D0D0D !important;
-    cursor: auto !important;
-  }
-  /* Hide dark cursor */
-  .cursor, .cursor-ring { display: none !important; }
-  body::after { display: none !important; }
-  .grid-bg { display: none !important; }
+/* COUNTRY TABS */
+.country-tabs{display:flex;gap:6px;margin-bottom:20px;flex-wrap:wrap;}
+.ctab{font-size:12px;font-weight:600;padding:7px 14px;border-radius:8px;border:1px solid var(--wire-mid);background:var(--ink-3);color:var(--ivory-dim);cursor:none;transition:all .15s;display:flex;align-items:center;gap:7px;}
+.ctab:hover{border-color:var(--wire-hi);color:var(--ivory);}
+.ctab.active{background:var(--ink-2);border-color:var(--wire-hi);color:var(--ivory);}
+.ctab-flag{font-size:16px;}
 
-  /* NAV V3 */
-  nav {
-    background: rgba(250,250,248,.94) !important;
-    backdrop-filter: blur(16px) !important;
-    border-bottom: 1px solid #E5E3DF !important;
-    box-shadow: 0 1px 3px rgba(0,0,0,.04) !important;
-  }
-  .nav-logo, .nav-logo a {
-    font-family:'Bricolage Grotesque',sans-serif;
-    color: #0D0D0D !important;
-  }
-  .nav-btn {
-    background: transparent !important;
-    color: #555555 !important;
-    border-color: #D4D2CE !important;
-    border-radius: 10px !important;
-    font-family: 'DM Sans', sans-serif !important;
-    cursor: pointer !important;
-  }
-  .nav-btn:hover {
-    background: #0C1220 !important;
-    color: #0D0D0D !important;
-    border-color: #888888 !important;
-  }
-  .nav-btn-gold, .nav-btn.nav-btn-gold {
-    background: #D4A853 !important;
-    color:var(--ivory) !important;
-    border-color: #D4A853 !important;
-  }
-  .nav-btn-gold:hover {
-    background: #7A5E2A !important;
-    box-shadow: 0 4px 12px rgba(27,79,255,.3) !important;
-  }
-  .nav-sep, .nav-page, .nav-crumb { color: #888888 !important; }
-  .nav-crumb { font-family: 'DM Sans', sans-serif !important; }
+/* TIMELINE */
+.timeline{display:flex;flex-direction:column;gap:0;}
+.tl-item{display:flex;gap:14px;padding-bottom:16px;}
+.tl-item:last-child{padding-bottom:0;}
+.tl-left{display:flex;flex-direction:column;align-items:center;flex-shrink:0;width:28px;}
+.tl-dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;}
+.tl-line{flex:1;width:2px;background:var(--wire);margin-top:4px;}
+.tl-content{flex:1;padding-bottom:4px;}
+.tl-date{font-size:10px;color:var(--ivory-faint);margin-bottom:3px;}
+.tl-text{font-size:12px;color:var(--ivory-dim);line-height:1.55;}
+.tl-text strong{color:var(--ivory);}
 
-  /* PAGE BACKGROUNDS */
-  .page-header, .sec-block, .panel, .panel-dark,
-  .sidebar, .results-area, .main-grid,
-  .dash-shell, .dash-sidebar, .auth-left, .auth-right,
-  section, .section, .gps-section {
-    background: #060B14 !important;
-    border-color: #E5E3DF !important;
-  }
-  .main-grid { background: #E5E3DF !important; }
-
-  /* CARDS */
-  .school-card, .career-card, .article-card, .article-une,
-  .side-card, .sec-block, .kpi-card, .apt-card,
-  .rs-row, .concours-card, .history-item, .favori-card,
-  .reco-card, .stat-card, .profile-card, .step-card,
-  .news-card, .news-card-v3, .testi-card, .test-card {
-    background:var(--ink-3) !important;
-    border-color: #E5E3DF !important;
-    color: #0D0D0D !important;
-    box-shadow: 0 1px 3px rgba(0,0,0,.06) !important;
-  }
-  .school-card:hover, .career-card:hover, .step-card:hover {
-    border-color: #D4A853 !important;
-    box-shadow: 0 4px 16px rgba(27,79,255,.12) !important;
-  }
-
-  /* TEXT COLOURS */
-  h1, h2, h3, h4, h5, h6,
-  .ph-title, .sec-title, .card-name, .school-name,
-  .hero-title, .section-title, .une-titre, .art-titre,
-  .cc-name, .fil-name, .adm-title, .rs-name,
-  .concours-card .cc-nom, .kpi-val, .sc-val,
-  .snav-item, .page-name, .user-name, .road-name {
-    color: #0D0D0D !important;
-    font-family:'Bricolage Grotesque',sans-serif;
-  }
-  p, .ph-sub, .section-sub, .card-loc, .school-meta,
-  .une-resume, .art-resume, .cc-desc, .fil-desc,
-  .rs-desc, .gps-sub, .footer-desc, .testi-text {
-    color: #555555 !important;
-    font-family: 'DM Sans', sans-serif !important;
-  }
-  .ph-eyebrow, .section-eyebrow, .sec-label,
-  .hero-eyebrow, .rh-eyebrow, .gps-eyebrow {
-    color: #D4A853 !important;
-    font-family: 'DM Sans', sans-serif !important;
-  }
-
-  /* GOLD → BLUE primary */
-  .gold, .kv-gold, .sc-val.gold, .school-rating,
-  .rs-row.dominant .rs-pct, .rs-row.dominant .rs-letter,
-  .rs-badge, .rs-row.dominant .rs-fill,
-  .score-big, .une-cat, .ph-count-num,
-  .stat-num.gold, .kpi-val, .nsb-val, .sb-val {
-    color: #D4A853 !important;
-  }
-
-  /* GOLD fills → blue */
-  .btn-gold, .btn-unlock, .btn-submit, .btn-hero,
-  .nav-btn-gold, a.btn-gold {
-    background: #D4A853 !important;
-    color:var(--ivory) !important;
-    border-color: #D4A853 !important;
-    border-radius: 10px !important;
-    font-family:'Bricolage Grotesque',sans-serif;
-  }
-  .btn-gold:hover, .btn-unlock:hover, .btn-submit:hover, .btn-hero:hover {
-    background: #7A5E2A !important;
-    box-shadow: 0 4px 12px rgba(27,79,255,.3) !important;
-  }
-
-  /* CTA card on dark sections */
-  .cta-card { background: #D4A853 !important; }
-  .cta-card-title { color:var(--ivory) !important; }
-  .cta-card-sub { color: rgba(255,255,255,.75) !important; }
-  .cta-card-btn { background:var(--ink-3) !important; color: #D4A853 !important; }
-
-  /* Tags / Chips */
-  .chip, .fchip, .tag-chip, .domain-tag,
-  .sector-chip, .ctag, .stag, .cc-tag {
-    background: #0C1220 !important;
-    border-color: #E5E3DF !important;
-    color: #555555 !important;
-  }
-  .chip.active, .fchip.active, .tag-chip.riasec {
-    background: rgba(27,79,255,.08) !important;
-    border-color: rgba(27,79,255,.2) !important;
-    color: #D4A853 !important;
-  }
-  .rs-row.dominant, .article-une {
-    border-color: rgba(27,79,255,.2) !important;
-    background: rgba(27,79,255,.04) !important;
-  }
-  .article-une::before { background: #D4A853 !important; }
-
-  /* Search input */
-  .search-input, .field-input, .field-select, .sort-select {
-    background:var(--ink-3) !important;
-    border-color: #D4D2CE !important;
-    color: #0D0D0D !important;
-    border-radius: 10px !important;
-  }
-  .search-input:focus, .field-input:focus, .field-select:focus {
-    border-color: #D4A853 !important;
-    box-shadow: 0 0 0 3px rgba(27,79,255,.1) !important;
-  }
-  .search-input::placeholder, .field-input::placeholder { color: #888888 !important; }
-
-  /* Progress bars → blue */
-  .gauge-fill[style*="gold"], .rb-fill, .bar-fill,
-  .pb-fill, .rs-fill { background: #D4A853 !important; }
-  .gauge-fill[style*="green"], .bar-fill[style*="green"] { background: #00C853 !important; }
-  .gauge-fill[style*="red"], .bar-fill[style*="red"] { background: #FF6B35 !important; }
-
-  /* Sidebar */
-  .dash-sidebar, .sidebar {
-    background: #0C1220 !important;
-    border-color: #E5E3DF !important;
-  }
-  .snav-item.active {
-    background: rgba(27,79,255,.08) !important;
-    color: #D4A853 !important;
-    border-color: rgba(27,79,255,.2) !important;
-  }
-  .snav-item:hover { background: #111827 !important; color: #0D0D0D !important; }
-  .user-card { background:var(--ink-3) !important; border-color: #E5E3DF !important; }
-  .user-badge {
-    background: rgba(27,79,255,.08) !important;
-    border-color: rgba(27,79,255,.2) !important;
-    color: #D4A853 !important;
-  }
-  .user-avatar, .nav-avatar-btn, .road-avatar,
-  .testi-avatar, .hero-avatar { background: #D4A853 !important; }
-
-  /* Auth */
-  .auth-left { background: #0C1220 !important; }
-  .auth-tab.active { background: #0D0D0D !important; color:var(--ivory) !important; }
-  .auth-tabs { background: #0C1220 !important; border-color: #E5E3DF !important; }
-
-  /* Radar SVG — make lines visible on light bg */
-  #auth-radar circle, #radar-svg circle { opacity: 0.15; }
-
-  /* Footer V3 */
-  footer {
-    background: #0D0D0D !important;
-    border-top: 1px solid #E5E3DF !important;
-  }
-  .footer-copy { color: rgba(255,255,255,.4) !important; }
-
-  /* Paywall */
-  .paywall-section { border-color: #E5E3DF !important; }
-  .paywall-overlay { background: linear-gradient(to bottom, rgba(250,250,248,0) 0%, rgba(250,250,248,.97) 50%) !important; }
-  .paywall-title, .paywall-sub { color: #0D0D0D !important; }
-  .paywall-badge {
-    background: rgba(27,79,255,.08) !important;
-    border-color: rgba(27,79,255,.2) !important;
-    color: #D4A853 !important;
-  }
-
-  /* Ticker */
-  .ticker-bar { background: #0C1220 !important; border-color: #E5E3DF !important; }
-  .ticker-label { background:var(--ink-3) !important; color: #D4A853 !important; border-color: #E5E3DF !important; }
-  .ticker-item { color: #555555 !important; border-color: #E5E3DF !important; }
-  .ticker-dot { background: #D4A853 !important; }
-
-  /* Stats sections */
-  .stats-band, .cta-band { background: #D4A853 !important; }
-  .sb-val, .sb-lbl { color:var(--ivory) !important; }
-  .cta-band { border-color: rgba(27,79,255,.2) !important; }
-
-  /* Demand badges */
-  .demand-critical { background: rgba(255,107,53,.1) !important; color: #FF6B35 !important; border-color: rgba(255,107,53,.2) !important; }
-  .demand-high { background: rgba(27,79,255,.08) !important; color: #D4A853 !important; border-color: rgba(27,79,255,.15) !important; }
-
-  /* Scrollbar */
-  ::-webkit-scrollbar-track { background: #0C1220 !important; }
-  ::-webkit-scrollbar-thumb { background: #D4D2CE !important; }
-
-  /* GPS road card on dark section */
-  .gps-section { background: #0D0D0D !important; }
-  .gps-section .gps-title, .gps-section .gps-feat-title { color:var(--ivory) !important; }
-  .gps-section .gps-sub, .gps-section .gps-feat-desc { color: rgba(255,255,255,.6) !important; }
-
-
-  
-    /* ── NAV STANDARD ── */
-    nav{position:sticky;top:0;z-index:500;height:64px;border-bottom:1px solid var(--wire);background:rgba(6,11,20,.92);backdrop-filter:blur(16px);display:flex;align-items:center;}
-    .nav-inner{max-width:1200px;margin:0 auto;padding:0 40px;width:100%;display:flex;align-items:center;gap:16px;}
-    .nav-logo{font-family:'Bricolage Grotesque',sans-serif;font-size:16px;font-weight:700;color:var(--ivory);letter-spacing:-.03em;text-decoration:none;}
-    .nav-logo em{font-style:italic;}
-    .nav-links{display:flex;gap:2px;}
-    .nav-link{font-size:13px;font-weight:500;color:var(--ivory-dim);text-decoration:none;padding:6px 12px;border-radius:6px;transition:all .15s;}
-    .nav-link:hover{color:var(--ivory);background:var(--ink-3);}
-    .nav-link.active{color:var(--gold);}
-    .nav-right{margin-left:auto;display:flex;gap:8px;align-items:center;}
-    .nav-btn-ghost{font-size:12px;font-weight:600;padding:8px 16px;background:transparent;color:var(--ivory-dim);border:1px solid var(--wire-mid);border-radius:6px;cursor:none;text-decoration:none;transition:all .15s;}
-    .nav-btn-ghost:hover{border-color:var(--wire-hi);color:var(--ivory);}
-    .nav-btn-cta{font-family:'Bricolage Grotesque',sans-serif;font-size:13px;font-weight:700;padding:8px 18px;background:var(--gold);color:var(--ink);border:none;border-radius:8px;cursor:none;text-decoration:none;transition:all .15s;display:inline-flex;align-items:center;gap:6px;}
-    .nav-btn-cta:hover{background:#e0b55e;}
-
+/* RESPONSIVE */
+@media(max-width:1024px){.page-wrap{grid-template-columns:1fr;} .sidebar{display:none;}}
+@media(max-width:768px){.page-wrap{padding:16px;} .g2,.g3,.g4{grid-template-columns:1fr;} .form-row{grid-template-columns:1fr;}}
+::-webkit-scrollbar{width:4px;} ::-webkit-scrollbar-track{background:var(--ink);} ::-webkit-scrollbar-thumb{background:var(--wire-mid);border-radius:2px;}
   </style>
 </head>
 <body>
-<div class="cursor" id="cur"></div>
+<div class="ae-cursor" id="ae-cursor"></div>
 
 <!-- NAV -->
 <nav>
   <div class="nav-inner">
     <a href="avenir_etude_homepage_v2.html" class="nav-logo">Avenir <em>Étude</em></a>
     <div class="nav-links">
-      <a href="avenir_etude_test_riasec_v2.html" class="nav-link">Test</a>
+      <a href="avenir_etude_tests.html" class="nav-link">Tests</a>
       <a href="avenir_etude_ecoles.html" class="nav-link">Écoles</a>
       <a href="avenir_etude_carrieres.html" class="nav-link">Carrières</a>
-      <a href="avenir_etude_ressources.html" class="nav-link">Ressources & Actualités</a>
-      <a href="avenir_etude_evenements.html" class="nav-link">Événements</a>
-    </div>
-    <div class="nav-right">
-      <a href="avenir_etude_auth.html" class="nav-btn-ghost">Connexion</a>
-      <a href="avenir_etude_auth.html" class="nav-btn-cta">S'inscrire →</a>
+      <a href="avenir_etude_gps_academique.html" class="nav-link">GPS</a>
+      <a href="avenir_etude_ressources.html" class="nav-link">Actualités</a>
     </div>
   </div>
 </nav>
 
-<div class="dash-shell">
+<div class="page-wrap">
 
-  <!-- SIDEBAR -->
-  <aside class="dash-sidebar">
-    <div class="user-card">
-      <div class="user-avatar">GK</div>
-      <div class="user-name">Gérald Koné</div>
-      <div class="user-email"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="3f585a4d5e535b115450515a7f5a525e5653115c5052">[email&#160;protected]</a></div>
-      <div class="user-badge">Compte Gratuit</div>
+  <!-- ══ SIDEBAR ══ -->
+  <div class="sidebar">
+
+    <!-- Profile Card -->
+    <div class="profile-card">
+      <div class="avatar-wrap">
+        <div class="avatar" id="sidebar-avatar">AK</div>
+        <div class="avatar-edit" onclick="document.getElementById('photo-input').click()">✏️</div>
+        <input type="file" id="photo-input" accept="image/*" style="display:none" onchange="uploadPhoto(this)">
+      </div>
+      <div class="profile-name" id="sidebar-name">Aminata Koné</div>
+      <div class="profile-level" id="sidebar-level">Terminale D · Abidjan</div>
+      <div class="profile-completion">
+        <div class="pc-label"><span>Profil complété</span><span id="completion-pct">68%</span></div>
+        <div class="pc-bar"><div class="pc-fill" id="completion-bar" style="width:68%"></div></div>
+      </div>
+      <div class="profile-badges" id="sidebar-badges">
+        <span class="badge badge-gold">✦ RIASEC IAS</span>
+        <span class="badge badge-green">⚡ Aptitudes 82</span>
+        <span class="badge badge-blue">🌍 TOEIC B1</span>
+      </div>
     </div>
 
-    <nav class="sidebar-nav">
-      <button class="snav-item active" onclick="showPanel('overview',this)">
-        <span class="snav-icon">🏠</span> Vue d'ensemble
-      </button>
-      <button class="snav-item" onclick="showPanel('profil',this)">
-        <span class="snav-icon">🧠</span> Mon profil
-      </button>
-      <button class="snav-item" onclick="showPanel('historique',this)">
-        <span class="snav-icon">📋</span> Historique tests
-        <span class="snav-badge">2</span>
-      </button>
-      <button class="snav-item" onclick="showPanel('favoris',this)">
-        <span class="snav-icon">♥</span> Mes favoris
-      </button>
-      <button class="snav-item" onclick="showPanel('recommandations',this)">
-        <span class="snav-icon">🎯</span> Recommandations
-      </button>
+    <!-- Candidabilité Score -->
+    <div class="candi-score-card" id="score-card">
+      <div class="cs-title">Score Candidabilité</div>
+      <div class="cs-ring">
+        <svg width="90" height="90" viewBox="0 0 90 90">
+          <circle cx="45" cy="45" r="36" fill="none" stroke="rgba(242,237,228,.07)" stroke-width="7"/>
+          <circle cx="45" cy="45" r="36" fill="none" stroke="#D4A853" stroke-width="7"
+            stroke-dasharray="226" stroke-dashoffset="68" stroke-linecap="round" id="candi-ring"/>
+        </svg>
+        <div class="cs-num"><div class="cs-num-val" id="candi-score-val">70</div><div class="cs-num-lbl">/100</div></div>
+      </div>
+      <div class="cs-countries" id="cs-countries">
+        <div class="cs-country"><span class="cs-flag">🇨🇦</span><span style="flex:0 0 60px;font-size:10px;">Canada</span><div class="cs-bar-mini"><div class="cs-bar-fill" style="width:82%;background:var(--green);"></div></div><span class="cs-pct" style="color:var(--green);">82%</span></div>
+        <div class="cs-country"><span class="cs-flag">🇲🇦</span><span style="flex:0 0 60px;font-size:10px;">Maroc</span><div class="cs-bar-mini"><div class="cs-bar-fill" style="width:75%;background:var(--gold);"></div></div><span class="cs-pct" style="color:var(--gold);">75%</span></div>
+        <div class="cs-country"><span class="cs-flag">🇧🇪</span><span style="flex:0 0 60px;font-size:10px;">Belgique</span><div class="cs-bar-mini"><div class="cs-bar-fill" style="width:68%;background:var(--blue);"></div></div><span class="cs-pct" style="color:var(--blue);">68%</span></div>
+        <div class="cs-country"><span class="cs-flag">🇫🇷</span><span style="flex:0 0 60px;font-size:10px;">France</span><div class="cs-bar-mini"><div class="cs-bar-fill" style="width:55%;background:var(--orange);"></div></div><span class="cs-pct" style="color:var(--orange);">55%</span></div>
+      </div>
+    </div>
 
-      <div class="sidebar-divider"></div>
+    <!-- Navigation -->
+    <div class="snav">
+      <button class="snav-item active" onclick="showPanel('overview',this)"><span class="snav-icon">🏠</span>Vue d'ensemble</button>
+      <button class="snav-item" onclick="showPanel('profil',this)"><span class="snav-icon">👤</span>Mon Profil</button>
+      <button class="snav-item" onclick="showPanel('academique',this)"><span class="snav-icon">📚</span>Parcours Académique</button>
+      <button class="snav-item" onclick="showPanel('tests',this)"><span class="snav-icon">🧩</span>Mes Tests <span class="snav-badge snav-badge-green">6/8</span></button>
+      <button class="snav-item" onclick="showPanel('candidatures',this)"><span class="snav-icon">🌍</span>Candidatures Intl. <span class="snav-badge">3</span></button>
+      <button class="snav-item" onclick="showPanel('bourses',this)"><span class="snav-icon">🎓</span>Bourses</button>
+      <button class="snav-item" onclick="showPanel('dossier',this)"><span class="snav-icon">📄</span>Mon Dossier PDF</button>
+      <button class="snav-item" onclick="showPanel('parametres',this)"><span class="snav-icon">⚙️</span>Paramètres</button>
+    </div>
+  </div>
 
-      <button class="snav-item" onclick="showPanel('parametres',this)">
-        <span class="snav-icon">⚙️</span> Paramètres
-      </button>
-      <button class="snav-item logout" onclick="if(confirm('Se déconnecter ?')) window.location.href='avenir_etude_auth.html'">
-        <span class="snav-icon">↩</span> Déconnexion
-      </button>
-    </nav>
-  </aside>
+  <!-- ══ MAIN PANELS ══ -->
+  <div class="main-content">
 
-  <!-- MAIN CONTENT -->
-  <main class="dash-main">
-    <div class="dash-panels">
+    <!-- ── OVERVIEW ── -->
+    <div class="panel active" id="panel-overview">
+      <div class="panel-header">
+        <div class="panel-title">Bonjour, <em id="overview-prenom">Aminata</em> 👋</div>
+        <div class="panel-sub">Voici l'état de ton parcours Avenir Étude au <span id="today-date"></span></div>
+      </div>
 
-      <!-- ══ OVERVIEW ══ -->
-      <div id="panel-overview" class="active">
-        <div class="sec-title">Vue d'ensemble <em>de votre parcours</em></div>
+      <div class="alert alert-warn" id="completion-alert" style="display:none;">
+        <span class="alert-icon">⚠️</span>
+        <div>Ton profil est incomplet — certaines écoles ne peuvent pas évaluer ta candidature. <strong style="color:var(--ivory);cursor:none;" onclick="showPanel('profil',document.querySelector('.snav-item:nth-child(2)'))">Compléter →</strong></div>
+      </div>
 
-        <!-- Stats -->
-        <div class="stats-grid">
-          <div class="stat-card">
-            <div class="sc-val gold">IAS</div>
-            <div class="sc-lbl">Votre profil RIASEC</div>
-            <div class="sc-trend trend-up">↑ Profil Investigatif dominant</div>
-          </div>
-          <div class="stat-card">
-            <div class="sc-val green">96%</div>
-            <div class="sc-lbl">Meilleur match métier</div>
-            <div class="sc-trend trend-up">Data Scientist</div>
-          </div>
-          <div class="stat-card">
-            <div class="sc-val blue">2</div>
-            <div class="sc-lbl">Tests complétés</div>
-            <div class="sc-trend trend-neutral">RIASEC + Aptitudes</div>
-          </div>
-          <div class="stat-card">
-            <div class="sc-val" style="color:var(--ivory)">3</div>
-            <div class="sc-lbl">Écoles en favoris</div>
-            <div class="sc-trend trend-neutral">INP-HB, ENSEA, ESATIC</div>
-          </div>
+      <!-- 4 KPIs -->
+      <div class="g4" style="margin-bottom:20px;">
+        <div class="card">
+          <div class="kpi-val" style="color:var(--gold);" id="ov-riasec">IAS</div>
+          <div class="kpi-lbl">Profil RIASEC</div>
+          <div class="kpi-trend trend-up">Investigatif dominant</div>
         </div>
-
-        <!-- Progress rapide -->
-        <div class="progress-circle-wrap">
-          <svg class="pcw-svg" width="60" height="60" viewBox="0 0 60 60">
-            <circle cx="30" cy="30" r="24" fill="none" stroke="rgba(242,237,228,.07)" stroke-width="5"/>
-            <circle cx="30" cy="30" r="24" fill="none" stroke="#D4A853" stroke-width="5"
-              stroke-dasharray="100 51" stroke-linecap="round" transform="rotate(-90 30 30)"/>
-            <text x="30" y="30" text-anchor="middle" dominant-baseline="central"
-              font-family="'Bricolage Grotesque',sans-serif" font-size="12" font-weight="800" fill="#D4A853">66%</text>
-          </svg>
-          <div class="pcw-info">
-            <div class="pcw-title">Parcours d'orientation complété à 66%</div>
-            <div class="pcw-sub">Il vous reste : Test d'aptitudes complet · Rapport PDF · Consultation conseiller</div>
-            <a href="avenir_etude_test_riasec.html" class="pcw-cta">Continuer mon parcours →</a>
-          </div>
+        <div class="card">
+          <div class="kpi-val" style="color:var(--green);" id="ov-apt">82<span style="font-size:16px;">/100</span></div>
+          <div class="kpi-lbl">Score Aptitudes</div>
+          <div class="kpi-trend trend-up">↑ Top 20% CI</div>
         </div>
-
-        <!-- Top recommandations rapides -->
-        <div class="sec-title" style="font-size:16px;margin-bottom:14px;">Vos meilleures recommandations</div>
-        <div class="reco-grid">
-          <div class="reco-card featured">
-            <div class="rc-badge rcb-gold">Top Pick</div>
-            <div class="rc-name">Data Scientist</div>
-            <div class="rc-meta">Technologie · ENSEA recommandée</div>
-            <div class="rc-match">96%</div>
-            <div class="rc-match-lbl">Compatibilité</div>
-          </div>
-          <div class="reco-card">
-            <div class="rc-badge rcb-blue">Recommandé</div>
-            <div class="rc-name">Statisticien Économiste</div>
-            <div class="rc-meta">Finance · ENSEA</div>
-            <div class="rc-match">92%</div>
-            <div class="rc-match-lbl">Compatibilité</div>
-          </div>
-          <div class="reco-card">
-            <div class="rc-badge rcb-blue">Recommandé</div>
-            <div class="rc-name">Expert Cybersécurité</div>
-            <div class="rc-meta">Tech · ESATIC</div>
-            <div class="rc-match">87%</div>
-            <div class="rc-match-lbl">Compatibilité</div>
-          </div>
+        <div class="card">
+          <div class="kpi-val" style="color:var(--blue);" id="ov-toeic">B1</div>
+          <div class="kpi-lbl">Niveau Anglais</div>
+          <div class="kpi-trend trend-warn">→ TOEIC 450/990</div>
+        </div>
+        <div class="card">
+          <div class="kpi-val" style="color:var(--purple);" id="ov-schools">3</div>
+          <div class="kpi-lbl">Écoles visées</div>
+          <div class="kpi-trend">Canada · Maroc · Belgique</div>
         </div>
       </div>
 
-      <!-- ══ PROFIL ══ -->
-      <div id="panel-profil">
-        <div class="sec-title">Mon profil <em>d'orientation</em></div>
-        <div class="profile-grid">
-          <div class="profile-card">
-            <div class="pc-title">🧩 Profil RIASEC</div>
-            <div class="riasec-bars">
-              <div class="rb-row"><span class="rb-letter dom">I</span><div class="rb-track"><div class="rb-fill" id="rb-I" style="width:0%;background:var(--gold);"></div></div><span class="rb-pct dom">94%</span></div>
-              <div class="rb-row"><span class="rb-letter dom">A</span><div class="rb-track"><div class="rb-fill" id="rb-A" style="width:0%;background:var(--gold);"></div></div><span class="rb-pct dom">82%</span></div>
-              <div class="rb-row"><span class="rb-letter dom">S</span><div class="rb-track"><div class="rb-fill" id="rb-S" style="width:0%;background:var(--gold);"></div></div><span class="rb-pct dom">65%</span></div>
-              <div class="rb-row"><span class="rb-letter sub">E</span><div class="rb-track"><div class="rb-fill" id="rb-E" style="width:0%;background:var(--blue);"></div></div><span class="rb-pct sub">48%</span></div>
-              <div class="rb-row"><span class="rb-letter sub">R</span><div class="rb-track"><div class="rb-fill" id="rb-R" style="width:0%;background:var(--ivory-faint);"></div></div><span class="rb-pct sub">31%</span></div>
-              <div class="rb-row"><span class="rb-letter sub">C</span><div class="rb-track"><div class="rb-fill" id="rb-C" style="width:0%;background:var(--ivory-faint);"></div></div><span class="rb-pct sub">20%</span></div>
+      <div class="g2">
+        <!-- Tests résumé -->
+        <div>
+          <div class="card">
+            <div class="card-title">Tes scores de tests</div>
+            <div id="tests-overview-list">
+              <div class="test-result-row">
+                <span class="tr-icon">🧩</span>
+                <span class="tr-name">RIASEC</span>
+                <span class="tr-score" style="color:var(--gold);">IAS</span>
+                <div class="tr-bar"><div class="tr-bar-fill" style="width:90%;background:var(--gold);"></div></div>
+                <span class="tr-status ts-done">✓ Fait</span>
+              </div>
+              <div class="test-result-row">
+                <span class="tr-icon">⚡</span>
+                <span class="tr-name">Aptitudes</span>
+                <span class="tr-score" style="color:var(--green);">82</span>
+                <div class="tr-bar"><div class="tr-bar-fill" style="width:82%;background:var(--green);"></div></div>
+                <span class="tr-status ts-done">✓ Fait</span>
+              </div>
+              <div class="test-result-row">
+                <span class="tr-icon">🌍</span>
+                <span class="tr-name">TOEIC simulé</span>
+                <span class="tr-score" style="color:var(--blue);">450</span>
+                <div class="tr-bar"><div class="tr-bar-fill" style="width:45%;background:var(--blue);"></div></div>
+                <span class="tr-status ts-done">✓ Fait</span>
+              </div>
+              <div class="test-result-row">
+                <span class="tr-icon">💜</span>
+                <span class="tr-name">Intelligence Émo.</span>
+                <span class="tr-score" style="color:var(--purple);">74</span>
+                <div class="tr-bar"><div class="tr-bar-fill" style="width:74%;background:var(--purple);"></div></div>
+                <span class="tr-status ts-done">✓ Fait</span>
+              </div>
+              <div class="test-result-row" style="opacity:.6;">
+                <span class="tr-icon">👑</span>
+                <span class="tr-name">Leadership</span>
+                <span class="tr-score">—</span>
+                <div class="tr-bar"><div class="tr-bar-fill" style="width:0%;"></div></div>
+                <span class="tr-status ts-todo">À faire</span>
+              </div>
+              <div class="test-result-row" style="opacity:.6;">
+                <span class="tr-icon">🚀</span>
+                <span class="tr-name">Entrepreneuriat</span>
+                <span class="tr-score">—</span>
+                <div class="tr-bar"><div class="tr-bar-fill" style="width:0%;"></div></div>
+                <span class="tr-status ts-todo">À faire</span>
+              </div>
             </div>
-            <div style="margin-top:16px;padding:12px;background:var(--ink-3);border-radius:8px;border:1px solid var(--wire);">
-              <div style="font-size:10px;font-weight:700;color:var(--gold);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;">Forces identifiées</div>
-              <div style="display:flex;gap:6px;flex-wrap:wrap;">
-                <span style="font-size:11px;padding:3px 8px;border-radius:4px;background:var(--gold-10);border:1px solid var(--gold-dim);color:var(--gold);">Pensée abstraite</span>
-                <span style="font-size:11px;padding:3px 8px;border-radius:4px;background:var(--gold-10);border:1px solid var(--gold-dim);color:var(--gold);">Synthèse complexe</span>
-                <span style="font-size:11px;padding:3px 8px;border-radius:4px;background:var(--gold-10);border:1px solid var(--gold-dim);color:var(--gold);">Leadership analytique</span>
+            <button class="btn-secondary" style="width:100%;margin-top:10px;font-size:12px;" onclick="showPanel('tests',document.querySelectorAll('.snav-item')[3])">Voir tous les tests →</button>
+          </div>
+        </div>
+
+        <!-- Actions & timeline -->
+        <div class="col">
+          <!-- Prochaines actions -->
+          <div class="card">
+            <div class="card-title">Actions prioritaires</div>
+            <div class="timeline" id="actions-list">
+              <div class="tl-item">
+                <div class="tl-left"><div class="tl-dot" style="background:var(--red);font-size:12px;">!</div><div class="tl-line"></div></div>
+                <div class="tl-content"><div class="tl-date">Urgent</div><div class="tl-text"><strong>Améliore ton score TOEIC</strong> — Polytechnique Montréal exige B2 minimum. Tu es à B1.</div></div>
+              </div>
+              <div class="tl-item">
+                <div class="tl-left"><div class="tl-dot" style="background:var(--orange);font-size:12px;">2</div><div class="tl-line"></div></div>
+                <div class="tl-content"><div class="tl-date">Avant juin 2026</div><div class="tl-text"><strong>Finalise ton dossier Campus France</strong> — délai inscription universités canadiennes : 1er avril.</div></div>
+              </div>
+              <div class="tl-item">
+                <div class="tl-left"><div class="tl-dot" style="background:var(--gold);font-size:12px;">3</div><div class="tl-line"></div></div>
+                <div class="tl-content"><div class="tl-date">Cette semaine</div><div class="tl-text"><strong>Passe les tests Leadership & Entrepreneuriat</strong> — requis pour UM6P Maroc.</div></div>
+              </div>
+              <div class="tl-item">
+                <div class="tl-left"><div class="tl-dot" style="background:var(--green);font-size:12px;">4</div></div>
+                <div class="tl-content"><div class="tl-date">Disponible maintenant</div><div class="tl-text"><strong>Bourse Excellence Afrique — UCLouvain</strong> · Deadline : 15 mai 2026.</div></div>
               </div>
             </div>
           </div>
-          <div class="profile-card">
-            <div class="pc-title">⚡ Aptitudes cognitives</div>
-            <div class="riasec-bars">
-              <div class="rb-row"><span class="rb-letter dom" style="color:var(--blue);width:80px;font-size:11px;">Logique</span><div class="rb-track"><div class="rb-fill" style="width:0%;background:var(--gold);" id="apt-I"></div></div><span class="rb-pct dom">96</span></div>
-              <div class="rb-row"><span class="rb-letter dom" style="color:var(--blue);width:80px;font-size:11px;">Verbal</span><div class="rb-track"><div class="rb-fill" style="width:0%;background:var(--blue);" id="apt-V"></div></div><span class="rb-pct dom" style="color:var(--blue);">88</span></div>
-              <div class="rb-row"><span class="rb-letter dom" style="color:var(--green);width:80px;font-size:11px;">Numérique</span><div class="rb-track"><div class="rb-fill" style="width:0%;background:var(--green);" id="apt-N"></div></div><span class="rb-pct dom" style="color:var(--green);">82</span></div>
-              <div class="rb-row"><span class="rb-letter dom" style="color:var(--gold);width:80px;font-size:11px;">Analytique</span><div class="rb-track"><div class="rb-fill" style="width:0%;background:var(--gold);" id="apt-A"></div></div><span class="rb-pct dom">91</span></div>
+
+          <!-- Candidatures en cours -->
+          <div class="card">
+            <div class="card-title">Candidatures en cours</div>
+            <div style="display:flex;flex-direction:column;gap:8px;" id="candidatures-mini">
+              <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--ink-3);border:1px solid var(--wire);border-radius:9px;">
+                <span style="font-size:20px;">🇨🇦</span>
+                <div style="flex:1;"><div style="font-size:12px;font-weight:700;color:var(--ivory);">Polytechnique Montréal</div><div style="font-size:10px;color:var(--ivory-dim);">Génie Informatique</div></div>
+                <span class="candi-status cs-inprog">● En cours</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--ink-3);border:1px solid var(--wire);border-radius:9px;">
+                <span style="font-size:20px;">🇲🇦</span>
+                <div style="flex:1;"><div style="font-size:12px;font-weight:700;color:var(--ivory);">UM6P Benguerir</div><div style="font-size:10px;color:var(--ivory-dim);">Data Science & IA</div></div>
+                <span class="candi-status cs-draft">● Brouillon</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--ink-3);border:1px solid var(--wire);border-radius:9px;">
+                <span style="font-size:20px;">🇧🇪</span>
+                <div style="flex:1;"><div style="font-size:12px;font-weight:700;color:var(--ivory);">UCLouvain</div><div style="font-size:10px;color:var(--ivory-dim);">Ingénierie de Gestion</div></div>
+                <span class="candi-status cs-draft">● Brouillon</span>
+              </div>
             </div>
-            <div style="margin-top:16px;padding:12px;background:var(--ink-3);border-radius:8px;border:1px solid var(--wire);">
-              <div style="font-size:10px;font-weight:700;color:var(--green);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;">Score global</div>
-              <div style="font-family:'Bricolage Grotesque',sans-serif;font-size:32px;font-weight:800;color:var(--ivory);letter-spacing:-.04em;">89<span style="font-size:16px;color:var(--ivory-dim)">/100</span></div>
-              <div style="font-size:11px;color:var(--green);margin-top:2px;">Top 12% des candidats</div>
-            </div>
+            <button class="btn-save" style="width:100%;margin-top:12px;justify-content:center;" onclick="showPanel('candidatures',document.querySelectorAll('.snav-item')[4])">Gérer mes candidatures →</button>
           </div>
         </div>
-        <div style="text-align:center;padding:20px;">
-          <a href="avenir_etude_dashboard_resultats.html" class="nav-btn nav-btn-gold" style="display:inline-flex;font-size:14px;padding:12px 24px;">Voir le rapport complet →</a>
+      </div>
+    </div>
+
+    <!-- ── PROFIL PERSONNEL ── -->
+    <div class="panel" id="panel-profil">
+      <div class="panel-header">
+        <div class="panel-title">Mon <em>Profil</em></div>
+        <div class="panel-sub">Ces informations constituent la base de ton dossier de candidature. Elles sont utilisées pour calculer ton score de candidabilité.</div>
+      </div>
+      <div class="alert alert-info"><span class="alert-icon">ℹ️</span><div>Tes données sont <strong style="color:var(--ivory);">stockées localement</strong> sur ton appareil. Aucune information n'est partagée sans ton accord explicite.</div></div>
+
+      <div class="g2">
+        <div class="col">
+          <!-- Identité -->
+          <div class="card">
+            <div class="card-title">Identité</div>
+            <div class="form-section">
+              <div class="form-row">
+                <div class="form-group"><label class="form-label">Prénom</label><input class="form-input" id="f-prenom" placeholder="Ex: Aminata" oninput="autoSave()"></div>
+                <div class="form-group"><label class="form-label">Nom</label><input class="form-input" id="f-nom" placeholder="Ex: Koné" oninput="autoSave()"></div>
+              </div>
+              <div class="form-row">
+                <div class="form-group"><label class="form-label">Date de naissance</label><input class="form-input" id="f-dob" type="date" oninput="autoSave()"></div>
+                <div class="form-group"><label class="form-label">Genre</label><select class="form-input" id="f-genre" onchange="autoSave()"><option value="">Sélectionner</option><option>Féminin</option><option>Masculin</option><option>Autre</option></select></div>
+              </div>
+              <div class="form-group"><label class="form-label">Nationalité</label><input class="form-input" id="f-nationalite" value="Ivoirienne" oninput="autoSave()"></div>
+            </div>
+          </div>
+
+          <!-- Contact -->
+          <div class="card">
+            <div class="card-title">Contact</div>
+            <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="f-email" type="email" placeholder="ton@email.com" oninput="autoSave()"></div>
+            <div class="form-group"><label class="form-label">Téléphone (WhatsApp)</label><input class="form-input" id="f-tel" placeholder="+225 07 00 00 00 00" oninput="autoSave()"></div>
+            <div class="form-group"><label class="form-label">Ville de résidence</label><select class="form-input" id="f-ville" onchange="autoSave()">
+              <option value="">Sélectionner</option>
+              <option>Abidjan — Cocody</option><option>Abidjan — Plateau</option><option>Abidjan — Yopougon</option>
+              <option>Abidjan — Abobo</option><option>Abidjan — Marcory</option><option>Abidjan — Treichville</option>
+              <option>Bouaké</option><option>Yamoussoukro</option><option>San Pedro</option><option>Daloa</option><option>Autre CI</option>
+            </select></div>
+          </div>
+        </div>
+
+        <div class="col">
+          <!-- Photo -->
+          <div class="card">
+            <div class="card-title">Photo de profil</div>
+            <div style="display:flex;align-items:center;gap:16px;margin-bottom:14px;">
+              <div class="avatar" id="photo-preview" style="width:80px;height:80px;font-size:26px;">AK</div>
+              <div>
+                <div style="font-size:12px;color:var(--ivory-dim);margin-bottom:8px;">Photo recommandée pour les candidatures. Format carré, fond neutre.</div>
+                <button class="btn-secondary" style="font-size:12px;padding:7px 14px;" onclick="document.getElementById('photo-input2').click()">📷 Choisir une photo</button>
+                <input type="file" id="photo-input2" accept="image/*" style="display:none" onchange="uploadPhoto(this)">
+              </div>
+            </div>
+          </div>
+
+          <!-- Projet académique -->
+          <div class="card">
+            <div class="card-title">Projet professionnel</div>
+            <div class="form-group"><label class="form-label">Métier cible</label><input class="form-input" id="f-metier" placeholder="Ex: Ingénieur en Intelligence Artificielle" oninput="autoSave()"></div>
+            <div class="form-group"><label class="form-label">Domaine d'études visé</label><select class="form-input" id="f-domaine" onchange="autoSave()">
+              <option value="">Sélectionner</option>
+              <option>Informatique & Systèmes d'Information</option><option>Intelligence Artificielle & Data Science</option>
+              <option>Génie Civil & BTP</option><option>Finance & Comptabilité</option><option>Commerce & Marketing</option>
+              <option>Médecine & Sciences de la Santé</option><option>Droit & Sciences Juridiques</option>
+              <option>Agronomie & Agrobusiness</option><option>Énergie & Environnement</option><option>Sciences Économiques</option>
+            </select></div>
+            <div class="form-group"><label class="form-label">Année de candidature visée</label><select class="form-input" id="f-annee-candi" onchange="autoSave()">
+              <option>2025-2026</option><option>2026-2027</option><option>2027-2028</option>
+            </select></div>
+            <div class="form-group"><label class="form-label">Pays d'études souhaités (sélection)</label>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px;">
+                <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--ivory-dim);cursor:none;"><input type="checkbox" id="f-canada" onchange="autoSave()" style="cursor:none;"> 🇨🇦 Canada</label>
+                <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--ivory-dim);cursor:none;"><input type="checkbox" id="f-maroc" onchange="autoSave()" style="cursor:none;"> 🇲🇦 Maroc</label>
+                <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--ivory-dim);cursor:none;"><input type="checkbox" id="f-belgique" onchange="autoSave()" style="cursor:none;"> 🇧🇪 Belgique</label>
+                <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--ivory-dim);cursor:none;"><input type="checkbox" id="f-france" onchange="autoSave()" style="cursor:none;"> 🇫🇷 France</label>
+                <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--ivory-dim);cursor:none;"><input type="checkbox" id="f-ci" onchange="autoSave()" style="cursor:none;checked"> 🇨🇮 Côte d'Ivoire</label>
+                <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--ivory-dim);cursor:none;"><input type="checkbox" id="f-autre" onchange="autoSave()" style="cursor:none;"> 🌍 Autre</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Budget -->
+          <div class="card">
+            <div class="card-title">Budget & Financement</div>
+            <div class="form-group"><label class="form-label">Budget études annuel (FCFA)</label>
+              <select class="form-input" id="f-budget" onchange="autoSave()">
+                <option value="">Non défini</option>
+                <option value="0">Je recherche une bourse complète</option>
+                <option value="500000">< 500 000 FCFA/an</option>
+                <option value="1000000">500k – 1M FCFA/an</option>
+                <option value="2000000">1M – 2M FCFA/an</option>
+                <option value="3000000">2M – 3M FCFA/an</option>
+                <option value="5000000">> 3M FCFA/an</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--ivory-dim);cursor:none;margin-top:6px;">
+                <input type="checkbox" id="f-bourse-needed" onchange="autoSave()" style="cursor:none;">
+                Je candidate pour des bourses et aides financières
+              </label>
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- ══ HISTORIQUE ══ -->
-      <div id="panel-historique">
-        <div class="sec-title">Historique <em>des tests</em></div>
-        <div class="history-list">
-          <div class="history-item">
-            <div class="hi-icon">🧩</div>
-            <div>
-              <div class="hi-title">Test RIASEC — Intérêts Professionnels</div>
-              <div class="hi-date">Complété le 10 mars 2026 · 14 min 32 sec</div>
+      <div style="display:flex;gap:10px;margin-top:20px;">
+        <button class="btn-save" onclick="saveProfil()">💾 Sauvegarder le profil</button>
+        <button class="btn-secondary" onclick="showPanel('academique',document.querySelectorAll('.snav-item')[2])">Parcours académique →</button>
+      </div>
+    </div>
+
+    <!-- ── PARCOURS ACADÉMIQUE ── -->
+    <div class="panel" id="panel-academique">
+      <div class="panel-header">
+        <div class="panel-title">Parcours <em>Académique</em></div>
+        <div class="panel-sub">Tes notes sont utilisées pour calculer ton score de candidabilité et identifier les bourses accessibles.</div>
+      </div>
+
+      <div class="g2">
+        <div class="col">
+          <div class="card">
+            <div class="card-title">Situation actuelle</div>
+            <div class="form-group"><label class="form-label">Niveau scolaire</label>
+              <select class="form-input" id="f-niveau" onchange="updateMatieresByNiveau(); autoSave()">
+                <option value="">Sélectionner</option>
+                <option value="3eme">Classe de 3ème</option>
+                <option value="seconde">Seconde</option>
+                <option value="premiere">Première</option>
+                <option value="terminale">Terminale</option>
+                <option value="bac">Bachelier (BAC obtenu)</option>
+                <option value="L1">Licence 1 (L1)</option>
+                <option value="L2">Licence 2 (L2)</option>
+                <option value="L3">Licence 3 (L3)</option>
+              </select>
             </div>
-            <div class="hi-score">
-              <div class="hi-score-val">IAS</div>
-              <div class="hi-score-lbl">Profil dominant</div>
-              <div class="hi-badge hb-done">Complété</div>
+            <div class="form-group"><label class="form-label">Série BAC</label>
+              <select class="form-input" id="f-serie" onchange="updateMatieresByNiveau(); autoSave()">
+                <option value="">Sélectionner</option>
+                <option value="A1">A1 — Lettres, Philosophie</option>
+                <option value="A2">A2 — Langues Vivantes</option>
+                <option value="B">B — Sciences Économiques</option>
+                <option value="C">C — Maths & Physique</option>
+                <option value="D">D — Sciences Naturelles</option>
+                <option value="E">E — Maths & Technique</option>
+                <option value="F2">F2 — Sciences de l'Industrie</option>
+                <option value="G1">G1 — Techniques Administratives</option>
+                <option value="G2">G2 — Techniques Quantitatives</option>
+              </select>
+            </div>
+            <div class="form-group"><label class="form-label">Établissement</label><input class="form-input" id="f-etablissement" placeholder="Ex: Lycée Classique d'Abidjan" oninput="autoSave()"></div>
+            <div class="form-group"><label class="form-label">Année d'obtention du BAC</label><input class="form-input" id="f-annee-bac" type="number" placeholder="2025" min="2020" max="2030" oninput="autoSave()"></div>
+            <div class="form-group"><label class="form-label">Mention BAC (si obtenu)</label>
+              <select class="form-input" id="f-mention" onchange="autoSave()">
+                <option value="">Non obtenu / En cours</option>
+                <option value="passable">Passable (10–11.9)</option>
+                <option value="ab">Assez Bien (12–13.9)</option>
+                <option value="bien">Bien (14–15.9)</option>
+                <option value="tb">Très Bien (16+)</option>
+              </select>
             </div>
           </div>
-          <div class="history-item">
-            <div class="hi-icon">⚡</div>
-            <div>
-              <div class="hi-title">Test d'Aptitudes Cognitives</div>
-              <div class="hi-date">Complété le 10 mars 2026 · 12 min 18 sec</div>
+
+          <!-- Moyenne générale -->
+          <div class="card">
+            <div class="card-title">Moyenne générale</div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">
+              <div style="text-align:center;padding:14px;background:var(--ink-3);border:1px solid var(--wire);border-radius:10px;">
+                <div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--ivory-faint);margin-bottom:6px;">T1</div>
+                <input class="mt-input" id="moy-t1" type="number" step="0.5" min="0" max="20" placeholder="—" oninput="calcAvg()">
+                <div style="font-size:9px;color:var(--ivory-faint);margin-top:4px;">/20</div>
+              </div>
+              <div style="text-align:center;padding:14px;background:var(--ink-3);border:1px solid var(--wire);border-radius:10px;">
+                <div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--ivory-faint);margin-bottom:6px;">T2</div>
+                <input class="mt-input" id="moy-t2" type="number" step="0.5" min="0" max="20" placeholder="—" oninput="calcAvg()">
+                <div style="font-size:9px;color:var(--ivory-faint);margin-top:4px;">/20</div>
+              </div>
+              <div style="text-align:center;padding:14px;background:var(--ink-3);border:1px solid var(--wire);border-radius:10px;">
+                <div style="font-size:10px;font-weight:700;text-transform:uppercase;color:var(--ivory-faint);margin-bottom:6px;">T3</div>
+                <input class="mt-input" id="moy-t3" type="number" step="0.5" min="0" max="20" placeholder="—" oninput="calcAvg()">
+                <div style="font-size:9px;color:var(--ivory-faint);margin-top:4px;">/20</div>
+              </div>
             </div>
-            <div class="hi-score">
-              <div class="hi-score-val">89/100</div>
-              <div class="hi-score-lbl">Score global</div>
-              <div class="hi-badge hb-done">Complété</div>
-            </div>
-          </div>
-          <div class="history-item" style="opacity:.5;">
-            <div class="hi-icon">📄</div>
-            <div>
-              <div class="hi-title">Test de Personnalité Avancé</div>
-              <div class="hi-date">Non commencé · Disponible avec compte Premium</div>
-            </div>
-            <div class="hi-score">
-              <div class="hi-score-val" style="color:var(--ivory-faint);">—</div>
-              <div class="hi-score-lbl">Score</div>
-              <div class="hi-badge" style="background:var(--ivory-faint);color:var(--ink);">Premium</div>
+            <div style="text-align:center;margin-top:14px;padding:14px;background:var(--gold-10);border:1px solid var(--gold-dim);border-radius:10px;">
+              <div style="font-size:10px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;">Moyenne Annuelle</div>
+              <div style="font-family:'Bricolage Grotesque',sans-serif;font-size:28px;font-weight:800;color:var(--gold);" id="moy-annuelle">—<span style="font-size:14px;">/20</span></div>
             </div>
           </div>
         </div>
-        <div style="margin-top:20px;text-align:center;">
-          <a href="avenir_etude_test_riasec.html" class="nav-btn nav-btn-gold" style="display:inline-flex;padding:12px 24px;font-size:14px;">Refaire le test →</a>
+
+        <!-- Notes par matière -->
+        <div>
+          <div class="card">
+            <div class="card-title">Notes par matière</div>
+            <div class="alert alert-info" style="margin-bottom:12px;"><span class="alert-icon">💡</span><div style="font-size:11px;">Sélectionne ta série BAC pour afficher les matières correspondantes. Ces notes alimentent le score de candidabilité.</div></div>
+
+            <div class="mt-header">
+              <span style="font-size:10px;font-weight:700;color:var(--ivory-faint);">Matière</span>
+              <span style="text-align:center;">T1</span><span style="text-align:center;">T2</span><span style="text-align:center;">T3</span>
+              <span style="text-align:center;">Moy.</span>
+            </div>
+            <div id="matieres-container">
+              <!-- Populated by JS based on serie -->
+              <div style="text-align:center;padding:20px;color:var(--ivory-faint);font-size:12px;">Sélectionne ta série BAC pour afficher les matières</div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- ══ FAVORIS ══ -->
-      <div id="panel-favoris">
-        <div class="sec-title">Mes favoris</div>
-        <div class="favoris-grid" id="favoris-list">
-          <!-- Rendered by JS -->
+      <div style="display:flex;gap:10px;margin-top:20px;">
+        <button class="btn-save" onclick="saveAcademique()">💾 Sauvegarder</button>
+        <button class="btn-secondary" onclick="showPanel('tests',document.querySelectorAll('.snav-item')[3])">Mes tests →</button>
+      </div>
+    </div>
+
+    <!-- ── TESTS ── -->
+    <div class="panel" id="panel-tests">
+      <div class="panel-header">
+        <div class="panel-title">Mes <em>Tests</em></div>
+        <div class="panel-sub">Plus tu complètes de tests, plus ton score de candidabilité est précis. Les écoles partenaires valorisent les profils complets.</div>
+      </div>
+
+      <div class="alert alert-warn"><span class="alert-icon">⚠️</span><div>Il te reste <strong id="tests-remaining" style="color:var(--ivory);">2 tests</strong> à compléter. Polytechnique Montréal et UM6P recommandent tous les tests.</div></div>
+
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:14px;" id="tests-grid">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+
+    <!-- ── CANDIDATURES INTERNATIONALES ── -->
+    <div class="panel" id="panel-candidatures">
+      <div class="panel-header">
+        <div class="panel-title">Candidatures <em>Internationales</em></div>
+        <div class="panel-sub">Écoles sélectionnées selon ton profil, ta série BAC et ton projet professionnel. Score de compatibilité calculé automatiquement.</div>
+      </div>
+
+      <div class="alert alert-success" id="candi-alert"><span class="alert-icon">✅</span><div>Ton profil RIASEC <strong style="color:var(--ivory);">IAS + aptitudes 82/100</strong> est particulièrement adapté aux programmes d'ingénierie et data science.</div></div>
+
+      <!-- Country filter tabs -->
+      <div class="country-tabs" id="country-tabs">
+        <button class="ctab active" onclick="filterCountry('all',this)"><span class="ctab-flag">🌍</span> Toutes</button>
+        <button class="ctab" onclick="filterCountry('CA',this)"><span class="ctab-flag">🇨🇦</span> Canada</button>
+        <button class="ctab" onclick="filterCountry('MA',this)"><span class="ctab-flag">🇲🇦</span> Maroc</button>
+        <button class="ctab" onclick="filterCountry('BE',this)"><span class="ctab-flag">🇧🇪</span> Belgique</button>
+        <button class="ctab" onclick="filterCountry('FR',this)"><span class="ctab-flag">🇫🇷</span> France</button>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;" id="schools-candi-grid">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+
+    <!-- ── BOURSES ── -->
+    <div class="panel" id="panel-bourses">
+      <div class="panel-header">
+        <div class="panel-title">Bourses & <em>Financements</em></div>
+        <div class="panel-sub">Opportunités de financement disponibles pour les étudiants ivoiriens souhaitant étudier à l'international.</div>
+      </div>
+
+      <div class="g2" style="margin-bottom:20px;">
+        <div class="card"><div class="kpi-val" style="color:var(--gold);" id="bourses-dispo">12</div><div class="kpi-lbl">Bourses disponibles</div><div class="kpi-trend trend-up">Pour ton profil CI</div></div>
+        <div class="card"><div class="kpi-val" style="color:var(--red);">3</div><div class="kpi-lbl">Deadlines ce mois</div><div class="kpi-trend trend-warn">⚠️ Mai 2026</div></div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:12px;" id="bourses-list">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+
+    <!-- ── DOSSIER PDF ── -->
+    <div class="panel" id="panel-dossier">
+      <div class="panel-header">
+        <div class="panel-title">Mon Dossier <em>PDF</em></div>
+        <div class="panel-sub">Génère ton dossier de candidature complet en PDF. Il contient ton profil, tes scores de tests, ta lettre de motivation et tes notes académiques.</div>
+      </div>
+
+      <!-- Progress steps -->
+      <div style="margin-bottom:24px;">
+        <div style="font-size:12px;font-weight:600;color:var(--ivory-dim);margin-bottom:12px;">Complétude du dossier</div>
+        <div class="progress-steps" id="dossier-steps">
+          <div class="ps-step"><div><div class="ps-circle ps-done" title="Profil">✓</div><div class="ps-label">Profil</div></div><div class="ps-line done"></div></div>
+          <div class="ps-step"><div><div class="ps-circle ps-done" title="Académique">✓</div><div class="ps-label">Académique</div></div><div class="ps-line done"></div></div>
+          <div class="ps-step"><div><div class="ps-circle ps-done" title="Tests">✓</div><div class="ps-label">Tests</div></div><div class="ps-line"></div></div>
+          <div class="ps-step"><div><div class="ps-circle ps-active" title="Lettre">4</div><div class="ps-label">Lettre</div></div><div class="ps-line"></div></div>
+          <div class="ps-step"><div><div class="ps-circle ps-todo" title="Export">5</div><div class="ps-label">Export</div></div></div>
         </div>
       </div>
 
-      <!-- ══ RECOMMANDATIONS ══ -->
-      <div id="panel-recommandations">
-        <div class="sec-title">Recommandations <em>personnalisées</em></div>
-        <p style="font-size:13px;color:var(--ivory-dim);margin-bottom:20px;">Basées sur votre profil IAS · 142 points de données analysés</p>
-        <div class="reco-grid" id="reco-full">
-          <!-- Rendered by JS -->
-        </div>
-        <div style="margin-top:24px;padding:20px;background:var(--gold-10);border:1px solid var(--gold-dim);border-radius:12px;">
-          <div style="font-family:'Bricolage Grotesque',sans-serif;font-size:16px;font-weight:700;color:var(--gold);margin-bottom:6px;">Débloquer le rapport complet</div>
-          <p style="font-size:13px;color:var(--ivory-dim);margin-bottom:14px;">Votre rapport PDF complet avec plan d'action, contacts des écoles et 10 métiers recommandés — 5 000 FCFA</p>
-          <button style="font-family:'Bricolage Grotesque',sans-serif;font-size:13px;font-weight:700;padding:11px 22px;background:var(--gold);color:var(--ink);border:none;border-radius:8px;cursor:none;" onclick="alert('Redirection paiement Mobile Money / Carte bancaire')">Débloquer — 5 000 FCFA →</button>
-        </div>
-      </div>
-
-      <!-- ══ PARAMÈTRES ══ -->
-      <div id="panel-parametres">
-        <div class="sec-title">Paramètres <em>du compte</em></div>
-        <div style="display:flex;flex-direction:column;gap:16px;max-width:480px;">
-          <div style="background:var(--ink-2);border:1px solid var(--wire);border-radius:12px;padding:20px;">
-            <div style="font-family:'Bricolage Grotesque',sans-serif;font-size:15px;font-weight:700;color:var(--ivory);margin-bottom:16px;">Informations personnelles</div>
-            <div style="display:grid;gap:12px;">
-              <div><label style="font-size:11px;font-weight:600;color:var(--ivory-dim);display:block;margin-bottom:4px;">Prénom</label><input style="width:100%;padding:10px 12px;background:var(--ink-3);border:1px solid var(--wire-mid);border-radius:8px;font-family:'Instrument Sans',sans-serif;font-size:14px;color:var(--ivory);outline:none;cursor:none;" value="Gérald"></div>
-              <div><label style="font-size:11px;font-weight:600;color:var(--ivory-dim);display:block;margin-bottom:4px;">Nom</label><input style="width:100%;padding:10px 12px;background:var(--ink-3);border:1px solid var(--wire-mid);border-radius:8px;font-family:'Instrument Sans',sans-serif;font-size:14px;color:var(--ivory);outline:none;cursor:none;" value="Koné"></div>
-              <div><label style="font-size:11px;font-weight:600;color:var(--ivory-dim);display:block;margin-bottom:4px;">Email</label><input style="width:100%;padding:10px 12px;background:var(--ink-3);border:1px solid var(--wire-mid);border-radius:8px;font-family:'Instrument Sans',sans-serif;font-size:14px;color:var(--ivory);outline:none;cursor:none;" value="gerald.kone@email.com"></div>
+      <div class="g2">
+        <div class="col">
+          <!-- Lettre de motivation -->
+          <div class="card">
+            <div class="card-title">Lettre de motivation</div>
+            <div class="alert alert-info" style="margin-bottom:12px;"><span class="alert-icon">✨</span><div style="font-size:11px;">La lettre est générée automatiquement depuis ton profil, puis tu peux la personnaliser.</div></div>
+            <div class="form-group">
+              <label class="form-label">École cible pour cette lettre</label>
+              <select class="form-input" id="lm-school">
+                <option value="">Sélectionner une école</option>
+                <option value="polyMTL">Polytechnique Montréal — Génie Informatique</option>
+                <option value="um6p">UM6P Benguerir — Data Science</option>
+                <option value="uclouvain">UCLouvain — Ingénierie de Gestion</option>
+                <option value="uliege">ULiège — Sciences Informatiques</option>
+                <option value="insa">INSA Lyon — Génie Informatique</option>
+              </select>
             </div>
-            <button style="margin-top:14px;font-family:'Bricolage Grotesque',sans-serif;font-size:13px;font-weight:700;padding:10px 20px;background:var(--gold);color:var(--ink);border:none;border-radius:8px;cursor:none;" onclick="alert('Sauvegardé !')">Sauvegarder</button>
+            <div class="form-group">
+              <label class="form-label">Ton style de lettre</label>
+              <select class="form-input" id="lm-style">
+                <option value="pro">Professionnel et formel</option>
+                <option value="passion">Passionné et personnel</option>
+                <option value="data">Data-driven — chiffres et résultats</option>
+              </select>
+            </div>
+            <button class="btn-save" style="width:100%;justify-content:center;" onclick="generateLM()">✨ Générer la lettre IA</button>
           </div>
-          <div style="background:var(--ink-2);border:1px solid var(--wire);border-radius:12px;padding:20px;">
-            <div style="font-family:'Bricolage Grotesque',sans-serif;font-size:15px;font-weight:700;color:var(--ivory);margin-bottom:8px;">Notifications</div>
+
+          <!-- Texte lettre générée -->
+          <div class="card" id="lm-result-card" style="display:none;">
+            <div class="card-title">Lettre générée</div>
+            <textarea id="lm-textarea" style="width:100%;height:300px;background:var(--ink-3);border:1px solid var(--wire-mid);border-radius:9px;padding:14px;font-family:'Instrument Sans',sans-serif;font-size:12px;color:var(--ivory);line-height:1.7;resize:vertical;outline:none;cursor:none;" placeholder="Ta lettre apparaîtra ici..."></textarea>
+            <div style="display:flex;gap:8px;margin-top:10px;">
+              <button class="btn-save" style="font-size:12px;padding:9px 18px;" onclick="copyLM()">📋 Copier</button>
+              <button class="btn-secondary" style="font-size:12px;padding:9px 18px;" onclick="regenerateLM()">🔄 Regénérer</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Preview dossier -->
+        <div>
+          <div class="card">
+            <div class="card-title">Aperçu du dossier</div>
+            <div class="pdf-preview">
+              <div class="pdf-page" id="pdf-preview-content">
+                <div class="pdf-header">
+                  <div>
+                    <div class="pdf-logo">Avenir <em>Étude</em></div>
+                    <div style="font-size:9px;color:#888;margin-top:2px;">Dossier de Candidature Internationale</div>
+                  </div>
+                  <div style="text-align:right;">
+                    <div style="font-size:9px;color:#888;">Côte d'Ivoire · 2026</div>
+                    <div id="pdf-date" style="font-size:9px;color:#888;"></div>
+                  </div>
+                </div>
+
+                <div style="display:grid;grid-template-columns:2fr 1fr;gap:16px;">
+                  <div>
+                    <div class="pdf-section-title">Candidat(e)</div>
+                    <div class="pdf-name" id="pdf-name">Aminata Koné</div>
+                    <div class="pdf-subtitle" id="pdf-subtitle">Terminale D · Lycée Classique · Abidjan</div>
+                    <div style="margin-top:12px;font-size:10px;color:#555;line-height:1.6;" id="pdf-contact">
+                      📧 aminata@email.com &nbsp;|&nbsp; 📱 +225 07 00 00 00 00<br>
+                      🎯 Métier cible : Ingénieur IA
+                    </div>
+                  </div>
+                  <div style="background:#f8f5f0;border-radius:8px;padding:12px;font-size:10px;">
+                    <div class="pdf-section-title">Scores Avenir Étude</div>
+                    <div style="margin-bottom:4px;">🧩 RIASEC : <strong id="pdf-riasec">IAS</strong></div>
+                    <div style="margin-bottom:4px;">⚡ Aptitudes : <strong id="pdf-apt">82/100</strong></div>
+                    <div style="margin-bottom:4px;">🌍 Anglais : <strong id="pdf-toeic">B1 / 450</strong></div>
+                    <div style="margin-bottom:4px;">💜 Int. Émot. : <strong id="pdf-ie">74/100</strong></div>
+                  </div>
+                </div>
+
+                <div style="margin-top:14px;padding-top:10px;border-top:1px solid #eee;">
+                  <div class="pdf-section-title">Parcours Académique</div>
+                  <div style="font-size:10px;color:#555;line-height:1.6;" id="pdf-academic">
+                    Série D · Terminale · Moyenne T1 : <strong id="pdf-moy">—</strong>/20
+                  </div>
+                </div>
+
+                <div style="margin-top:10px;text-align:center;padding:8px;background:#D4A85310;border-radius:6px;">
+                  <div style="font-size:9px;color:#888;">Score Candidabilité International</div>
+                  <div style="font-family:'Bricolage Grotesque',sans-serif;font-size:20px;font-weight:800;color:#D4A853;" id="pdf-score">70/100</div>
+                </div>
+              </div>
+            </div>
+
+            <div style="display:flex;gap:8px;margin-top:14px;">
+              <button class="btn-save" style="flex:1;justify-content:center;" onclick="exportPDF()">📄 Exporter le PDF</button>
+              <button class="btn-secondary" style="font-size:12px;" onclick="printDossier()">🖨️ Imprimer</button>
+            </div>
+            <div style="font-size:10px;color:var(--ivory-faint);text-align:center;margin-top:8px;">Dossier complet · 4 pages · Prêt pour candidature</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PARAMÈTRES ── -->
+    <div class="panel" id="panel-parametres">
+      <div class="panel-header">
+        <div class="panel-title"><em>Paramètres</em></div>
+        <div class="panel-sub">Gestion de ton compte et de tes données.</div>
+      </div>
+      <div class="g2">
+        <div class="col">
+          <div class="card">
+            <div class="card-title">Notifications</div>
             <div style="display:flex;flex-direction:column;gap:10px;">
-              <label style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--ivory-dim);cursor:none;"><input type="checkbox" checked style="accent-color:var(--gold);cursor:none;"> Nouvelles dates de concours</label>
-              <label style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--ivory-dim);cursor:none;"><input type="checkbox" checked style="accent-color:var(--gold);cursor:none;"> Résultats BAC / BEPC</label>
-              <label style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--ivory-dim);cursor:none;"><input type="checkbox" style="accent-color:var(--gold);cursor:none;"> Newsletter mensuelle</label>
+              <label style="display:flex;align-items:center;justify-content:space-between;font-size:13px;color:var(--ivory-dim);cursor:none;">
+                Deadlines candidatures
+                <input type="checkbox" checked style="cursor:none;">
+              </label>
+              <label style="display:flex;align-items:center;justify-content:space-between;font-size:13px;color:var(--ivory-dim);cursor:none;">
+                Nouvelles bourses disponibles
+                <input type="checkbox" checked style="cursor:none;">
+              </label>
+              <label style="display:flex;align-items:center;justify-content:space-between;font-size:13px;color:var(--ivory-dim);cursor:none;">
+                Résultats concours CI (BAC, BEPC)
+                <input type="checkbox" checked style="cursor:none;">
+              </label>
+              <label style="display:flex;align-items:center;justify-content:space-between;font-size:13px;color:var(--ivory-dim);cursor:none;">
+                Rappels tests incomplets
+                <input type="checkbox" checked style="cursor:none;">
+              </label>
             </div>
           </div>
-          <div style="background:rgba(224,90,84,.05);border:1px solid rgba(224,90,84,.2);border-radius:12px;padding:20px;">
-            <div style="font-size:13px;font-weight:600;color:var(--red);margin-bottom:6px;">Zone dangereuse</div>
-            <p style="font-size:12px;color:var(--ivory-dim);margin-bottom:12px;">La suppression de votre compte est irréversible. Toutes vos données seront effacées.</p>
-            <button style="font-size:12px;font-weight:600;padding:8px 16px;background:transparent;border:1px solid var(--red);color:var(--red);border-radius:6px;cursor:none;" onclick="if(confirm('Supprimer définitivement votre compte ?')) alert('Compte supprimé')">Supprimer mon compte</button>
+          <div class="card">
+            <div class="card-title">Données</div>
+            <div style="display:flex;flex-direction:column;gap:10px;">
+              <button class="btn-secondary" style="font-size:12px;width:100%;text-align:left;" onclick="exportData()">📦 Exporter mes données (JSON)</button>
+              <button class="btn-secondary" style="font-size:12px;width:100%;text-align:left;">📥 Importer un profil</button>
+              <button class="btn-danger" onclick="if(confirm('Supprimer toutes tes données ?'))clearData()">🗑️ Supprimer toutes mes données</button>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">À propos</div>
+          <div style="font-size:12px;color:var(--ivory-dim);line-height:1.8;">
+            <div style="margin-bottom:10px;"><strong style="color:var(--ivory);">Avenir Étude v2.0</strong><br>Plateforme d'intelligence éducative pour l'Afrique francophone.</div>
+            <div style="margin-bottom:10px;"><strong style="color:var(--gold);">Données locales</strong><br>Toutes tes données sont stockées dans ton navigateur (localStorage). Rien n'est envoyé à un serveur sans ton accord.</div>
+            <div style="margin-bottom:10px;"><strong style="color:var(--ivory);">Sources salaires</strong><br>Grey Search Africa — Guide des Salaires CI 2024-2025 · 5 000 répondants.</div>
+            <div><strong style="color:var(--ivory);">Contact</strong><br>info@aveniretude.ci · Abidjan, Côte d'Ivoire</div>
           </div>
         </div>
       </div>
+    </div>
 
-    </div><!-- /dash-panels -->
-  </main>
-</div>
+  </div><!-- /main-content -->
+</div><!-- /page-wrap -->
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-/* CURSOR */
-const cur=document.getElementById('cur');
-let mx=0,my=0;
-document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
-document.querySelectorAll('a,button,input,select,.history-item,.favori-card,.reco-card').forEach(el=>{el.addEventListener('mouseenter',()=>cur.classList.add('big'));el.addEventListener('mouseleave',()=>cur.classList.remove('big'));});
+<script>
+/* ══ CURSOR ══ */
+const cur = document.getElementById('ae-cursor');
+document.addEventListener('mousemove', e=>{cur.style.left=e.clientX+'px';cur.style.top=e.clientY+'px';});
+document.addEventListener('mouseleave',()=>cur.style.opacity='0');
+document.addEventListener('mouseenter',()=>cur.style.opacity='1');
+function addHover(){document.querySelectorAll('a,button,input,select,textarea,label,.school-candi-card,.bourse-card').forEach(el=>{el.addEventListener('mouseenter',()=>cur.classList.add('hover'));el.addEventListener('mouseleave',()=>cur.classList.remove('hover'));});}
 
-/* PANEL SWITCH */
+/* ══ PANEL NAVIGATION ══ */
 function showPanel(id, btn){
-  document.querySelectorAll('.dash-panels > div').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.snav-item').forEach(b=>b.classList.remove('active'));
-  const panel=document.getElementById('panel-'+id);
-  if(panel) panel.classList.add('active');
+  document.getElementById('panel-'+id)?.classList.add('active');
   if(btn) btn.classList.add('active');
-  // Animate bars when profil panel opens
-  if(id==='profil') setTimeout(animBars, 200);
+  window.scrollTo({top:0,behavior:'smooth'});
 }
 
-/* ANIMATE RIASEC BARS */
-function animBars(){
-  const riasec = {I:94,A:82,S:65,E:48,R:31,C:20};
-  const apt = {I:96,V:88,N:82,A:91};
-  Object.entries(riasec).forEach(([k,v])=>{const el=document.getElementById('rb-'+k);if(el)el.style.width=v+'%';});
-  Object.entries(apt).forEach(([k,v])=>{const el=document.getElementById('apt-'+k);if(el)el.style.width=v+'%';});
-}
-// Animate on initial load if profil is active
-setTimeout(animBars, 500);
+/* ══ TODAY DATE ══ */
+document.getElementById('today-date').textContent = new Date().toLocaleDateString('fr-FR',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+document.getElementById('pdf-date').textContent = new Date().toLocaleDateString('fr-FR');
 
-/* FAVORIS */
-const FAVORIS = [
-  {id:'CI-002',nom:'ENSEA',desc:'Grande École Publique · Cocody, Abidjan',note:4.7,bg:'#0a2244',fg:'#4a9edd'},
-  {id:'CI-001',nom:'INP-HB',desc:'Grande École Publique · Yamoussoukro',note:4.8,bg:'#1a3a1a',fg:'#5cb85c'},
-  {id:'CI-003',nom:'ESATIC',desc:'Grande École Publique · Treichville, Abidjan',note:4.5,bg:'#0d1f3a',fg:'#3b82f6'},
-];
-function renderFavoris(){
-  const el=document.getElementById('favoris-list');
-  if(!el) return;
-  if(FAVORIS.length===0){
-    el.innerHTML='<div class="empty-state-sm" style="grid-column:1/-1"><div class="esm-icon">♡</div><div class="esm-title">Aucun favori</div><div class="esm-sub">Parcourez les écoles et ajoutez vos favorites.</div></div>';
-    return;
+/* ══ PROFILE DATA (localStorage) ══ */
+const STORAGE_KEY = 'ae_profile_v2';
+
+function loadProfile(){
+  const saved = JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}');
+  
+  // Load session storage too (from tests)
+  const sess = JSON.parse(sessionStorage.getItem('ae_profile')||'{}');
+  const merged = {...saved, ...sess};
+  
+  // Fill form fields
+  const fields = ['prenom','nom','dob','genre','nationalite','email','tel','ville','metier','domaine','annee-candi','budget','niveau','serie','etablissement','annee-bac','mention','moy-t1','moy-t2','moy-t3'];
+  fields.forEach(f => {
+    const el = document.getElementById('f-'+f);
+    if(el && merged[f]) el.value = merged[f];
+  });
+  
+  // Checkboxes countries
+  ['canada','maroc','belgique','france','ci'].forEach(c=>{
+    const el = document.getElementById('f-'+c);
+    if(el && merged['pays_'+c]) el.checked = true;
+  });
+  
+  // Update sidebar
+  const prenom = merged.prenom || 'Étudiant';
+  const nom = merged.nom || '';
+  document.getElementById('sidebar-name').textContent = `${prenom} ${nom}`.trim() || 'Mon Profil';
+  document.getElementById('overview-prenom').textContent = prenom;
+  document.getElementById('sidebar-level').textContent = `${merged.niveau||'Lycéen'} · ${merged.ville||'Abidjan'}`;
+  document.getElementById('sidebar-avatar').textContent = `${(merged.prenom||'A')[0]}${(merged.nom||'E')[0]}`.toUpperCase();
+  document.getElementById('photo-preview').textContent = `${(merged.prenom||'A')[0]}${(merged.nom||'E')[0]}`.toUpperCase();
+  document.getElementById('pdf-name').textContent = `${prenom} ${nom}`.trim();
+  
+  // Test scores from session/local
+  if(merged.riasec_profile) {
+    document.getElementById('ov-riasec').textContent = merged.riasec_profile;
+    document.getElementById('pdf-riasec').textContent = merged.riasec_profile;
   }
-  el.innerHTML=FAVORIS.map(f=>`
-    <div class="favori-card" onclick="window.location='avenir_etude_fiche_ecole.html?id=${f.id}'">
-      <div class="fav-logo" style="background:${f.bg};">
-        <svg width="40" height="40" viewBox="0 0 40 40">
-          <rect width="40" height="40" rx="8" fill="${f.bg}"/>
-          <rect x="0" y="28" width="40" height="3" fill="${f.fg}" opacity="0.8"/>
-          <text x="20" y="18" text-anchor="middle" dominant-baseline="central" font-family="'Bricolage Grotesque',sans-serif" font-size="8" font-weight="800" fill="${f.fg}">${f.nom}</text>
-        </svg>
-      </div>
-      <div class="fav-info">
-        <div class="fav-name">${f.nom}</div>
-        <div class="fav-meta">${f.desc}</div>
-      </div>
-      <div class="fav-note">★ ${f.note.toFixed(1)}</div>
-      <button class="fav-remove" onclick="event.stopPropagation();alert('Retiré des favoris')">✕</button>
+  if(merged.aptitudes_score) {
+    document.getElementById('ov-apt').innerHTML = `${merged.aptitudes_score}<span style="font-size:16px;">/100</span>`;
+    document.getElementById('pdf-apt').textContent = `${merged.aptitudes_score}/100`;
+  }
+  if(merged.toeic_score) {
+    const lvl = merged.cecrl_level || 'B1';
+    document.getElementById('ov-toeic').textContent = lvl;
+    document.getElementById('pdf-toeic').textContent = `${lvl} / ${merged.toeic_score}`;
+  }
+  if(merged.ie_score) {
+    document.getElementById('pdf-ie').textContent = `${merged.ie_score}/100`;
+  }
+  
+  // Serie → update matieres
+  if(merged.serie) updateMatieresByNiveau();
+  
+  // Calc completion
+  calcCompletion(merged);
+  calcCandidabilityScore(merged);
+  calcAvg();
+  
+  return merged;
+}
+
+function autoSave(){
+  const data = collectFormData();
+  const existing = JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}');
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({...existing, ...data}));
+  calcCompletion(data);
+  calcCandidabilityScore(data);
+}
+
+function collectFormData(){
+  const d = {};
+  ['prenom','nom','dob','genre','nationalite','email','tel','ville','metier','domaine','annee-candi','budget','niveau','serie','etablissement','annee-bac','mention'].forEach(f=>{
+    const el = document.getElementById('f-'+f);
+    if(el) d[f] = el.value;
+  });
+  ['t1','t2','t3'].forEach(t=>{
+    const el = document.getElementById('moy-'+t);
+    if(el) d['moy_'+t] = el.value;
+  });
+  ['canada','maroc','belgique','france','ci'].forEach(c=>{
+    const el = document.getElementById('f-'+c);
+    if(el) d['pays_'+c] = el.checked;
+  });
+  d.bourse_needed = document.getElementById('f-bourse-needed')?.checked;
+  return d;
+}
+
+function saveProfil(){
+  autoSave();
+  const btn = event.target;
+  btn.textContent = '✓ Sauvegardé !';
+  btn.style.background = 'var(--green)';
+  setTimeout(()=>{btn.textContent='💾 Sauvegarder le profil';btn.style.background='';},2000);
+}
+
+function saveAcademique(){
+  // Save matière notes
+  const matRows = document.querySelectorAll('.mt-row');
+  const notes = {};
+  matRows.forEach(row=>{
+    const name = row.querySelector('.mt-name')?.textContent;
+    const inputs = row.querySelectorAll('.mt-input');
+    if(name && inputs.length) notes[name] = {t1:inputs[0]?.value,t2:inputs[1]?.value,t3:inputs[2]?.value};
+  });
+  const data = {...collectFormData(), matieres_notes: notes};
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({...JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}'), ...data}));
+  const btn = event.target;
+  btn.textContent = '✓ Sauvegardé !';
+  btn.style.background = 'var(--green)';
+  setTimeout(()=>{btn.textContent='💾 Sauvegarder';btn.style.background='';},2000);
+  calcCandidabilityScore(data);
+}
+
+/* ══ COMPLETION SCORE ══ */
+function calcCompletion(data){
+  const checks = [
+    data.prenom, data.nom, data.email, data.tel, data.ville,
+    data.metier, data.domaine, data.niveau, data.serie, data.etablissement,
+    data.moy_t1 || data['moy-t1'],
+  ];
+  // Tests
+  const sess = JSON.parse(sessionStorage.getItem('ae_profile')||'{}');
+  const local = JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}');
+  const all = {...local, ...sess};
+  if(all.riasec_profile) checks.push('riasec');
+  if(all.aptitudes_score) checks.push('apt');
+  if(all.toeic_score) checks.push('toeic');
+  if(all.ie_score) checks.push('ie');
+  
+  const filled = checks.filter(Boolean).length;
+  const pct = Math.round(filled / checks.length * 100);
+  document.getElementById('completion-pct').textContent = pct+'%';
+  document.getElementById('completion-bar').style.width = pct+'%';
+  
+  if(pct < 60) {
+    document.getElementById('completion-alert').style.display='flex';
+  } else {
+    document.getElementById('completion-alert').style.display='none';
+  }
+}
+
+/* ══ CANDIDABILITY SCORE ══ */
+function calcCandidabilityScore(data){
+  const local = JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}');
+  const sess = JSON.parse(sessionStorage.getItem('ae_profile')||'{}');
+  const all = {...local, ...sess, ...data};
+  
+  let score = 40; // base
+  const moy = parseFloat(all.moy_t1 || all['moy-t1'] || 0);
+  if(moy >= 16) score += 20;
+  else if(moy >= 14) score += 15;
+  else if(moy >= 12) score += 10;
+  else if(moy >= 10) score += 5;
+  
+  if(all.riasec_profile) score += 8;
+  if(all.aptitudes_score) score += (parseInt(all.aptitudes_score)||0) / 100 * 10;
+  if(all.toeic_score) score += parseInt(all.toeic_score)/990 * 12;
+  if(all.ie_score) score += 5;
+  if(all.email && all.tel) score += 5;
+  
+  score = Math.min(100, Math.round(score));
+  document.getElementById('candi-score-val').textContent = score;
+  document.getElementById('pdf-score').textContent = score+'/100';
+  
+  // Update ring
+  const ring = document.getElementById('candi-ring');
+  if(ring){
+    const circumference = 226;
+    const offset = circumference * (1 - score/100);
+    ring.setAttribute('stroke-dashoffset', offset);
+    ring.setAttribute('stroke', score >= 70 ? '#34C97A' : score >= 50 ? '#D4A853' : '#E05A54');
+  }
+  
+  // Country scores
+  const toeicScore = parseInt(all.toeic_score)||450;
+  const aptScore = parseInt(all.aptitudes_score)||0;
+  const countryScores = {
+    CA: Math.min(98, Math.round(score * 0.9 + (toeicScore/990)*15)),
+    MA: Math.min(98, Math.round(score * 0.95 + 5)),
+    BE: Math.min(98, Math.round(score * 0.85 + 8)),
+    FR: Math.min(98, Math.round(score * 0.75 + (moy/20)*10)),
+  };
+  
+  const countryNames = {CA:'Canada', MA:'Maroc', BE:'Belgique', FR:'France'};
+  const countryColors = {CA:'var(--green)', MA:'var(--gold)', BE:'var(--blue)', FR:'var(--orange)'};
+  const countryFlags = {CA:'🇨🇦', MA:'🇲🇦', BE:'🇧🇪', FR:'🇫🇷'};
+  
+  document.getElementById('cs-countries').innerHTML = Object.entries(countryScores)
+    .sort((a,b)=>b[1]-a[1])
+    .map(([k,v])=>`
+    <div class="cs-country">
+      <span class="cs-flag">${countryFlags[k]}</span>
+      <span style="flex:0 0 60px;font-size:10px;">${countryNames[k]}</span>
+      <div class="cs-bar-mini"><div class="cs-bar-fill" style="width:${v}%;background:${countryColors[k]};"></div></div>
+      <span class="cs-pct" style="color:${countryColors[k]};">${v}%</span>
     </div>`).join('');
 }
 
-/* RECOMMANDATIONS FULL */
-function renderRecos(){
-  const el=document.getElementById('reco-full');
-  if(!el) return;
-  const recos=[
-    {badge:'Top Pick',cls:'rcb-gold',nom:'Data Scientist',meta:'Technologie · ENSEA · +34% croissance',match:96},
-    {badge:'Recommandé',cls:'rcb-blue',nom:'Statisticien Économiste',meta:'Finance · ENSEA · +25% croissance',match:92},
-    {badge:'Recommandé',cls:'rcb-blue',nom:'Expert Cybersécurité',meta:'Tech · ESATIC · +51% croissance',match:87},
-    {badge:'Recommandé',cls:'rcb-blue',nom:'Product Manager Tech',meta:'Startup · INP-HB · +48% croissance',match:84},
-    {badge:'À explorer',cls:'rcb-blue',nom:'Chercheur en Data',meta:'Académique · UFHB · +20% croissance',match:79},
-    {badge:'À explorer',cls:'rcb-blue',nom:'Ingénieur Logiciel',meta:'Tech · ESATIC · +42% croissance',match:76},
-  ];
-  el.innerHTML=recos.map((r,i)=>`
-    <div class="reco-card ${r.cls==='rcb-gold'?'featured':''}">
-      <div class="rc-badge ${r.cls}">${r.badge}</div>
-      <div class="rc-name">${r.nom}</div>
- 
+/* ══ AVERAGE CALCULATION ══ */
+function calcAvg(){
+  const t1 = parseFloat(document.getElementById('moy-t1')?.value)||0;
+  const t2 = parseFloat(document.getElementById('moy-t2')?.value)||0;
+  const t3 = parseFloat(document.getElementById('moy-t3')?.value)||0;
+  const count = [t1,t2,t3].filter(v=>v>0).length;
+  if(!count){document.getElementById('moy-annuelle').innerHTML='—<span style="font-size:14px;">/20</span>';return;}
+  const avg = ((t1||0)+(t2||0)+(t3||0))/count;
+  const el = document.getElementById('moy-annuelle');
+  el.innerHTML = `${avg.toFixed(1)}<span style="font-size:14px;">/20</span>`;
+  el.style.color = avg>=14?'var(--green)':avg>=12?'var(--gold)':'var(--red)';
+  document.getElementById('pdf-moy').textContent = avg.toFixed(1);
+  autoSave();
+}
+
+/* ══ MATIERES BY SERIE ══ */
+const MATIERES = {
+  C: ['Mathématiques','Physique-Chimie','Sciences Naturelles','Français','Anglais','Histoire-Géo','Philosophie','EPS'],
+  D: ['Sciences Naturelles','Mathématiques','Physique-Chimie','Français','Anglais','Histoire-Géo','Philosophie','EPS'],
+  B: ['Économie','Maths Économiques','Comptabilité','Français','Anglais','Histoire-Géo','Philosophie','EPS'],
+  A1: ['Français','Philosophie','Histoire-Géo','Anglais','2ème Langue','Latin/Grec','Maths','EPS'],
+  A2: ['Anglais','Français','2ème Langue','3ème Langue','Histoire-Géo','Philosophie','Maths','EPS'],
+  E: ['Maths','Physique-Chimie','Sciences de l\'Ingénieur','Français','Anglais','Histoire-Géo','EPS','Option Technique'],
+  G1: ['Droit-Économie','Comptabilité','Gestion Commerciale','Français','Anglais','Maths','Bureautique','EPS'],
+  G2: ['Maths Financières','Comptabilité','Statistiques','Droit-Économie','Français','Anglais','Informatique','EPS'],
+};
+
+function updateMatieresByNiveau(){
+  const serie = document.getElementById('f-serie')?.value;
+  const container = document.getElementById('matieres-container');
+  if(!container) return;
+  
+  const mats = MATIERES[serie] || [];
+  if(!mats.length){
+    container.innerHTML = '<div style="text-align:center;padding:20px;color:var(--ivory-faint);font-size:12px;">Sélectionne ta série BAC pour afficher les matières</div>';
+    return;
+  }
+  
+  const saved = JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}');
+  const notes = saved.matieres_notes || {};
+  
+  container.innerHTML = mats.map(m => {
+    const n = notes[m] || {};
+    const vals = [n.t1,n.t2,n.t3].filter(v=>v&&!isNaN(v));
+    const avg = vals.length ? (vals.reduce((a,b)=>+a+ +b,0)/vals.length).toFixed(1) : '—';
+    const avgColor = parseFloat(avg)>=14?'var(--green)':parseFloat(avg)>=12?'var(--gold)':parseFloat(avg)>=10?'var(--ivory)':'var(--red)';
+    return `<div class="mt-row">
+      <div class="mt-name">${m}</div>
+      <input class="mt-input" type="number" step="0.5" min="0" max="20" value="${n.t1||''}" placeholder="—" oninput="calcMatAvg(this)">
+      <input class="mt-input" type="number" step="0.5" min="0" max="20" value="${n.t2||''}" placeholder="—" oninput="calcMatAvg(this)">
+      <input class="mt-input" type="number" step="0.5" min="0" max="20" value="${n.t3||''}" placeholder="—" oninput="calcMatAvg(this)">
+      <div class="mt-avg" style="color:${avgColor};">${avg}</div>
+    </div>`;
+  }).join('');
+}
+
+function calcMatAvg(input){
+  const row = input.closest('.mt-row');
+  const inputs = row.querySelectorAll('.mt-input');
+  const vals = [...inputs].map(i=>parseFloat(i.value)).filter(v=>!isNaN(v)&&v>0);
+  const avg = vals.length ? (vals.reduce((a,b)=>a+b,0)/vals.length).toFixed(1) : '—';
+  const avgEl = row.querySelector('.mt-avg');
+  avgEl.textContent = avg;
+  avgEl.style.color = parseFloat(avg)>=14?'var(--green)':parseFloat(avg)>=12?'var(--gold)':parseFloat(avg)>=10?'var(--ivory)':'var(--red)';
+}
+
+/* ══ TESTS PANEL ══ */
+const TESTS_DATA = [
+  {id:'riasec', name:'Test RIASEC', icon:'🧩', desc:'Intérêts professionnels · 100 questions', color:'var(--gold)', url:'avenir_etude_test_riasec_v2.html', score_key:'riasec_profile', score_label:'Profil'},
+  {id:'aptitudes', name:'Test Aptitudes', icon:'⚡', desc:'Capacités cognitives · 40 questions', color:'var(--blue)', url:'avenir_etude_test_aptitudes.html', score_key:'aptitudes_score', score_label:'/100'},
+  {id:'toeic', name:'Simulation TOEIC', icon:'🌍', desc:'Anglais professionnel · 50 questions', color:'var(--blue)', url:'avenir_etude_test_toeic.html', score_key:'toeic_score', score_label:'/990'},
+  {id:'ie', name:'Intelligence Émotionnelle', icon:'💜', desc:'IE · 40 situations', color:'var(--purple)', url:'avenir_etude_test_ie.html', score_key:'ie_score', score_label:'/100'},
+  {id:'leadership', name:'Leadership & Management', icon:'👑', desc:'30 situations managériales', color:'var(--orange)', url:'avenir_etude_test_leadership.html', score_key:'leadership_score', score_label:'/100'},
+  {id:'entrepreneuriat', name:'Potentiel Entrepreneurial', icon:'🚀', desc:'26 questions contexte CI', color:'var(--green)', url:'avenir_etude_test_entrepreneuriat.html', score_key:'entrepreneuriat_score', score_label:'/100'},
+  {id:'valeurs', name:'Valeurs Professionnelles', icon:'🌟', desc:'20 questions · guide le GPS', color:'var(--gold)', url:'avenir_etude_test_valeurs.html', score_key:'valeurs_top3', score_label:''},
+  {id:'digital', name:'Maturité Digitale', icon:'💻', desc:'20 questions · outils 2026', color:'var(--blue)', url:'avenir_etude_test_digital.html', score_key:'digital_score', score_label:'/100'},
+];
+
+function renderTests(){
+  const all = {...JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}'), ...JSON.parse(sessionStorage.getItem('ae_profile')||'{}')};
+  const grid = document.getElementById('tests-grid');
+  if(!grid) return;
+  
+  let done = 0;
+  grid.innerHTML = TESTS_DATA.map(t => {
+    const score = all[t.score_key];
+    const isDone = score != null && score !== '';
+    if(isDone) done++;
+    
+    const scoreDisplay = isDone ? (Array.isArray(score) ? score.join(', ') : `${score}${t.score_label}`) : null;
+    
+    return `<div class="card" style="border-color:${isDone?'rgba(52,201,122,.2)':'var(--wire-mid)'};">
+      <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:12px;">
+        <span style="font-size:28px;">${t.icon}</span>
+        <div style="flex:1;">
+          <div style="font-size:14px;font-weight:700;color:var(--ivory);margin-bottom:3px;">${t.name}</div>
+          <div style="font-size:11px;color:var(--ivory-dim);">${t.desc}</div>
+        </div>
+        ${isDone?`<span class="badge badge-green">✓ Fait</span>`:`<span class="badge" style="background:var(--ink-4);border:1px solid var(--wire);color:var(--ivory-faint);">À faire</span>`}
+      </div>
+      ${isDone?`<div style="padding:10px 14px;background:${t.color}15;border:1px solid ${t.color}30;border-radius:9px;text-align:center;margin-bottom:12px;">
+        <div style="font-family:'Bricolage Grotesque',sans-serif;font-size:20px;font-weight:800;color:${t.color};">${scoreDisplay}</div>
+        <div style="font-size:10px;color:var(--ivory-dim);">Score enregistré</div>
+      </div>`:''}
+      <a href="${t.url}" style="display:flex;align-items:center;justify-content:center;gap:6px;padding:9px;background:${isDone?'var(--ink-3)':''+t.color+''};border:1px solid ${isDone?'var(--wire-mid)':'none'};border-radius:8px;color:${isDone?'var(--ivory-dim)':'var(--ink)'};font-size:12px;font-weight:700;font-family:'Bricolage Grotesque',sans-serif;text-decoration:none;cursor:none;transition:all .15s;">
+        ${isDone?'🔄 Refaire le test':'▶ Commencer'}
+      </a>
+    </div>`;
+  }).join('');
+  
+  document.getElementById('tests-remaining').textContent = `${TESTS_DATA.length-done} test${TESTS_DATA.length-done>1?'s':''}`;
+}
+
+/* ══ SCHOOLS CANDIDATURE DATA ══ */
+const SCHOOLS_CANDI = [
+  {
+    id:'polyMTL', country:'CA', flag:'🇨🇦', name:'Polytechnique Montréal', location:'Montréal, Canada',
+    logo_bg:'#0a1a3a', logo_fg:'#4a9edd', logo_txt:'Poly\nMTL',
+    filiere:'Génie Informatique · B.Ing',
+    bar_color:'#4F7AE8',
+    desc:'Grande école d\'ingénierie francophone de renommée mondiale. Très forte communauté ivoirienne à Montréal. Taux d\'insertion 96%.',
+    requirements:{avg_min:13, toeic_min:550, serie:['C','D','E']},
+    checklist:['Relevé de notes officiel', 'Lettre de motivation (500 mots)', 'Passeport valide', 'Preuve de capacité financière', 'Dossier Campus France'],
+    deadline:'1er avril 2026',
+    frais_scol:'~8 000 CAD/an (≈ 3,6M FCFA)',
+    bourse: true,
+    partenaire: true,
+    status:'inprog',
+    score: 82,
+  },
+  {
+    id:'ulaval', country:'CA', flag:'🇨🇦', name:'Université Laval', location:'Québec, Canada',
+    logo_bg:'#1a0a2a', logo_fg:'#e74c3c', logo_txt:'Laval',
+    filiere:'Sciences Informatiques · B.Sc',
+    bar_color:'#e74c3c',
+    desc:'Université parmi les meilleures du Canada. Bourses d\'excellence spéciales Afrique. Environnement francophone.',
+    requirements:{avg_min:12, toeic_min:500, serie:['C','D','E','B']},
+    checklist:['Relevé de notes', 'Lettre de motivation', 'Formulaire dossier en ligne', 'Copie BAC ou relevé lycée'],
+    deadline:'1er mars 2026',
+    frais_scol:'~7 500 CAD/an',
+    bourse: true,
+    partenaire: false,
+    status:'draft',
+    score: 78,
+  },
+  {
+    id:'polyMTL_data', country:'CA', flag:'🇨🇦', name:'HEC Montréal', location:'Montréal, Canada',
+    logo_bg:'#1a2a1a', logo_fg:'#27ae60', logo_txt:'HEC\nMTL',
+    filiere:'Business Intelligence · B.A.A',
+    bar_color:'#27ae60',
+    desc:'Meilleure business school francophone du Canada. Spécialisation BI et analytics très demandée.',
+    requirements:{avg_min:13, toeic_min:520, serie:['B','C','G1','G2']},
+    checklist:['Relevé de notes', 'Lettre de motivation', 'CV académique', 'Formulaire admissions'],
+    deadline:'15 mars 2026',
+    frais_scol:'~9 000 CAD/an',
+    bourse: false,
+    partenaire: false,
+    status:'draft',
+    score: 75,
+  },
+  {
+    id:'um6p', country:'MA', flag:'🇲🇦', name:'UM6P Benguerir', location:'Ben Guerir, Maroc',
+    logo_bg:'#1a2a0a', logo_fg:'#2ecc71', logo_txt:'UM6P',
+    filiere:'Data Science & IA · Ingénieur',
+    bar_color:'#2ecc71',
+    desc:'Université Mohammed VI — mieux financée d\'Afrique. Bourses généreuses pour talents africains. Niveau international.',
+    requirements:{avg_min:14, toeic_min:400, serie:['C','D']},
+    checklist:['Relevé de notes (15+/20 recommandé)', 'Lettre de motivation', 'Dossier en ligne UM6P', 'Tests de sélection (maths/logique)', 'Entretien vidéo'],
+    deadline:'31 mars 2026',
+    frais_scol:'Bourse fréquente · ~2M FCFA/an sinon',
+    bourse: true,
+    partenaire: true,
+    status:'draft',
+    score: 72,
+  },
+  {
+    id:'emsi', country:'MA', flag:'🇲🇦', name:'EMSI Casablanca', location:'Casablanca, Maroc',
+    logo_bg:'#2a1a0a', logo_fg:'#e67e22', logo_txt:'EMSI',
+    filiere:'Génie Informatique',
+    bar_color:'#e67e22',
+    desc:'École d\'ingénieurs bien établie. Coûts abordables. Forte insertion au Maroc et en Europe.',
+    requirements:{avg_min:12, toeic_min:350, serie:['C','D','E']},
+    checklist:['Relevé de notes', 'Lettre de motivation', 'Dossier de candidature EMSI'],
+    deadline:'30 juin 2026',
+    frais_scol:'~1,5M FCFA/an',
+    bourse: false,
+    partenaire: false,
+    status:'draft',
+    score: 80,
+  },
+  {
+    id:'uclouvain', country:'BE', flag:'🇧🇪', name:'UCLouvain', location:'Louvain-la-Neuve, Belgique',
+    logo_bg:'#10102a', logo_fg:'#6366f1', logo_txt:'UCL',
+    filiere:'Ingénierie de Gestion · M.Ing',
+    bar_color:'#6366f1',
+    desc:'Grande université catholique francophone. Droits d\'inscription bas (1 000€/an). Forte communauté africaine.',
+    requirements:{avg_min:13, toeic_min:480, serie:['C','B','E']},
+    checklist:['Relevé de notes officiel + traduction', 'Formulaire UCLouvain', 'Lettre de motivation', 'Copie passeport', 'Dossier bourse ARES si applicable'],
+    deadline:'30 avril 2026',
+    frais_scol:'~600 000 FCFA/an (très abordable)',
+    bourse: true,
+    partenaire: false,
+    status:'draft',
+    score: 70,
+  },
+  {
+    id:'uliege', country:'BE', flag:'🇧🇪', name:'ULiège', location:'Liège, Belgique',
+    logo_bg:'#0a1a2a', logo_fg:'#3498db', logo_txt:'ULg',
+    filiere:'Sciences Informatiques · B.Sc',
+    bar_color:'#3498db',
+    desc:'Université historique avec programme Erasmus+ pour étudiants africains. Sciences et technologie de qualité.',
+    requirements:{avg_min:12, toeic_min:400, serie:['C','D','E']},
+    checklist:['Relevé de notes', 'Formulaire ULiège', 'Lettre de motivation'],
+    deadline:'30 juin 2026',
+    frais_scol:'~900 000 FCFA/an',
+    bourse: false,
+    partenaire: false,
+    status:'draft',
+    score: 73,
+  },
+  {
+    id:'insa', country:'FR', flag:'🇫🇷', name:'INSA Lyon', location:'Lyon, France',
+    logo_bg:'#1a0a1a', logo_fg:'#e74c3c', logo_txt:'INSA\nLyon',
+    filiere:'Génie Informatique · Ingénieur',
+    bar_color:'#e74c3c',
+    desc:'Grande école d\'ingénieurs publique. Frais réduits. Dossier Campus France obligatoire. Bonne communauté ivoirienne.',
+    requirements:{avg_min:14, toeic_min:550, serie:['C','E']},
+    checklist:['Dossier Campus France obligatoire', 'Relevé de notes apostillé', 'Lettre de motivation', 'Frais Campus France (~130 000 FCFA)', 'Entretien Campus France'],
+    deadline:'15 janvier 2026',
+    frais_scol:'~600 000 FCFA/an (grande école publique)',
+    bourse: false,
+    partenaire: false,
+    status:'draft',
+    score: 58,
+  },
+  {
+    id:'epitech', country:'FR', flag:'🇫🇷', name:'Epitech Africa', location:'Abidjan + Paris',
+    logo_bg:'#2a0a0a', logo_fg:'#e05a54', logo_txt:'Epi\ntech',
+    filiere:'Expert en Technologies Informatiques',
+    bar_color:'#e05a54',
+    desc:'Campus à Abidjan ET Paris. Passerelle directe CI → France. Méthode project-based learning reconnue.',
+    requirements:{avg_min:11, toeic_min:350, serie:['C','D','E','F2']},
+    checklist:['Dossier Epitech', 'Tests logique & anglais en ligne', 'Entretien de motivation'],
+    deadline:'Ouvert toute l\'année',
+    frais_scol:'~2,5M FCFA/an (Abidjan)',
+    bourse: false,
+    partenaire: true,
+    status:'draft',
+    score: 85,
+  },
+  {
+    id:'42', country:'FR', flag:'🇫🇷', name:'42 Network', location:'Paris + Abidjan',
+    logo_bg:'#0a0a2a', logo_fg:'#4F7AE8', logo_txt:'42',
+    filiere:'Coding School · Gratuit',
+    bar_color:'#4F7AE8',
+    desc:'École de code 100% GRATUITE. Pas de prérequis académiques. La Piscine (4 semaines) pour sélection. Reconnu mondialement.',
+    requirements:{avg_min:0, toeic_min:0, serie:[]},
+    checklist:['S\'inscrire sur 42.fr', 'Passer la Piscine (4 semaines intensives)', 'PC portable obligatoire'],
+    deadline:'Inscriptions permanentes',
+    frais_scol:'GRATUIT · Pas de diplôme mais équivalent Bac+5',
+    bourse: false,
+    partenaire: false,
+    status:'draft',
+    score: 90,
+  },
+];
+
+let activeCountryFilter = 'all';
+
+function filterCountry(country, btn){
+  activeCountryFilter = country;
+  document.querySelectorAll('.ctab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderSchools();
+}
+
+function renderSchools(){
+  const all = {...JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}'), ...JSON.parse(sessionStorage.getItem('ae_profile')||'{}')};
+  const avg = parseFloat(all.moy_t1||all['moy-t1']||0);
+  const toeic = parseInt(all.toeic_score)||0;
+  const serie = all.serie || '';
+  
+  const grid = document.getElementById('schools-candi-grid');
+  if(!grid) return;
+  
+  const filtered = activeCountryFilter==='all' ? SCHOOLS_CANDI : SCHOOLS_CANDI.filter(s=>s.country===activeCountryFilter);
+  
+  grid.innerHTML = filtered.map(s => {
+    // Check requirements
+    const avgOk = s.requirements.avg_min === 0 || avg >= s.requirements.avg_min;
+    const toeicOk = s.requirements.toeic_min === 0 || toeic >= s.requirements.toeic_min;
+    const serieOk = s.requirements.serie.length === 0 || s.requirements.serie.includes(serie);
+    
+    const reqsMet = avgOk && toeicOk && (serieOk || !serie);
+    const savedStatuses = JSON.parse(localStorage.getItem('ae_candi_status')||'{}');
+    const status = savedStatuses[s.id] || s.status;
+    
+    const statusMap = {
+      draft: {cls:'cs-draft', txt:'● Brouillon'},
+      inprog: {cls:'cs-inprog', txt:'● En cours'},
+      sent: {cls:'cs-sent', txt:'● Envoyée'},
+      accepted: {cls:'cs-accepted', txt:'✓ Acceptée'},
+      refused: {cls:'cs-refused', txt:'✗ Refusée'},
+    };
+    const st = statusMap[status]||statusMap.draft;
+    
+    const checklistHTML = s.checklist.map((item, idx) => {
+      const savedChecks = JSON.parse(localStorage.getItem(`ae_candi_checks_${s.id}`)||'[]');
+      const isChecked = savedChecks.includes(idx);
+      return `<div class="scl-item">
+        <div class="scl-check ${isChecked?'scl-done':'scl-todo'}" onclick="toggleCheck('${s.id}',${idx},this)" style="cursor:none;">${isChecked?'✓':''}</div>
+        <span style="${isChecked?'text-decoration:line-through;opacity:.5;':''}">${item}</span>
+      </div>`;
+    }).join('');
+    
+    const progress = (() => {
+      const saved = JSON.parse(localStorage.getItem(`ae_candi_checks_${s.id}`)||'[]');
+      return Math.round(saved.length/s.checklist.length*100);
+    })();
+    
+    return `<div class="school-candi-card" id="scc-${s.id}">
+      <div class="scc-country-bar" style="background:${s.bar_color};"></div>
+      <div class="scc-header">
+        <div class="scc-logo" style="background:${s.logo_bg};color:${s.logo_fg};">${s.logo_txt.replace('\n','<br>')}</div>
+        <div class="scc-info">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div class="scc-name">${s.flag} ${s.name}</div>
+            ${s.partenaire?`<span class="badge badge-gold" style="font-size:8px;">✦ Partenaire</span>`:''}
+          </div>
+          <div class="scc-location">${s.location}</div>
+          <div class="scc-badges" style="margin-top:6px;">
+            <span class="candi-status ${st.cls}">${st.txt}</span>
+            ${s.bourse?`<span class="badge badge-green" style="font-size:8px;">🎓 Bourses dispo</span>`:''}
+          </div>
+        </div>
+        <div class="scc-score">
+          <div class="scc-score-val" style="color:${s.score>=75?'var(--green)':s.score>=60?'var(--gold)':'var(--orange)'};">${s.score}%</div>
+          <div class="scc-score-lbl">compatibilité</div>
+        </div>
+      </div>
+      
+      <div style="font-size:12px;font-weight:600;color:var(--gold);margin-bottom:6px;">📚 ${s.filiere}</div>
+      <div class="scc-body">${s.desc}</div>
+      
+      <div style="display:flex;gap:10px;margin-bottom:10px;font-size:11px;color:var(--ivory-dim);">
+        <span>💰 ${s.frais_scol}</span>
+      </div>
+      
+      <div style="margin-bottom:10px;">
+        <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--ivory-faint);margin-bottom:4px;">
+          <span>Checklist dossier</span><span>${progress}% complété</span>
+        </div>
+        <div style="height:3px;background:var(--ink-4);border-radius:2px;margin-bottom:8px;"><div style="height:100%;background:${s.bar_color};border-radius:2px;width:${progress}%;transition:width .5s;"></div></div>
+        <div style="display:flex;flex-direction:column;gap:4px;">${checklistHTML}</div>
+      </div>
+      
+      <div style="display:flex;gap:6px;align-items:center;padding:8px 12px;background:var(--ink-3);border:1px solid var(--wire);border-radius:8px;margin-bottom:12px;">
+        <span style="font-size:16px;">📅</span>
+        <div>
+          <div style="font-size:10px;font-weight:700;color:var(--ivory-faint);text-transform:uppercase;letter-spacing:.06em;">Deadline</div>
+          <div style="font-size:12px;font-weight:700;color:var(--ivory);">${s.deadline}</div>
+        </div>
+        ${reqsMet?`<span class="badge badge-green" style="margin-left:auto;">Profil OK ✓</span>`:`<span class="badge" style="background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.2);color:var(--orange);margin-left:auto;">⚠️ Prérequis manquants</span>`}
+      </div>
+      
+      <div class="scc-actions">
+        <select style="flex:1;padding:8px 12px;background:var(--ink-3);border:1px solid var(--wire-mid);border-radius:8px;font-size:11px;font-weight:600;color:var(--ivory-dim);cursor:none;font-family:'Instrument Sans',sans-serif;" onchange="updateStatus('${s.id}',this.value)">
+          <option value="draft" ${status==='draft'?'selected':''}>Brouillon</option>
+          <option value="inprog" ${status==='inprog'?'selected':''}>En cours</option>
+          <option value="sent" ${status==='sent'?'selected':''}>Dossier envoyé</option>
+          <option value="accepted" ${status==='accepted'?'selected':''}>Accepté 🎉</option>
+          <option value="refused" ${status==='refused'?'selected':''}>Refusé</option>
+        </select>
+        <button class="btn-candi btn-candi-primary" onclick="prepareDossier('${s.id}')">📄 Préparer dossier</button>
+        ${s.partenaire?`<button class="btn-candi btn-candi-ghost" onclick="contactPartner('${s.id}')">✉️ Contacter</button>`:''}
+      </div>
+    </div>`;
+  }).join('');
+  
+  addHover();
+}
+
+function toggleCheck(schoolId, idx, el){
+  const key = `ae_candi_checks_${schoolId}`;
+  const saved = JSON.parse(localStorage.getItem(key)||'[]');
+  const pos = saved.indexOf(idx);
+  if(pos === -1) saved.push(idx);
+  else saved.splice(pos,1);
+  localStorage.setItem(key, JSON.stringify(saved));
+  renderSchools();
+}
+
+function updateStatus(schoolId, status){
+  const saved = JSON.parse(localStorage.getItem('ae_candi_status')||'{}');
+  saved[schoolId] = status;
+  localStorage.setItem('ae_candi_status', JSON.stringify(saved));
+  renderSchools();
+}
+
+function prepareDossier(schoolId){
+  showPanel('dossier', document.querySelectorAll('.snav-item')[6]);
+  const school = SCHOOLS_CANDI.find(s=>s.id===schoolId);
+  if(school){
+    const el = document.getElementById('lm-school');
+    if(el) el.value = schoolId;
+  }
+}
+
+function contactPartner(schoolId){
+  alert('Fonctionnalité partenaire — Avenir Étude transmettra ton dossier directement à l\'établissement dans la prochaine version. Email : partenaires@aveniretude.ci');
+}
+
+/* ══ BOURSES ══ */
+const BOURSES = [
+  {icon:'🎓',name:'Bourse Excellence Afrique',org:'UCLouvain · Belgique',amount:'12 000 € / an',deadline:'15 mai 2026',status:'open',pays:['BE'],domaines:['Ingénierie','Sciences','Économie'],conditions:'Moyenne ≥ 14/20 · Ressortissant Afrique subsaharienne',lien:'https://uclouvain.be/fr/index.html',tags:['Belgique','Ingénierie','Complète']},
+  {icon:'🏆',name:'Bourse Exellence UM6P',org:'Université Mohammed VI · Maroc',amount:'Bourse complète + hébergement',deadline:'31 mars 2026',status:'open',pays:['MA'],domaines:['Sciences','IA','Ingénierie'],conditions:'Sélection sur concours · Top profils africains',lien:'https://um6p.ma',tags:['Maroc','IA','Sciences','Complète']},
+  {icon:'🌍',name:'Bourse ARES',org:'Académie de Recherche · Belgique',amount:'Couverture totale (frais + bourse)',deadline:'31 janvier 2026',status:'closed',pays:['BE'],domaines:['Toutes disciplines'],conditions:'BAC + 2 minimum · Projet développement',lien:'#',tags:['Belgique','Toutes disciplines','Gouvernementale']},
+  {icon:'🇫🇷',name:'Bourse Eiffel Excellence',org:'Campus France · France',amount:'1 181 € / mois',deadline:'9 janvier 2026',status:'closed',pays:['FR'],domaines:['Ingénierie','Économie','Sciences Po'],conditions:'Proposé uniquement par les établissements français',lien:'https://www.campusfrance.org',tags:['France','Master','Doctorat']},
+  {icon:'🍁',name:'Bourse Excellence Montréal',org:'Polytechnique Montréal · Canada',amount:'5 000 CAD / an',deadline:'15 février 2026',status:'soon',pays:['CA'],domaines:['Ingénierie','Informatique'],conditions:'Dossier académique exceptionnel · Cotes ≥ 3.7/4',lien:'https://www.polymtl.ca',tags:['Canada','Ingénierie','Partielle']},
+  {icon:'🌱',name:'Bourse Tony Elumelu',org:'Tony Elumelu Foundation',amount:'5 000 USD seed funding',deadline:'1er avril 2026',status:'open',pays:['CI'],domaines:['Entrepreneuriat','Tech'],conditions:'Projet entrepreneurial viable · Africain <35 ans',lien:'https://www.tonyelumelufoundation.org',tags:['Entrepreneuriat','CI','Tech']},
+  {icon:'💡',name:'Programme Mastercard Foundation Scholars',org:'Mastercard Foundation',amount:'Bourse complète études + vie',deadline:'Selon établissement partenaire',status:'open',pays:['CA','BE','FR'],domaines:['Toutes disciplines'],conditions:'Excellent académique · Leadership démontré · Besoin financier',lien:'https://mastercardfdn.org',tags:['International','Leadership','Complète']},
+  {icon:'🎯',name:'Bourse CRDI — Canada',org:'Centre de Recherches pour le Développement International',amount:'Variable selon projet',deadline:'Dépôt dossier permanent',status:'open',pays:['CA'],domaines:['Recherche','Sciences sociales','Tech'],conditions:'Projet recherche lié au développement Afrique',lien:'https://www.idrc.ca',tags:['Canada','Recherche','Développement']},
+];
+
+function renderBourses(){
+  const container = document.getElementById('bourses-list');
+  if(!container) return;
+  
+  container.innerHTML = BOURSES.map(b => {
+    const statusMap = {open:{cls:'bc-open',txt:'● Ouvert'},soon:{cls:'bc-soon',txt:'⏱ Bientôt'},closed:{cls:'bc-closed',txt:'✗ Fermé'}};
+    const st = statusMap[b.status]||statusMap.closed;
+    return `<div class="bourse-card">
+      <div class="bc-icon">${b.icon}</div>
+      <div style="flex:1;">
+        <div class="bc-name">${b.name}</div>
+        <div class="bc-org">${b.org}</div>
+        <div class="bc-amount">${b.amount}</div>
+        <div style="font-size:11px;color:var(--ivory-dim);margin-bottom:6px;">📋 ${b.conditions}</div>
+        <div class="bc-tags">${b.tags.map(t=>`<span class="bc-tag">${t}</span>`).join('')}</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;">
+        <span class="bc-deadline ${st.cls}">${st.txt}</span>
+        <div style="text-align:right;font-size:10px;color:var(--ivory-faint);">📅 ${b.deadline}</div>
+        <button class="bc-btn" onclick="window.open('${b.lien}','_blank')">Voir →</button>
+      </div>
+    </div>`;
+  }).join('');
+  addHover();
+}
+
+/* ══ LETTRE DE MOTIVATION IA ══ */
+function generateLM(){
+  const school = document.getElementById('lm-school')?.value;
+  const style = document.getElementById('lm-style')?.value;
+  if(!school){alert('Sélectionne une école d\'abord');return;}
+  
+  const all = {...JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}'), ...JSON.parse(sessionStorage.getItem('ae_profile')||'{}')};
+  const prenom = all.prenom||'[Prénom]';
+  const nom = all.nom||'[Nom]';
+  const serie = all.serie||'D';
+  const metier = all.metier||'Ingénieur en Intelligence Artificielle';
+  const domaine = all.domaine||'Informatique & Systèmes d\'Information';
+  const ville = all.ville||'Abidjan';
+  const moy = all.moy_t1||'14';
+  const riasec = all.riasec_profile||'IAS';
+  const apt = all.aptitudes_score||'82';
+  
+  const schoolData = SCHOOLS_CANDI.find(s=>s.id===school);
+  const schoolName = schoolData?.name||school;
+  const schoolCountry = {CA:'Canada',MA:'Maroc',BE:'Belgique',FR:'France'}[schoolData?.country]||'';
+  const schoolFiliere = schoolData?.filiere||domaine;
+  
+  const today = new Date().toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'});
+  
+  const templates = {
+    pro: `${prenom} ${nom}\nAbidjan, Côte d'Ivoire\n${today}\n\nObjet : Candidature au programme ${schoolFiliere} — ${schoolName}\n\nMadame, Monsieur,\n\nC'est avec un vif intérêt que je vous adresse ma candidature au programme ${schoolFiliere} de ${schoolName}, ${schoolCountry}.\n\nActuellement en série BAC ${serie} à ${ville}, j'ai maintenu une moyenne de ${moy}/20 et développé une forte appétence pour les sciences et les technologies. Mon projet professionnel est clairement défini : devenir ${metier}, un domaine dans lequel je souhaite contribuer au développement du numérique en Afrique de l'Ouest.\n\nMon profil d'orientation RIASEC (${riasec}) confirme mes aptitudes investigatives et analytiques, avec un score de compétences cognitives de ${apt}/100 sur la plateforme Avenir Étude. Ces résultats témoignent de ma capacité à aborder des problèmes complexes avec rigueur et méthode.\n\nLa réputation de ${schoolName} en matière de formation d'excellence et son ouverture internationale représentent pour moi l'environnement idéal pour atteindre mes ambitions. Je suis convaincu(e) que ma curiosité, ma discipline et ma motivation à contribuer positivement au développement de la Côte d'Ivoire font de moi un(e) candidat(e) sérieux(se).\n\nJe reste disponible pour tout entretien et vous prie d'agréer, Madame, Monsieur, l'expression de mes sincères salutations.\n\n${prenom} ${nom}`,
+    
+    passion: `${prenom} ${nom}\nAbidjan, Côte d'Ivoire · ${today}\n\n${schoolName} — Candidature programme ${schoolFiliere}\n\nDepuis mon plus jeune âge, j'ai grandi dans une Côte d'Ivoire en pleine transformation numérique. À ${ville}, j'ai vu des entreprises se digitaliser, des applications mobiles révolutionner les paiements, et l'IA s'inviter dans nos quotidiens. Cette révolution m'a donné une certitude : je veux en être un acteur, pas un spectateur.\n\nEn série BAC ${serie}, avec une moyenne de ${moy}/20, j'ai construis des bases académiques solides. Mais au-delà des chiffres, c'est une passion authentique pour ${domaine} qui m'anime. Mes tests d'orientation (profil ${riasec}, aptitudes cognitives ${apt}/100) confirment que c'est bien ma voie.\n\n${schoolName} incarne ce que je recherche : une formation d'excellence qui allie théorie rigoureuse et pratique concrète. Je sais que les défis seront nombreux — mais j'ai appris que les meilleures choses dans la vie exigent du travail.\n\nMon ambition ? Revenir en Côte d'Ivoire avec les compétences pour contribuer à construire les prochains succès technologiques africains.\n\nAvec confiance et enthousiasme,\n${prenom} ${nom}`,
+    
+    data: `${prenom} ${nom} · Abidjan, CI · ${today}\n\nCandidature — ${schoolFiliere} · ${schoolName}\n\nÀ l'attention du comité d'admissions,\n\nPourquoi me choisir ? Voici les données :\n\n📊 ACADÉMIQUE\n• Série BAC ${serie} · Moyenne ${moy}/20\n• Rang dans les 20% supérieurs de mon établissement\n\n🧠 PROFIL APTITUDES (Avenir Étude)\n• Score cognitif : ${apt}/100\n• Profil RIASEC : ${riasec} (Investigatif dominant)\n• Anglais estimé : B1 (en progression vers B2)\n\n🎯 PROJET\n• Objectif métier : ${metier}\n• Domaine visé : ${domaine}\n• Motivation : Développement tech en Afrique francophone\n\n🌍 IMPACT VISÉ\nLa Côte d'Ivoire compte 28 millions d'habitants et un écosystème tech en explosion. Je veux y contribuer avec des compétences formées à ${schoolName} — une combinaison qui crée de la valeur des deux côtés.\n\n${schoolName} a été sélectionné parmi d'autres établissements pour la qualité de son programme ${schoolFiliere} et sa réputation internationale. Mon objectif est de faire partie des 10% d'alumni qui retournent contribuer à leur pays d'origine.\n\nDisponible pour entretien à votre convenance.\n\n${prenom} ${nom}`,
+  };
+  
+  const letter = templates[style] || templates.pro;
+  document.getElementById('lm-textarea').value = letter;
+  document.getElementById('lm-result-card').style.display = 'block';
+  document.getElementById('lm-result-card').scrollIntoView({behavior:'smooth'});
+  addHover();
+}
+
+function copyLM(){
+  const ta = document.getElementById('lm-textarea');
+  navigator.clipboard.writeText(ta.value).then(()=>{
+    const btn = event.target;
+    btn.textContent = '✓ Copié !';
+    setTimeout(()=>btn.textContent='📋 Copier',2000);
+  });
+}
+
+function regenerateLM(){
+  generateLM();
+}
+
+function exportPDF(){
+  const all = {...JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}'), ...JSON.parse(sessionStorage.getItem('ae_profile')||'{}')};
+  // Open print window with the preview
+  const printContent = document.getElementById('pdf-preview-content').cloneNode(true);
+  const win = window.open('','_blank');
+  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Dossier Avenir Étude</title>
+  <style>
+    body{font-family:Arial,sans-serif;margin:20px;color:#111;}
+    .pdf-logo{font-size:18px;font-weight:900;} .pdf-logo em{color:#D4A853;font-style:italic;}
+    strong{font-weight:bold;} em{font-style:italic;}
+    @media print{body{margin:0;}}
+  </style>
+  </head><body>`);
+  win.document.write(printContent.innerHTML);
+  win.document.write('</body></html>');
+  win.document.close();
+  win.print();
+}
+
+function printDossier(){
+  exportPDF();
+}
+
+/* ══ PHOTO UPLOAD ══ */
+function uploadPhoto(input){
+  if(!input.files || !input.files[0]) return;
+  const reader = new FileReader();
+  reader.onload = e=>{
+    const data = e.target.result;
+    document.querySelectorAll('.avatar, #photo-preview, #sidebar-avatar').forEach(el=>{
+      el.style.backgroundImage = `url(${data})`;
+      el.style.backgroundSize = 'cover';
+      el.style.backgroundPosition = 'center';
+      el.textContent = '';
+    });
+    const prof = JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}');
+    prof.photo = data;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(prof));
+  };
+  reader.readAsDataURL(input.files[0]);
+}
+
+/* ══ DATA EXPORT ══ */
+function exportData(){
+  const data = {
+    profile: JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}'),
+    tests: JSON.parse(sessionStorage.getItem('ae_profile')||'{}'),
+    candidatures: JSON.parse(localStorage.getItem('ae_candi_status')||'{}'),
+    exported_at: new Date().toISOString(),
+    version: '2.0'
+  };
+  const blob = new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `avenir_etude_profil_${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+}
+
+function clearData(){
+  localStorage.removeItem(STORAGE_KEY);
+  localStorage.removeItem('ae_candi_status');
+  SCHOOLS_CANDI.forEach(s=>localStorage.removeItem(`ae_candi_checks_${s.id}`));
+  sessionStorage.clear();
+  location.reload();
+}
+
+/* ══ INIT ══ */
+loadProfile();
+renderTests();
+renderSchools();
+renderBourses();
+addHover();
+</script>
+</body>
+</html>
