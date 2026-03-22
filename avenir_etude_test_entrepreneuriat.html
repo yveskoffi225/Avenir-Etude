@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Avenir Étude — Potentiel Entrepreneurial</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    :root{--ink:#060B14;--ink-2:#0C1220;--ink-3:#111827;--gold:#D4A853;--gold-dim:#7A5E2A;--gold-10:rgba(212,168,83,.10);--ivory:#F2EDE4;--ivory-dim:#8A8278;--ivory-faint:#2E3545;--wire:rgba(242,237,228,.07);--wire-mid:rgba(242,237,228,.13);--wire-hi:rgba(242,237,228,.24);--green:#34C97A;--blue:#4F7AE8;--red:#E05A54;--orange:#F59E0B;--purple:#8B5CF6;--tc:#34C97A;}
+    body{font-family:"Instrument Sans",sans-serif;background:var(--ink);color:var(--ivory);-webkit-font-smoothing:antialiased;cursor:none;min-height:100vh;display:flex;flex-direction:column;}
+    .ae-cursor{position:fixed;width:10px;height:10px;background:var(--gold);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);mix-blend-mode:screen;top:-100px;left:-100px;transition:width .18s,height .18s;}
+    .ae-cursor.hover{width:30px;height:30px;background:transparent;border:1.5px solid var(--gold);}
+    .top-bar{height:56px;border-bottom:1px solid var(--wire);background:rgba(6,11,20,.97);backdrop-filter:blur(16px);display:flex;align-items:center;padding:0 32px;gap:16px;position:sticky;top:0;z-index:200;flex-shrink:0;}
+    .tb-logo{font-family:"Bricolage Grotesque",sans-serif;font-size:15px;font-weight:800;color:var(--ivory);text-decoration:none;letter-spacing:-.03em;}
+    .tb-logo em{font-style:italic;color:var(--gold);}
+    .tb-back{font-size:11px;font-weight:600;color:var(--ivory-dim);text-decoration:none;padding:5px 12px;border:1px solid var(--wire-mid);border-radius:6px;flex-shrink:0;}
+    .tb-back:hover{border-color:var(--wire-hi);color:var(--ivory);}
+    .tb-prog-wrap{flex:1;display:flex;align-items:center;gap:10px;}
+    .tb-prog-track{flex:1;height:3px;background:var(--wire);border-radius:2px;}
+    .tb-prog-fill{height:100%;background:var(--tc);border-radius:2px;transition:width .4s ease;}
+    .tb-prog-pct{font-family:"Bricolage Grotesque",sans-serif;font-size:12px;font-weight:700;color:var(--tc);min-width:36px;text-align:right;}
+    .intro-screen{flex:1;display:flex;align-items:center;justify-content:center;padding:40px;}
+    .intro-card{max-width:640px;width:100%;background:var(--ink-2);border:1px solid var(--wire-mid);border-radius:20px;padding:40px;animation:fadeIn .5s ease;}
+    .intro-icon{font-size:48px;margin-bottom:14px;}
+    .intro-title{font-family:"Bricolage Grotesque",sans-serif;font-size:clamp(24px,4vw,34px);font-weight:800;color:var(--ivory);letter-spacing:-.04em;margin-bottom:8px;}
+    .intro-title em{font-style:italic;color:var(--tc);}
+    .intro-sub{font-size:14px;color:var(--ivory-dim);line-height:1.7;margin-bottom:20px;}
+    .dims-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
+    .dim-card{padding:12px 16px;background:var(--ink-3);border:1px solid var(--wire);border-radius:10px;}
+    .dim-icon{font-size:20px;margin-bottom:4px;}
+    .dim-name{font-size:13px;font-weight:600;color:var(--ivory);margin-bottom:2px;}
+    .dim-desc{font-size:11px;color:var(--ivory-dim);}
+    .intro-rules{display:flex;flex-direction:column;gap:8px;margin-bottom:24px;}
+    .intro-rule{display:flex;gap:10px;font-size:12px;color:var(--ivory-dim);}
+    .btn-start{width:100%;font-family:"Bricolage Grotesque",sans-serif;font-size:16px;font-weight:700;padding:15px;background:var(--tc);color:var(--ink);border:none;border-radius:12px;cursor:none;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:10px;}
+    .btn-start:hover{opacity:.9;transform:translateY(-2px);}
+    .test-screen{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 40px;overflow-y:auto;}
+    .q-card{width:100%;max-width:680px;}
+    .q-dim-badge{display:inline-flex;align-items:center;gap:8px;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:4px 14px;border-radius:20px;margin-bottom:14px;background:rgba(255,255,255,.06);color:var(--tc);border:1px solid rgba(255,255,255,.1);}
+    .q-num{font-size:11px;color:var(--ivory-dim);margin-bottom:8px;}
+    .q-situation{font-size:13px;color:var(--ivory-dim);line-height:1.7;margin-bottom:14px;padding:14px 18px;background:var(--ink-3);border:1px solid var(--wire);border-radius:10px;border-left:3px solid var(--tc);}
+    .q-text{font-family:"Bricolage Grotesque",sans-serif;font-size:clamp(17px,2.2vw,22px);font-weight:700;color:var(--ivory);letter-spacing:-.02em;line-height:1.3;margin-bottom:24px;}
+    .q-options{display:grid;grid-template-columns:1fr;gap:8px;}
+    .q-option{display:flex;align-items:flex-start;gap:14px;padding:14px 18px;border-radius:10px;border:1px solid var(--wire-mid);background:var(--ink-3);cursor:none;transition:all .2s;}
+    .q-option:hover{border-color:var(--tc);background:rgba(255,255,255,.04);}
+    .q-option.selected{border-color:var(--tc);background:rgba(255,255,255,.07);}
+    .q-option.selected .opt-key{background:var(--tc);border-color:var(--tc);color:var(--ink);}
+    .opt-key{width:28px;height:28px;border-radius:6px;border:1px solid var(--wire-mid);display:flex;align-items:center;justify-content:center;font-family:"Bricolage Grotesque",sans-serif;font-size:12px;font-weight:700;color:var(--ivory-dim);transition:all .2s;flex-shrink:0;margin-top:1px;}
+    .opt-text{font-size:13px;color:var(--ivory);line-height:1.45;}
+    .bottom-bar{height:64px;border-top:1px solid var(--wire);background:rgba(6,11,20,.97);display:flex;align-items:center;justify-content:space-between;padding:0 32px;flex-shrink:0;}
+    .bb-info{font-size:12px;color:var(--ivory-dim);}.bb-info strong{color:var(--ivory);}
+    .bb-actions{display:flex;gap:10px;}
+    .btn-prev{font-size:12px;font-weight:600;color:var(--ivory-dim);background:none;border:1px solid var(--wire-mid);border-radius:8px;padding:8px 14px;cursor:none;font-family:"Instrument Sans",sans-serif;transition:all .15s;}
+    .btn-prev:hover{border-color:var(--wire-hi);color:var(--ivory);}.btn-prev:disabled{opacity:.3;}
+    .btn-next{font-family:"Bricolage Grotesque",sans-serif;font-size:14px;font-weight:700;padding:10px 24px;background:var(--tc);color:var(--ink);border:none;border-radius:10px;cursor:none;transition:all .15s;}
+    .btn-next:hover{opacity:.9;}.btn-next:disabled{opacity:.4;}
+    .results-screen{flex:1;display:flex;align-items:center;justify-content:center;padding:40px;overflow-y:auto;}
+    .results-card{max-width:680px;width:100%;background:var(--ink-2);border:1px solid var(--wire-mid);border-radius:20px;padding:40px;animation:fadeIn .5s ease;}
+    .rs-title{font-family:"Bricolage Grotesque",sans-serif;font-size:clamp(22px,3vw,34px);font-weight:800;color:var(--ivory);letter-spacing:-.04em;margin-bottom:24px;}
+    .rs-title em{font-style:italic;color:var(--tc);}
+    .rs-global{text-align:center;padding:24px;background:var(--ink-3);border:1px solid var(--wire);border-radius:14px;margin-bottom:20px;}
+    .rs-score{font-family:"Bricolage Grotesque",sans-serif;font-size:56px;font-weight:800;letter-spacing:-.06em;color:var(--tc);}
+    .rs-score-lbl{font-size:13px;color:var(--ivory-dim);margin-top:4px;}
+    .rs-label{display:inline-block;font-family:"Bricolage Grotesque",sans-serif;font-size:18px;font-weight:800;padding:6px 20px;border-radius:6px;margin-top:8px;}
+    .rs-dims{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
+    .rs-dim{background:var(--ink-3);border:1px solid var(--wire);border-radius:10px;padding:14px;}
+    .rs-dim-icon{font-size:18px;margin-bottom:4px;}
+    .rs-dim-name{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ivory-faint);margin-bottom:6px;}
+    .rs-dim-val{font-family:"Bricolage Grotesque",sans-serif;font-size:20px;font-weight:800;margin-bottom:6px;}
+    .rs-dim-bar{height:3px;background:var(--ink-2);border-radius:2px;}
+    .rs-dim-fill{height:100%;border-radius:2px;transition:width 1s ease;}
+    .rs-advice{padding:16px 20px;border-radius:10px;margin-bottom:20px;font-size:13px;color:var(--ivory-dim);line-height:1.7;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);}
+    .rs-btns{display:flex;gap:10px;}
+    .btn-rs-p{flex:1;font-family:"Bricolage Grotesque",sans-serif;font-size:15px;font-weight:700;padding:14px;background:var(--gold);color:var(--ink);border:none;border-radius:10px;cursor:none;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:8px;}
+    .btn-rs-p:hover{background:#e0b55e;}
+    .btn-rs-g{padding:14px 20px;background:transparent;border:1px solid var(--wire-mid);border-radius:10px;font-size:13px;color:var(--ivory-dim);cursor:none;transition:all .15s;}
+    .btn-rs-g:hover{border-color:var(--wire-hi);color:var(--ivory);}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+    @media(max-width:768px){.top-bar,.bottom-bar{padding:0 16px;} .test-screen{padding:16px 20px;} .rs-dims{grid-template-columns:1fr;} .dims-grid{grid-template-columns:1fr;}}
+    ::-webkit-scrollbar{width:4px;} ::-webkit-scrollbar-track{background:var(--ink);} ::-webkit-scrollbar-thumb{background:var(--wire-mid);border-radius:2px;}
+  </style>
+</head>
+<body>
+<div class="ae-cursor" id="ae-cursor"></div>
+<div class="top-bar" id="top-bar" style="display:none;">
+  <a href="avenir_etude_homepage_v2.html" class="tb-logo">Avenir <em>Étude</em></a>
+  <a href="avenir_etude_tests.html" class="tb-back">← Portail tests</a>
+  <div class="tb-prog-wrap"><div class="tb-prog-track"><div class="tb-prog-fill" id="prog-fill" style="width:0%"></div></div><div class="tb-prog-pct" id="prog-pct">0%</div></div>
+</div>
+<div class="intro-screen" id="intro-screen">
+  <div class="intro-card">
+    <div class="intro-icon">🚀</div>
+    <h1 class="intro-title"><em>Potentiel Entrepreneurial</em></h1>
+    <p class="intro-sub">26 questions pour mesurer ton potentiel dans le contexte startup ivoirien et africain.</p>
+    <div class="dims-grid"><div class="dim-card"><div class="dim-icon">💡</div><div class="dim-name">Innovation</div><div class="dim-desc">Générer et tester des idées</div></div><div class="dim-card"><div class="dim-icon">⚡</div><div class="dim-name">Prise de risque</div><div class="dim-desc">Tolérer l'incertitude</div></div><div class="dim-card"><div class="dim-icon">🔄</div><div class="dim-name">Résilience</div><div class="dim-desc">Rebondir après les échecs</div></div><div class="dim-card"><div class="dim-icon">🌍</div><div class="dim-name">Vision marché</div><div class="dim-desc">Voir les opportunités CI</div></div></div>
+    <div class="intro-rules">
+      <div class="intro-rule"><span>💡</span><span>Réponds selon ce que tu ferais vraiment, pas ce qui te semble "correct"</span></div>
+      <div class="intro-rule"><span>📊</span><span>Score sur 100 par dimension + profil personnalisé avec conseils</span></div>
+      <div class="intro-rule"><span>⏱</span><span>Pas de chrono — prends le temps de réfléchir</span></div>
+    </div>
+    <button class="btn-start" onclick="startTest()">Commencer ›</button>
+  </div>
+</div>
+<div class="test-screen" id="test-screen" style="display:none;"><div class="q-card" id="q-card"></div></div>
+<div class="bottom-bar" id="bottom-bar" style="display:none;">
+  <div class="bb-info">Question <strong id="q-num-lbl">1</strong> / <strong>26</strong></div>
+  <div class="bb-actions">
+    <button class="btn-prev" id="btn-prev" onclick="prevQ()" disabled>← Préc.</button>
+    <button class="btn-next" id="btn-next" onclick="nextQ()" disabled>Suivant →</button>
+  </div>
+</div>
+<div class="results-screen" id="results-screen" style="display:none;"><div class="results-card" id="results-card"></div></div>
+<script>
+const cur=document.getElementById("ae-cursor");
+document.addEventListener("mousemove",e=>{cur.style.left=e.clientX+"px";cur.style.top=e.clientY+"px";});
+document.addEventListener("mouseleave",()=>cur.style.opacity="0");
+document.addEventListener("mouseenter",()=>cur.style.opacity="1");
+function addHover(){document.querySelectorAll("a,button,.q-option,.dim-card").forEach(el=>{el.addEventListener("mouseenter",()=>cur.classList.add("hover"));el.addEventListener("mouseleave",()=>cur.classList.remove("hover"));});}
+const QUESTIONS=[{"dim": "I", "text": "Face à un problème quotidien abidjanais, tu penses surtout à :", "opts": ["Comment le contourner", "S'il y a une solution business possible", "Qui d'autre a ce problème", "Accepter que c'est comme ça"], "scores": [1, 3, 2, 0]}, {"dim": "I", "text": "Quand tu as une idée, tu :", "opts": ["En parles à tout le monde", "Testes rapidement avec une version minimale", "La gardes secrète", "L'analyses longuement avant d'agir"], "scores": [1, 3, 0, 2]}, {"dim": "I", "sit": "Tu identifies un besoin sans solution claire.", "text": "Tu :", "opts": ["Attends qu'une solution émerge", "Prototypes 3 approches rapidement", "Cherches si ça existe ailleurs", "Études le marché 6 mois avant d'agir"], "scores": [0, 3, 1, 0]}, {"dim": "I", "text": "Une bonne idée business est celle qui :", "opts": ["Est totalement originale", "Résout un vrai problème pour un vrai marché", "Est validée par des experts", "Peut être brevetée"], "scores": [0, 3, 1, 1]}, {"dim": "R", "text": "Tu te définis comme quelqu'un qui :", "opts": ["Évite le risque", "Prend des risques calculés", "Prend des risques par instinct", "Préfère la sécurité salariale"], "scores": [0, 3, 2, 0]}, {"dim": "R", "sit": "Opportunité : quitter ton emploi pour une startup.", "text": "Ta réaction :", "opts": ["Jamais — trop risqué", "Si validé et 6 mois d'épargne, oui", "Si investisseurs confirmés, oui", "Tu le ferais si tu crois au projet"], "scores": [0, 2, 2, 3]}, {"dim": "R", "text": "Face à l'incertitude financière, tu :", "opts": ["Paniques et abandonnes", "Identifies des revenus alternatifs pour tenir", "Cherches un associé pour partager", "Retournes à un emploi salarié"], "scores": [0, 3, 2, 1]}, {"dim": "R", "text": "Pour toi, l'échec d'un projet est :", "opts": ["Une honte à éviter", "Une leçon coûteuse mais précieuse", "Inévitable dans l'entrepreneuriat", "Une raison d'arrêter"], "scores": [0, 3, 2, 0]}, {"dim": "Re", "text": "Ton produit ne marche pas. Tu :", "opts": ["Abandonnes", "Pivotes — nouveau cap avec l'apprentissage", "Persistes sans changer", "Blâmes le marché"], "scores": [0, 3, 1, 0]}, {"dim": "Re", "sit": "Ton premier client important te quitte.", "text": "Tu :", "opts": ["Paniques et envisages d'arrêter", "Comprends pourquoi et améliores le produit", "Cherches 5 nouveaux prospects immédiatement", "Te sens découragé·e mais continues"], "scores": [0, 3, 2, 1]}, {"dim": "Re", "text": "Après un refus d'investisseur, tu :", "opts": ["Renonces à lever des fonds", "Demandes un feedback et améliores ton pitch", "Cherches un autre sans changer ton pitch", "Attends quelques mois pour réessayer"], "scores": [0, 3, 1, 1]}, {"dim": "Re", "text": "Dans les moments difficiles, ta motivation vient de :", "opts": ["La peur de l'échec", "La vision du problème résolu et de l'impact", "Le salaire futur espéré", "Les obligations envers tes investisseurs"], "scores": [0, 3, 1, 1]}, {"dim": "M", "sit": "Le marché ivoirien du transport est inefficace.", "text": "L'opportunité que tu vois :", "opts": ["Une app de covoiturage type Uber", "Une solution logistique B2B pour commerçants", "Un système de gestion de flotte", "Les trois selon le segment"], "scores": [1, 2, 1, 3]}, {"dim": "M", "text": "Le plus grand avantage compétitif en CI :", "opts": ["Une technologie unique", "Comprendre profondément les habitudes locales", "Des financements étrangers", "Être présent avant les concurrents"], "scores": [0, 3, 1, 2]}, {"dim": "M", "text": "Le mobile money ivoirien représente :", "opts": ["Un marché saturé", "Une infrastructure sur laquelle bâtir", "Un problème pour les entrepreneurs", "Un secteur réservé aux télécoms"], "scores": [0, 3, 0, 0]}, {"dim": "M", "text": "Pour valider une idée en CI, la meilleure approche :", "opts": ["Étude de marché formelle", "Parler à 20 clients potentiels en 2 semaines", "Analyser les données en ligne", "Regarder ce qui marche ailleurs en Afrique"], "scores": [1, 3, 1, 2]}, {"dim": "I", "text": "Ton rapport au travail en équipe :", "opts": ["Je préfère travailler seul", "Je construis une équipe complémentaire", "Je travaille en équipe par obligation", "Je collabore si les rôles sont clairs"], "scores": [1, 3, 1, 0]}, {"dim": "R", "text": "Pour lancer en CI, il faut d'abord :", "opts": ["Lever des fonds étrangers", "Être rentable rapidement avec ressources locales", "Être présent sur les réseaux sociaux", "Avoir une technologie avancée"], "scores": [0, 3, 1, 1]}, {"dim": "Re", "text": "Quand ton idée est sévèrement critiquée par quelqu'un que tu respectes :", "opts": ["Abandonnes si la critique est sévère", "Écoutes et cherches ce qui est valide", "Défends point par point", "Cherches d'autres avis"], "scores": [0, 3, 2, 1]}, {"dim": "M", "text": "L'Afrique en 2030 :", "opts": ["Marché difficile à cause de l'instabilité", "Le plus grand marché d'opportunités au monde", "Marché de second rang", "Marché qui a besoin d'aide extérieure"], "scores": [0, 3, 1, 0]}, {"dim": "I", "text": "Le MVP d'une idée, c'est :", "opts": ["La version finale réduite au minimum", "N'importe quoi qui teste une hypothèse avec de vrais clients", "Une maquette non fonctionnelle", "Le produit complet livré rapidement"], "scores": [0, 3, 1, 0]}, {"dim": "R", "text": "Le financement idéal en phase initiale :", "opts": ["Emprunt bancaire", "Fonds propres + love money + incubateur", "Capital-risque international", "Subvention gouvernementale"], "scores": [0, 3, 1, 1]}, {"dim": "Re", "text": "Un concurrent copie ton idée mieux que toi. Tu :", "opts": ["Abandonnes", "Identifies ton avantage unique et te repositionnes", "Essaies de faire encore mieux rapidement", "Cherches à t'associer avec lui"], "scores": [0, 3, 2, 1]}, {"dim": "M", "text": "Le secteur le plus porteur en CI en 2026 :", "opts": ["Fintech et mobile money", "Agritech et chaîne alimentaire", "Edtech et formation professionnelle", "Healthtech et accès aux soins"], "scores": [3, 2, 2, 2]}, {"dim": "I", "text": "L'entrepreneuriat en Afrique est d'abord :", "opts": ["Un moyen de s'enrichir rapidement", "Résoudre des problèmes locaux et créer de la valeur", "Une alternative au chômage", "Un risque pour ceux qui ont les moyens"], "scores": [0, 3, 1, 0]}, {"dim": "Re", "text": "Ton modèle inspirant en Afrique :", "opts": ["Tony Elumelu", "Strive Masiyiwa", "Leila Janah", "Je crée mon propre modèle"], "scores": [2, 2, 2, 3]}];
+const DIM_NAMES={"I": "Innovation", "R": "Prise de risque", "Re": "Résilience", "M": "Vision marché"};
+const DIM_COLORS={"I": "#34C97A", "R": "#E05A54", "Re": "#F59E0B", "M": "#4F7AE8"};
+const DIM_ICONS={"I": "💡", "R": "⚡", "Re": "🔄", "M": "🌍"};
+let currentQ=0,answers=new Array(26).fill(null);
+function startTest(){document.getElementById("intro-screen").style.display="none";document.getElementById("test-screen").style.display="flex";document.getElementById("bottom-bar").style.display="flex";document.getElementById("top-bar").style.display="flex";renderQ();}
+function renderQ(){
+  const q=QUESTIONS[currentQ];
+  const pct=Math.round(answers.filter(a=>a!==null).length/26*100);
+  document.getElementById("prog-fill").style.width=pct+"%";
+  document.getElementById("prog-pct").textContent=pct+"%";
+  document.getElementById("q-num-lbl").textContent=currentQ+1;
+  document.getElementById("btn-prev").disabled=currentQ===0;
+  document.getElementById("btn-next").disabled=answers[currentQ]===null;
+  document.getElementById("q-card").innerHTML=`
+    <span class="q-dim-badge">${DIM_ICONS[q.dim]} ${DIM_NAMES[q.dim]}</span>
+    <div class="q-num">Question ${currentQ+1} / 26</div>
+    ${q.sit?`<div class="q-situation">📍 ${q.sit}</div>`:""}
+    <div class="q-text">${q.text}</div>
+    <div class="q-options">${q.opts.map((o,i)=>`
+    <div class="q-option ${answers[currentQ]===i?"selected":""}" onclick="selectOpt(${i})">
+      <div class="opt-key">${i+1}</div><div class="opt-text">${o}</div>
+    </div>`).join("")}</div>`;
+  addHover();
+}
+function selectOpt(idx){answers[currentQ]=idx;document.querySelectorAll(".q-option").forEach((o,i)=>o.classList.toggle("selected",i===idx));document.getElementById("btn-next").disabled=false;if(currentQ<26-1)setTimeout(()=>nextQ(),400);else setTimeout(()=>showResults(),400);}
+function nextQ(){if(currentQ<26-1){currentQ++;renderQ();}else showResults();}
+function prevQ(){if(currentQ>0){currentQ--;renderQ();}}
+function showResults(){
+  document.getElementById("test-screen").style.display="none";
+  document.getElementById("bottom-bar").style.display="none";
+  document.getElementById("results-screen").style.display="flex";
+  const dimS={},dimC={};
+  Object.keys(DIM_NAMES).forEach(k=>{dimS[k]=0;dimC[k]=0;});
+  QUESTIONS.forEach((q,i)=>{if(answers[i]!==null){dimS[q.dim]+=q.scores[answers[i]];dimC[q.dim]+=3;}});
+  const dimP={};
+  Object.keys(dimS).forEach(k=>dimP[k]=dimC[k]>0?Math.round(dimS[k]/dimC[k]*100):0);
+  const global=Math.round(Object.values(dimP).reduce((a,b)=>a+b,0)/Object.keys(dimP).length);
+  const profile=JSON.parse(sessionStorage.getItem("ae_profile")||"{}");
+  sessionStorage.setItem("ae_profile",JSON.stringify({...profile,["test_entrepreneuriat_score"]:global,["test_entrepreneuriat_dims"]:dimP,["test_entrepreneuriat_date"]:new Date().toISOString()}));
+  let label="",labelColor="",advice="";
+  if(global>=80){label="Excellent";labelColor="var(--green)";advice="Résultat exceptionnel ! Tu es dans le top 10% sur cette dimension."}
+  else if(global>=60){label="Bon niveau";labelColor="var(--blue)";advice="Bon niveau avec des axes d'amélioration identifiés. Continue à pratiquer."}
+  else if(global>=40){label="En développement";labelColor="var(--orange)";advice="Ces compétences peuvent se développer avec de la pratique consciente."}
+  else{label="À renforcer";labelColor="var(--red)";advice="Ces compétences sont fondamentales. Identifie les dimensions les plus faibles et commence par là."}
+  document.getElementById("results-card").innerHTML=`
+    <div class="rs-title">Résultats <em>Potentiel Entrepreneurial</em></div>
+    <div class="rs-global">
+      <div class="rs-score">${global}</div>
+      <div class="rs-score-lbl">Score global sur 100</div>
+      <div class="rs-label" style="background:${labelColor}22;color:${labelColor};">${label}</div>
+    </div>
+    <div class="rs-dims">${Object.entries(DIM_NAMES).map(([k,name])=>`
+    <div class="rs-dim">
+      <div class="rs-dim-icon">${DIM_ICONS[k]}</div>
+      <div class="rs-dim-name">${name}</div>
+      <div class="rs-dim-val" style="color:${DIM_COLORS[k]};">${dimP[k]}/100</div>
+      <div class="rs-dim-bar"><div class="rs-dim-fill" id="rdf-${k}" style="width:0%;background:${DIM_COLORS[k]};"></div></div>
+    </div>`).join("")}</div>
+    <div class="rs-advice">💡 ${advice}</div>
+    <div class="rs-btns">
+      <button class="btn-rs-p" onclick="window.location.href='avenir_etude_dashboard_resultats.html'">Voir mon rapport →</button>
+      <button class="btn-rs-g" onclick="window.location.href='avenir_etude_tests.html'">Autres tests</button>
+    </div>`;
+  setTimeout(()=>{Object.keys(DIM_NAMES).forEach(k=>{const el=document.getElementById("rdf-"+k);if(el)el.style.width=dimP[k]+"%";});},200);
+  addHover();
+}
+addHover();
+</script>
+</body>
+</html>

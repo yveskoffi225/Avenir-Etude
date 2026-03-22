@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Avenir Étude — Leadership & Management</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    :root{--ink:#060B14;--ink-2:#0C1220;--ink-3:#111827;--gold:#D4A853;--gold-dim:#7A5E2A;--gold-10:rgba(212,168,83,.10);--ivory:#F2EDE4;--ivory-dim:#8A8278;--ivory-faint:#2E3545;--wire:rgba(242,237,228,.07);--wire-mid:rgba(242,237,228,.13);--wire-hi:rgba(242,237,228,.24);--green:#34C97A;--blue:#4F7AE8;--red:#E05A54;--orange:#F59E0B;--purple:#8B5CF6;--tc:#F59E0B;}
+    body{font-family:"Instrument Sans",sans-serif;background:var(--ink);color:var(--ivory);-webkit-font-smoothing:antialiased;cursor:none;min-height:100vh;display:flex;flex-direction:column;}
+    .ae-cursor{position:fixed;width:10px;height:10px;background:var(--gold);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);mix-blend-mode:screen;top:-100px;left:-100px;transition:width .18s,height .18s;}
+    .ae-cursor.hover{width:30px;height:30px;background:transparent;border:1.5px solid var(--gold);}
+    .top-bar{height:56px;border-bottom:1px solid var(--wire);background:rgba(6,11,20,.97);backdrop-filter:blur(16px);display:flex;align-items:center;padding:0 32px;gap:16px;position:sticky;top:0;z-index:200;flex-shrink:0;}
+    .tb-logo{font-family:"Bricolage Grotesque",sans-serif;font-size:15px;font-weight:800;color:var(--ivory);text-decoration:none;letter-spacing:-.03em;}
+    .tb-logo em{font-style:italic;color:var(--gold);}
+    .tb-back{font-size:11px;font-weight:600;color:var(--ivory-dim);text-decoration:none;padding:5px 12px;border:1px solid var(--wire-mid);border-radius:6px;flex-shrink:0;}
+    .tb-back:hover{border-color:var(--wire-hi);color:var(--ivory);}
+    .tb-prog-wrap{flex:1;display:flex;align-items:center;gap:10px;}
+    .tb-prog-track{flex:1;height:3px;background:var(--wire);border-radius:2px;}
+    .tb-prog-fill{height:100%;background:var(--tc);border-radius:2px;transition:width .4s ease;}
+    .tb-prog-pct{font-family:"Bricolage Grotesque",sans-serif;font-size:12px;font-weight:700;color:var(--tc);min-width:36px;text-align:right;}
+    .intro-screen{flex:1;display:flex;align-items:center;justify-content:center;padding:40px;}
+    .intro-card{max-width:640px;width:100%;background:var(--ink-2);border:1px solid var(--wire-mid);border-radius:20px;padding:40px;animation:fadeIn .5s ease;}
+    .intro-icon{font-size:48px;margin-bottom:14px;}
+    .intro-title{font-family:"Bricolage Grotesque",sans-serif;font-size:clamp(24px,4vw,34px);font-weight:800;color:var(--ivory);letter-spacing:-.04em;margin-bottom:8px;}
+    .intro-title em{font-style:italic;color:var(--tc);}
+    .intro-sub{font-size:14px;color:var(--ivory-dim);line-height:1.7;margin-bottom:20px;}
+    .dims-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
+    .dim-card{padding:12px 16px;background:var(--ink-3);border:1px solid var(--wire);border-radius:10px;}
+    .dim-icon{font-size:20px;margin-bottom:4px;}
+    .dim-name{font-size:13px;font-weight:600;color:var(--ivory);margin-bottom:2px;}
+    .dim-desc{font-size:11px;color:var(--ivory-dim);}
+    .intro-rules{display:flex;flex-direction:column;gap:8px;margin-bottom:24px;}
+    .intro-rule{display:flex;gap:10px;font-size:12px;color:var(--ivory-dim);}
+    .btn-start{width:100%;font-family:"Bricolage Grotesque",sans-serif;font-size:16px;font-weight:700;padding:15px;background:var(--tc);color:var(--ink);border:none;border-radius:12px;cursor:none;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:10px;}
+    .btn-start:hover{opacity:.9;transform:translateY(-2px);}
+    .test-screen{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 40px;overflow-y:auto;}
+    .q-card{width:100%;max-width:680px;}
+    .q-dim-badge{display:inline-flex;align-items:center;gap:8px;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:4px 14px;border-radius:20px;margin-bottom:14px;background:rgba(255,255,255,.06);color:var(--tc);border:1px solid rgba(255,255,255,.1);}
+    .q-num{font-size:11px;color:var(--ivory-dim);margin-bottom:8px;}
+    .q-situation{font-size:13px;color:var(--ivory-dim);line-height:1.7;margin-bottom:14px;padding:14px 18px;background:var(--ink-3);border:1px solid var(--wire);border-radius:10px;border-left:3px solid var(--tc);}
+    .q-text{font-family:"Bricolage Grotesque",sans-serif;font-size:clamp(17px,2.2vw,22px);font-weight:700;color:var(--ivory);letter-spacing:-.02em;line-height:1.3;margin-bottom:24px;}
+    .q-options{display:grid;grid-template-columns:1fr;gap:8px;}
+    .q-option{display:flex;align-items:flex-start;gap:14px;padding:14px 18px;border-radius:10px;border:1px solid var(--wire-mid);background:var(--ink-3);cursor:none;transition:all .2s;}
+    .q-option:hover{border-color:var(--tc);background:rgba(255,255,255,.04);}
+    .q-option.selected{border-color:var(--tc);background:rgba(255,255,255,.07);}
+    .q-option.selected .opt-key{background:var(--tc);border-color:var(--tc);color:var(--ink);}
+    .opt-key{width:28px;height:28px;border-radius:6px;border:1px solid var(--wire-mid);display:flex;align-items:center;justify-content:center;font-family:"Bricolage Grotesque",sans-serif;font-size:12px;font-weight:700;color:var(--ivory-dim);transition:all .2s;flex-shrink:0;margin-top:1px;}
+    .opt-text{font-size:13px;color:var(--ivory);line-height:1.45;}
+    .bottom-bar{height:64px;border-top:1px solid var(--wire);background:rgba(6,11,20,.97);display:flex;align-items:center;justify-content:space-between;padding:0 32px;flex-shrink:0;}
+    .bb-info{font-size:12px;color:var(--ivory-dim);}.bb-info strong{color:var(--ivory);}
+    .bb-actions{display:flex;gap:10px;}
+    .btn-prev{font-size:12px;font-weight:600;color:var(--ivory-dim);background:none;border:1px solid var(--wire-mid);border-radius:8px;padding:8px 14px;cursor:none;font-family:"Instrument Sans",sans-serif;transition:all .15s;}
+    .btn-prev:hover{border-color:var(--wire-hi);color:var(--ivory);}.btn-prev:disabled{opacity:.3;}
+    .btn-next{font-family:"Bricolage Grotesque",sans-serif;font-size:14px;font-weight:700;padding:10px 24px;background:var(--tc);color:var(--ink);border:none;border-radius:10px;cursor:none;transition:all .15s;}
+    .btn-next:hover{opacity:.9;}.btn-next:disabled{opacity:.4;}
+    .results-screen{flex:1;display:flex;align-items:center;justify-content:center;padding:40px;overflow-y:auto;}
+    .results-card{max-width:680px;width:100%;background:var(--ink-2);border:1px solid var(--wire-mid);border-radius:20px;padding:40px;animation:fadeIn .5s ease;}
+    .rs-title{font-family:"Bricolage Grotesque",sans-serif;font-size:clamp(22px,3vw,34px);font-weight:800;color:var(--ivory);letter-spacing:-.04em;margin-bottom:24px;}
+    .rs-title em{font-style:italic;color:var(--tc);}
+    .rs-global{text-align:center;padding:24px;background:var(--ink-3);border:1px solid var(--wire);border-radius:14px;margin-bottom:20px;}
+    .rs-score{font-family:"Bricolage Grotesque",sans-serif;font-size:56px;font-weight:800;letter-spacing:-.06em;color:var(--tc);}
+    .rs-score-lbl{font-size:13px;color:var(--ivory-dim);margin-top:4px;}
+    .rs-label{display:inline-block;font-family:"Bricolage Grotesque",sans-serif;font-size:18px;font-weight:800;padding:6px 20px;border-radius:6px;margin-top:8px;}
+    .rs-dims{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
+    .rs-dim{background:var(--ink-3);border:1px solid var(--wire);border-radius:10px;padding:14px;}
+    .rs-dim-icon{font-size:18px;margin-bottom:4px;}
+    .rs-dim-name{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ivory-faint);margin-bottom:6px;}
+    .rs-dim-val{font-family:"Bricolage Grotesque",sans-serif;font-size:20px;font-weight:800;margin-bottom:6px;}
+    .rs-dim-bar{height:3px;background:var(--ink-2);border-radius:2px;}
+    .rs-dim-fill{height:100%;border-radius:2px;transition:width 1s ease;}
+    .rs-advice{padding:16px 20px;border-radius:10px;margin-bottom:20px;font-size:13px;color:var(--ivory-dim);line-height:1.7;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);}
+    .rs-btns{display:flex;gap:10px;}
+    .btn-rs-p{flex:1;font-family:"Bricolage Grotesque",sans-serif;font-size:15px;font-weight:700;padding:14px;background:var(--gold);color:var(--ink);border:none;border-radius:10px;cursor:none;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:8px;}
+    .btn-rs-p:hover{background:#e0b55e;}
+    .btn-rs-g{padding:14px 20px;background:transparent;border:1px solid var(--wire-mid);border-radius:10px;font-size:13px;color:var(--ivory-dim);cursor:none;transition:all .15s;}
+    .btn-rs-g:hover{border-color:var(--wire-hi);color:var(--ivory);}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+    @media(max-width:768px){.top-bar,.bottom-bar{padding:0 16px;} .test-screen{padding:16px 20px;} .rs-dims{grid-template-columns:1fr;} .dims-grid{grid-template-columns:1fr;}}
+    ::-webkit-scrollbar{width:4px;} ::-webkit-scrollbar-track{background:var(--ink);} ::-webkit-scrollbar-thumb{background:var(--wire-mid);border-radius:2px;}
+  </style>
+</head>
+<body>
+<div class="ae-cursor" id="ae-cursor"></div>
+<div class="top-bar" id="top-bar" style="display:none;">
+  <a href="avenir_etude_homepage_v2.html" class="tb-logo">Avenir <em>Étude</em></a>
+  <a href="avenir_etude_tests.html" class="tb-back">← Portail tests</a>
+  <div class="tb-prog-wrap"><div class="tb-prog-track"><div class="tb-prog-fill" id="prog-fill" style="width:0%"></div></div><div class="tb-prog-pct" id="prog-pct">0%</div></div>
+</div>
+<div class="intro-screen" id="intro-screen">
+  <div class="intro-card">
+    <div class="intro-icon">👑</div>
+    <h1 class="intro-title"><em>Leadership & Management</em></h1>
+    <p class="intro-sub">30 situations managériales pour identifier ton style et tes compétences de gestion.</p>
+    <div class="dims-grid"><div class="dim-card"><div class="dim-icon">🎯</div><div class="dim-name">Vision</div><div class="dim-desc">Donner une direction claire</div></div><div class="dim-card"><div class="dim-icon">👥</div><div class="dim-name">Gestion</div><div class="dim-desc">Développer et motiver l'équipe</div></div><div class="dim-card"><div class="dim-icon">🔥</div><div class="dim-name">Décision</div><div class="dim-desc">Agir sous pression</div></div><div class="dim-card"><div class="dim-icon">🤝</div><div class="dim-name">Influence</div><div class="dim-desc">Convaincre sans autorité</div></div></div>
+    <div class="intro-rules">
+      <div class="intro-rule"><span>💡</span><span>Réponds selon ce que tu ferais vraiment, pas ce qui te semble "correct"</span></div>
+      <div class="intro-rule"><span>📊</span><span>Score sur 100 par dimension + profil personnalisé avec conseils</span></div>
+      <div class="intro-rule"><span>⏱</span><span>Pas de chrono — prends le temps de réfléchir</span></div>
+    </div>
+    <button class="btn-start" onclick="startTest()">Commencer ›</button>
+  </div>
+</div>
+<div class="test-screen" id="test-screen" style="display:none;"><div class="q-card" id="q-card"></div></div>
+<div class="bottom-bar" id="bottom-bar" style="display:none;">
+  <div class="bb-info">Question <strong id="q-num-lbl">1</strong> / <strong>30</strong></div>
+  <div class="bb-actions">
+    <button class="btn-prev" id="btn-prev" onclick="prevQ()" disabled>← Préc.</button>
+    <button class="btn-next" id="btn-next" onclick="nextQ()" disabled>Suivant →</button>
+  </div>
+</div>
+<div class="results-screen" id="results-screen" style="display:none;"><div class="results-card" id="results-card"></div></div>
+<script>
+const cur=document.getElementById("ae-cursor");
+document.addEventListener("mousemove",e=>{cur.style.left=e.clientX+"px";cur.style.top=e.clientY+"px";});
+document.addEventListener("mouseleave",()=>cur.style.opacity="0");
+document.addEventListener("mouseenter",()=>cur.style.opacity="1");
+function addHover(){document.querySelectorAll("a,button,.q-option,.dim-card").forEach(el=>{el.addEventListener("mouseenter",()=>cur.classList.add("hover"));el.addEventListener("mouseleave",()=>cur.classList.remove("hover"));});}
+const QUESTIONS=[{"dim": "V", "text": "Ta priorité avec ton équipe est d'abord de :", "opts": ["Respecter les délais", "Expliquer le sens de ce qu'on fait", "Maintenir l'harmonie", "Être reconnu·e"], "scores": [1, 3, 1, 0]}, {"dim": "V", "sit": "Tu prends en charge une équipe démotivée.", "text": "Ta première action :", "opts": ["Résoudre les problèmes immédiats", "Partager une vision inspirante", "Écouter chaque membre", "Instaurer de nouvelles règles"], "scores": [1, 3, 2, 0]}, {"dim": "V", "text": "Quand tu fixes des objectifs, tu :", "opts": ["Donnes des chiffres précis", "Expliques l'impact et le sens", "Laisses l'équipe choisir", "Appliques les objectifs reçus"], "scores": [1, 3, 2, 0]}, {"dim": "V", "text": "Face à un changement important, tu :", "opts": ["Appliques sans expliquer", "Expliques les raisons et la vision", "Consultes l'équipe avant", "Minimises pour réduire l'anxiété"], "scores": [0, 3, 2, 1]}, {"dim": "V", "text": "Tu démarres un projet difficile en :", "opts": ["Assignant les tâches", "Présentant la vision du résultat", "Demandant à chacun ce qu'il peut faire", "Préparant un plan détaillé"], "scores": [1, 3, 1, 2]}, {"dim": "G", "sit": "Un membre gère mal une tâche clé.", "text": "Tu :", "opts": ["Reprends la tâche toi-même", "Lui montres et le laisses corriger", "Identifies si c'est compétence ou motivation", "Alertes ta hiérarchie"], "scores": [0, 2, 3, 1]}, {"dim": "G", "text": "Pour développer ton équipe, tu investis dans :", "opts": ["La formation technique", "L'autonomie avec feedback régulier", "Les primes de performance", "Les réunions fréquentes"], "scores": [1, 3, 0, 1]}, {"dim": "G", "sit": "Deux membres sont en conflit ouvert.", "text": "Tu :", "opts": ["Les laisses régler ça entre eux", "Rencontres chacun puis les réunis", "Prends une décision arbitrale", "Alertes les RH"], "scores": [0, 3, 1, 0]}, {"dim": "G", "sit": "Tu délègues une tâche importante.", "text": "Tu choisis selon :", "opts": ["L'ancienneté", "Le temps disponible", "L'opportunité de croissance", "Le meilleur profil technique"], "scores": [0, 0, 3, 2]}, {"dim": "G", "text": "Quand quelqu'un fait un excellent travail, tu :", "opts": ["L'informes en privé", "Le félicites devant l'équipe en expliquant pourquoi", "Consignes dans son évaluation", "Rien — c'est normal"], "scores": [2, 3, 1, 0]}, {"dim": "D", "sit": "Tu décides mais manques d'informations.", "text": "Tu :", "opts": ["Attends d'avoir tout", "Décides avec ce que tu as et restes flexible", "Délègues la décision", "Consultes tout le monde"], "scores": [0, 3, 1, 1]}, {"dim": "D", "text": "Quand une décision s'avère mauvaise, tu :", "opts": ["L'assumes et corriges rapidement", "Identifies les responsabilités", "Minimises l'erreur", "Attends que ça se résolve"], "scores": [3, 1, 0, 0]}, {"dim": "D", "sit": "Ton équipe est en désaccord sur la direction.", "text": "Tu :", "opts": ["Décides seul·e pour gagner du temps", "Organises un vote", "Synthétises et proposes ta décision", "Cherches un consensus même long"], "scores": [1, 1, 3, 2]}, {"dim": "D", "text": "Face à une crise imprévue, tu :", "opts": ["Évalues avant d'agir", "Agis pour limiter les dégâts", "Informes ta hiérarchie en premier", "Réunis l'équipe pour décider"], "scores": [3, 2, 1, 1]}, {"dim": "D", "text": "Ton style de management préféré :", "opts": ["Instructions claires à suivre", "Cadre fixé + autonomie dans l'exécution", "Liberté totale", "Vérification à chaque étape"], "scores": [1, 3, 2, 0]}, {"dim": "I", "sit": "Tu dois convaincre l'équipe d'un process impopulaire.", "text": "Tu :", "opts": ["L'imposes par ton autorité", "Expliques les avantages concrets pour chacun", "Demandes comment le mettre en œuvre", "Attends que la nécessité s'impose"], "scores": [0, 2, 3, 1]}, {"dim": "I", "text": "Pour influencer sans autorité, tu t'appuies sur :", "opts": ["La logique et les arguments", "La confiance construite dans le temps", "La pression sociale", "L'autorité de ta hiérarchie"], "scores": [1, 3, 0, 0]}, {"dim": "I", "text": "Pour présenter une idée difficile, tu :", "opts": ["Prépares des données solides", "Identifies les objections et prépares tes réponses", "Présentes simplement et laisses parler", "Cherches des alliés clés avant la réunion"], "scores": [1, 2, 1, 3]}, {"dim": "I", "sit": "Un influent s'oppose à ton projet.", "text": "Tu :", "opts": ["L'affrontes en réunion", "Comprends ses objections en privé d'abord", "Escalades à ta hiérarchie", "Modifies ton projet pour intégrer ses préoccupations"], "scores": [1, 2, 0, 3]}, {"dim": "V", "text": "Un bon leader crée surtout :", "opts": ["Un contrôle rigoureux", "Les conditions pour que chacun performe", "Les meilleurs résultats", "Une disponibilité totale pour l'équipe"], "scores": [0, 3, 1, 1]}, {"dim": "G", "text": "Face à un feedback négatif sur ton management, tu :", "opts": ["Le prends personnellement", "L'analyses pour t'améliorer", "Le contestes si tu crois avoir raison", "L'ignores si ça vient d'un subordonné"], "scores": [0, 3, 1, 0]}, {"dim": "D", "text": "En matière de risque, tu es :", "opts": ["Très prudent·e", "Calculé·e — risques mesurés", "Audacieux/audacieuse", "Suiveur/suiveuse"], "scores": [1, 3, 2, 0]}, {"dim": "I", "text": "Quand ton équipe a une bonne idée, tu :", "opts": ["La valides et la mets en œuvre", "L'encourages à la présenter elle-même", "En prends crédit", "La soumets à ta hiérarchie"], "scores": [1, 3, 0, 0]}, {"dim": "V", "text": "La réussite d'un projet se mesure d'abord par :", "opts": ["Budget et délai", "L'impact réel", "La satisfaction de l'équipe", "La reconnaissance hiérarchique"], "scores": [1, 3, 2, 0]}, {"dim": "G", "text": "Tu préfères un collaborateur qui :", "opts": ["Exécute parfaitement les instructions", "Prend des initiatives et peut se tromper", "Pose beaucoup de questions avant d'agir", "Produit un travail moyen mais constant"], "scores": [1, 3, 1, 0]}, {"dim": "I", "sit": "Tu veux une culture de feedback dans l'équipe.", "text": "Tu commences par :", "opts": ["Annoncer la politique en réunion", "Toi-même demander du feedback à l'équipe en premier", "Former l'équipe aux techniques", "Imposer des sessions hebdomadaires"], "scores": [0, 3, 1, 1]}, {"dim": "G", "sit": "Un projet prend du retard à cause d'un sous-performant.", "text": "Tu :", "opts": ["Réassignes la tâche", "Comprends pourquoi il sous-performe", "Mets la pression pour rattraper", "Acceptes le retard"], "scores": [1, 3, 0, 0]}, {"dim": "I", "text": "Pour motiver sans augmentation de salaire :", "opts": ["Rappelles le devoir professionnel", "Connectes le travail à un sens plus grand et à leur développement", "Augmentes la flexibilité", "Menaces de conséquences"], "scores": [0, 3, 2, 0]}, {"dim": "D", "text": "Face à l'incertitude, ton équipe a besoin de toi pour :", "opts": ["Donner des certitudes", "Montrer que tu navigues avec confiance dans le flou", "Partager ton inquiétude pour être transparent·e", "Protéger l'équipe de l'info anxiogène"], "scores": [0, 3, 1, 0]}, {"dim": "V", "text": "Le leadership idéal en 2026 est :", "opts": ["Autoritaire et directif", "Inspirant et servant — le leader sert l'équipe", "Collégial — tout est collectif", "Adaptatif selon les situations"], "scores": [0, 2, 1, 3]}];
+const DIM_NAMES={"V": "Vision", "G": "Gestion d'équipe", "D": "Prise de décision", "I": "Influence"};
+const DIM_COLORS={"V": "#F59E0B", "G": "#4F7AE8", "D": "#E05A54", "I": "#34C97A"};
+const DIM_ICONS={"V": "🎯", "G": "👥", "D": "🔥", "I": "🤝"};
+let currentQ=0,answers=new Array(30).fill(null);
+function startTest(){document.getElementById("intro-screen").style.display="none";document.getElementById("test-screen").style.display="flex";document.getElementById("bottom-bar").style.display="flex";document.getElementById("top-bar").style.display="flex";renderQ();}
+function renderQ(){
+  const q=QUESTIONS[currentQ];
+  const pct=Math.round(answers.filter(a=>a!==null).length/30*100);
+  document.getElementById("prog-fill").style.width=pct+"%";
+  document.getElementById("prog-pct").textContent=pct+"%";
+  document.getElementById("q-num-lbl").textContent=currentQ+1;
+  document.getElementById("btn-prev").disabled=currentQ===0;
+  document.getElementById("btn-next").disabled=answers[currentQ]===null;
+  document.getElementById("q-card").innerHTML=`
+    <span class="q-dim-badge">${DIM_ICONS[q.dim]} ${DIM_NAMES[q.dim]}</span>
+    <div class="q-num">Question ${currentQ+1} / 30</div>
+    ${q.sit?`<div class="q-situation">📍 ${q.sit}</div>`:""}
+    <div class="q-text">${q.text}</div>
+    <div class="q-options">${q.opts.map((o,i)=>`
+    <div class="q-option ${answers[currentQ]===i?"selected":""}" onclick="selectOpt(${i})">
+      <div class="opt-key">${i+1}</div><div class="opt-text">${o}</div>
+    </div>`).join("")}</div>`;
+  addHover();
+}
+function selectOpt(idx){answers[currentQ]=idx;document.querySelectorAll(".q-option").forEach((o,i)=>o.classList.toggle("selected",i===idx));document.getElementById("btn-next").disabled=false;if(currentQ<30-1)setTimeout(()=>nextQ(),400);else setTimeout(()=>showResults(),400);}
+function nextQ(){if(currentQ<30-1){currentQ++;renderQ();}else showResults();}
+function prevQ(){if(currentQ>0){currentQ--;renderQ();}}
+function showResults(){
+  document.getElementById("test-screen").style.display="none";
+  document.getElementById("bottom-bar").style.display="none";
+  document.getElementById("results-screen").style.display="flex";
+  const dimS={},dimC={};
+  Object.keys(DIM_NAMES).forEach(k=>{dimS[k]=0;dimC[k]=0;});
+  QUESTIONS.forEach((q,i)=>{if(answers[i]!==null){dimS[q.dim]+=q.scores[answers[i]];dimC[q.dim]+=3;}});
+  const dimP={};
+  Object.keys(dimS).forEach(k=>dimP[k]=dimC[k]>0?Math.round(dimS[k]/dimC[k]*100):0);
+  const global=Math.round(Object.values(dimP).reduce((a,b)=>a+b,0)/Object.keys(dimP).length);
+  const profile=JSON.parse(sessionStorage.getItem("ae_profile")||"{}");
+  sessionStorage.setItem("ae_profile",JSON.stringify({...profile,["test_leadership_score"]:global,["test_leadership_dims"]:dimP,["test_leadership_date"]:new Date().toISOString()}));
+  let label="",labelColor="",advice="";
+  if(global>=80){label="Excellent";labelColor="var(--green)";advice="Résultat exceptionnel ! Tu es dans le top 10% sur cette dimension."}
+  else if(global>=60){label="Bon niveau";labelColor="var(--blue)";advice="Bon niveau avec des axes d'amélioration identifiés. Continue à pratiquer."}
+  else if(global>=40){label="En développement";labelColor="var(--orange)";advice="Ces compétences peuvent se développer avec de la pratique consciente."}
+  else{label="À renforcer";labelColor="var(--red)";advice="Ces compétences sont fondamentales. Identifie les dimensions les plus faibles et commence par là."}
+  document.getElementById("results-card").innerHTML=`
+    <div class="rs-title">Résultats <em>Leadership & Management</em></div>
+    <div class="rs-global">
+      <div class="rs-score">${global}</div>
+      <div class="rs-score-lbl">Score global sur 100</div>
+      <div class="rs-label" style="background:${labelColor}22;color:${labelColor};">${label}</div>
+    </div>
+    <div class="rs-dims">${Object.entries(DIM_NAMES).map(([k,name])=>`
+    <div class="rs-dim">
+      <div class="rs-dim-icon">${DIM_ICONS[k]}</div>
+      <div class="rs-dim-name">${name}</div>
+      <div class="rs-dim-val" style="color:${DIM_COLORS[k]};">${dimP[k]}/100</div>
+      <div class="rs-dim-bar"><div class="rs-dim-fill" id="rdf-${k}" style="width:0%;background:${DIM_COLORS[k]};"></div></div>
+    </div>`).join("")}</div>
+    <div class="rs-advice">💡 ${advice}</div>
+    <div class="rs-btns">
+      <button class="btn-rs-p" onclick="window.location.href='avenir_etude_dashboard_resultats.html'">Voir mon rapport →</button>
+      <button class="btn-rs-g" onclick="window.location.href='avenir_etude_tests.html'">Autres tests</button>
+    </div>`;
+  setTimeout(()=>{Object.keys(DIM_NAMES).forEach(k=>{const el=document.getElementById("rdf-"+k);if(el)el.style.width=dimP[k]+"%";});},200);
+  addHover();
+}
+addHover();
+</script>
+</body>
+</html>

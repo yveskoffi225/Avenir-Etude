@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Avenir Étude — Intelligence Émotionnelle</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    :root{--ink:#060B14;--ink-2:#0C1220;--ink-3:#111827;--gold:#D4A853;--gold-dim:#7A5E2A;--gold-10:rgba(212,168,83,.10);--ivory:#F2EDE4;--ivory-dim:#8A8278;--ivory-faint:#2E3545;--wire:rgba(242,237,228,.07);--wire-mid:rgba(242,237,228,.13);--wire-hi:rgba(242,237,228,.24);--green:#34C97A;--blue:#4F7AE8;--red:#E05A54;--orange:#F59E0B;--purple:#8B5CF6;}
+    body{font-family:"Instrument Sans",sans-serif;background:var(--ink);color:var(--ivory);-webkit-font-smoothing:antialiased;cursor:none;min-height:100vh;display:flex;flex-direction:column;}
+    .ae-cursor{position:fixed;width:10px;height:10px;background:var(--gold);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);mix-blend-mode:screen;top:-100px;left:-100px;transition:width .18s,height .18s;}
+    .ae-cursor.hover{width:30px;height:30px;background:transparent;border:1.5px solid var(--gold);}
+    .top-bar{height:56px;border-bottom:1px solid var(--wire);background:rgba(6,11,20,.97);backdrop-filter:blur(16px);display:flex;align-items:center;padding:0 32px;gap:16px;position:sticky;top:0;z-index:200;flex-shrink:0;}
+    .tb-logo{font-family:"Bricolage Grotesque",sans-serif;font-size:15px;font-weight:800;color:var(--ivory);text-decoration:none;letter-spacing:-.03em;}
+    .tb-logo em{font-style:italic;color:var(--gold);}
+    .tb-back{font-size:11px;font-weight:600;color:var(--ivory-dim);text-decoration:none;padding:5px 12px;border:1px solid var(--wire-mid);border-radius:6px;transition:all .15s;flex-shrink:0;}
+    .tb-back:hover{border-color:var(--wire-hi);color:var(--ivory);}
+    .tb-prog-wrap{flex:1;display:flex;align-items:center;gap:10px;}
+    .tb-prog-track{flex:1;height:3px;background:var(--wire);border-radius:2px;}
+    .tb-prog-fill{height:100%;background:var(--purple);border-radius:2px;transition:width .4s ease;}
+    .tb-prog-pct{font-family:"Bricolage Grotesque",sans-serif;font-size:12px;font-weight:700;color:var(--purple);min-width:36px;text-align:right;}
+    .intro-screen{flex:1;display:flex;align-items:center;justify-content:center;padding:40px;}
+    .intro-card{max-width:640px;width:100%;background:var(--ink-2);border:1px solid var(--wire-mid);border-radius:20px;padding:40px;}
+    .intro-icon{font-size:48px;margin-bottom:14px;}
+    .intro-title{font-family:"Bricolage Grotesque",sans-serif;font-size:clamp(24px,4vw,34px);font-weight:800;color:var(--ivory);letter-spacing:-.04em;margin-bottom:8px;}
+    .intro-title em{font-style:italic;color:var(--purple);}
+    .intro-sub{font-size:14px;color:var(--ivory-dim);line-height:1.7;margin-bottom:20px;}
+    .dims-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
+    .dim-card{padding:12px 16px;background:var(--ink-3);border:1px solid var(--wire);border-radius:10px;}
+    .dim-icon{font-size:20px;margin-bottom:4px;}
+    .dim-name{font-size:13px;font-weight:600;color:var(--ivory);margin-bottom:2px;}
+    .dim-desc{font-size:11px;color:var(--ivory-dim);}
+    .intro-rules{display:flex;flex-direction:column;gap:8px;margin-bottom:24px;}
+    .intro-rule{display:flex;gap:10px;font-size:12px;color:var(--ivory-dim);}
+    .btn-start{width:100%;font-family:"Bricolage Grotesque",sans-serif;font-size:16px;font-weight:700;padding:15px;background:var(--purple);color:#fff;border:none;border-radius:12px;cursor:none;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:10px;}
+    .btn-start:hover{background:#7c4fe8;transform:translateY(-2px);}
+    .test-screen{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 40px;overflow-y:auto;}
+    .q-card{width:100%;max-width:680px;}
+    .q-dim-badge{display:inline-flex;align-items:center;gap:8px;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:4px 14px;border-radius:20px;margin-bottom:14px;background:rgba(139,92,246,.12);color:var(--purple);border:1px solid rgba(139,92,246,.2);}
+    .q-num{font-size:11px;color:var(--ivory-dim);margin-bottom:8px;}
+    .q-situation{font-size:13px;color:var(--ivory-dim);line-height:1.7;margin-bottom:14px;padding:14px 18px;background:var(--ink-3);border:1px solid var(--wire);border-radius:10px;border-left:3px solid var(--purple);}
+    .q-text{font-family:"Bricolage Grotesque",sans-serif;font-size:clamp(17px,2.2vw,22px);font-weight:700;color:var(--ivory);letter-spacing:-.02em;line-height:1.3;margin-bottom:24px;}
+    .scale-note{font-size:12px;color:var(--ivory-faint);margin-bottom:14px;}
+    .q-options{display:grid;grid-template-columns:1fr;gap:8px;}
+    .q-option{display:flex;align-items:center;gap:14px;padding:14px 18px;border-radius:10px;border:1px solid var(--wire-mid);background:var(--ink-3);cursor:none;transition:all .2s;}
+    .q-option:hover{border-color:var(--purple);background:rgba(139,92,246,.06);}
+    .q-option.selected{border-color:var(--purple);background:rgba(139,92,246,.12);}
+    .q-option.selected .opt-key{background:var(--purple);border-color:var(--purple);color:#fff;}
+    .opt-key{width:28px;height:28px;border-radius:6px;border:1px solid var(--wire-mid);display:flex;align-items:center;justify-content:center;font-family:"Bricolage Grotesque",sans-serif;font-size:12px;font-weight:700;color:var(--ivory-dim);transition:all .2s;flex-shrink:0;}
+    .opt-text{font-size:13px;color:var(--ivory);line-height:1.45;}
+    .bottom-bar{height:64px;border-top:1px solid var(--wire);background:rgba(6,11,20,.97);display:flex;align-items:center;justify-content:space-between;padding:0 32px;flex-shrink:0;}
+    .bb-info{font-size:12px;color:var(--ivory-dim);}
+    .bb-info strong{color:var(--ivory);}
+    .bb-actions{display:flex;gap:10px;}
+    .btn-prev{font-size:12px;font-weight:600;color:var(--ivory-dim);background:none;border:1px solid var(--wire-mid);border-radius:8px;padding:8px 14px;cursor:none;font-family:"Instrument Sans",sans-serif;transition:all .15s;}
+    .btn-prev:hover{border-color:var(--wire-hi);color:var(--ivory);}
+    .btn-prev:disabled{opacity:.3;}
+    .btn-next{font-family:"Bricolage Grotesque",sans-serif;font-size:14px;font-weight:700;padding:10px 24px;background:var(--purple);color:#fff;border:none;border-radius:10px;cursor:none;transition:all .15s;display:flex;align-items:center;gap:8px;}
+    .btn-next:hover{background:#7c4fe8;}
+    .btn-next:disabled{opacity:.4;}
+    .results-screen{flex:1;display:flex;align-items:center;justify-content:center;padding:40px;overflow-y:auto;}
+    .results-card{max-width:680px;width:100%;background:var(--ink-2);border:1px solid var(--wire-mid);border-radius:20px;padding:40px;}
+    .rs-title{font-family:"Bricolage Grotesque",sans-serif;font-size:clamp(22px,3vw,34px);font-weight:800;color:var(--ivory);letter-spacing:-.04em;margin-bottom:24px;}
+    .rs-title em{font-style:italic;color:var(--purple);}
+    .rs-global{text-align:center;padding:24px;background:var(--ink-3);border:1px solid var(--wire);border-radius:14px;margin-bottom:20px;}
+    .rs-score{font-family:"Bricolage Grotesque",sans-serif;font-size:56px;font-weight:800;letter-spacing:-.06em;color:var(--purple);}
+    .rs-score-lbl{font-size:13px;color:var(--ivory-dim);margin-top:4px;}
+    .rs-ie-label{display:inline-block;font-family:"Bricolage Grotesque",sans-serif;font-size:18px;font-weight:800;padding:6px 20px;border-radius:6px;margin-top:8px;}
+    .rs-dims{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
+    .rs-dim{background:var(--ink-3);border:1px solid var(--wire);border-radius:10px;padding:14px;}
+    .rs-dim-icon{font-size:18px;margin-bottom:4px;}
+    .rs-dim-name{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ivory-faint);margin-bottom:6px;}
+    .rs-dim-val{font-family:"Bricolage Grotesque",sans-serif;font-size:20px;font-weight:800;margin-bottom:6px;}
+    .rs-dim-bar{height:3px;background:var(--ink-2);border-radius:2px;}
+    .rs-dim-fill{height:100%;border-radius:2px;transition:width 1s ease;}
+    .rs-advice{padding:16px 20px;background:rgba(139,92,246,.08);border:1px solid rgba(139,92,246,.2);border-radius:10px;margin-bottom:20px;font-size:13px;color:var(--ivory-dim);line-height:1.7;}
+    .rs-btns{display:flex;gap:10px;}
+    .btn-rs-p{flex:1;font-family:"Bricolage Grotesque",sans-serif;font-size:15px;font-weight:700;padding:14px;background:var(--gold);color:var(--ink);border:none;border-radius:10px;cursor:none;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:8px;}
+    .btn-rs-p:hover{background:#e0b55e;}
+    .btn-rs-g{padding:14px 20px;background:transparent;border:1px solid var(--wire-mid);border-radius:10px;font-size:13px;color:var(--ivory-dim);cursor:none;transition:all .15s;}
+    .btn-rs-g:hover{border-color:var(--wire-hi);color:var(--ivory);}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+    @media(max-width:768px){.top-bar,.bottom-bar{padding:0 16px;} .test-screen{padding:16px 20px;} .rs-dims{grid-template-columns:1fr;} .dims-grid{grid-template-columns:1fr;}}
+    ::-webkit-scrollbar{width:4px;} ::-webkit-scrollbar-track{background:var(--ink);} ::-webkit-scrollbar-thumb{background:var(--wire-mid);border-radius:2px;}
+  </style>
+</head>
+<body>
+<div class="ae-cursor" id="ae-cursor"></div>
+<div class="top-bar" id="top-bar" style="display:none;">
+  <a href="avenir_etude_homepage_v2.html" class="tb-logo">Avenir <em>Étude</em></a>
+  <a href="avenir_etude_tests.html" class="tb-back">← Portail tests</a>
+  <div class="tb-prog-wrap"><div class="tb-prog-track"><div class="tb-prog-fill" id="prog-fill" style="width:0%"></div></div><div class="tb-prog-pct" id="prog-pct">0%</div></div>
+</div>
+
+<div class="intro-screen" id="intro-screen">
+  <div class="intro-card" style="animation:fadeIn .5s ease;">
+    <div class="intro-icon">💜</div>
+    <h1 class="intro-title">Intelligence <em>Émotionnelle</em></h1>
+    <p class="intro-sub">40 situations du quotidien professionnel ivoirien pour mesurer tes 4 composantes d'IE. Pas de bonnes ou mauvaises réponses — réponds sincèrement.</p>
+    <div class="dims-grid">
+      <div class="dim-card"><div class="dim-icon">🧭</div><div class="dim-name">Conscience de soi</div><div class="dim-desc">Reconnaître ses propres émotions</div></div>
+      <div class="dim-card"><div class="dim-icon">🎯</div><div class="dim-name">Maîtrise de soi</div><div class="dim-desc">Gérer ses réactions émotionnelles</div></div>
+      <div class="dim-card"><div class="dim-icon">🤝</div><div class="dim-name">Empathie</div><div class="dim-desc">Comprendre les émotions des autres</div></div>
+      <div class="dim-card"><div class="dim-icon">🌐</div><div class="dim-name">Compétences sociales</div><div class="dim-desc">Gérer les relations et conflits</div></div>
+    </div>
+    <div class="intro-rules">
+      <div class="intro-rule"><span>💜</span><span>Réponds selon ce que tu ferais <strong style="color:var(--ivory);">vraiment</strong>, pas ce qui te semble "bien"</span></div>
+      <div class="intro-rule"><span>⏱</span><span>Pas de chrono — prends le temps de réfléchir à chaque situation</span></div>
+      <div class="intro-rule"><span>📊</span><span>Score sur 100 + profil IE détaillé avec conseils personnalisés</span></div>
+    </div>
+    <button class="btn-start" onclick="startTest()">Commencer <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+  </div>
+</div>
+
+<div class="test-screen" id="test-screen" style="display:none;">
+  <div class="q-card" id="q-card"></div>
+</div>
+<div class="bottom-bar" id="bottom-bar" style="display:none;">
+  <div class="bb-info">Question <strong id="q-num-lbl">1</strong> / <strong>40</strong></div>
+  <div class="bb-actions">
+    <button class="btn-prev" id="btn-prev" onclick="prevQ()" disabled>← Précédent</button>
+    <button class="btn-next" id="btn-next" onclick="nextQ()" disabled>Suivant →</button>
+  </div>
+</div>
+<div class="results-screen" id="results-screen" style="display:none;">
+  <div class="results-card" style="animation:fadeIn .5s ease;" id="results-card"></div>
+</div>
+
+<script>
+const cur=document.getElementById("ae-cursor");
+document.addEventListener("mousemove",e=>{cur.style.left=e.clientX+"px";cur.style.top=e.clientY+"px";});
+document.addEventListener("mouseleave",()=>cur.style.opacity="0");
+document.addEventListener("mouseenter",()=>cur.style.opacity="1");
+function addHover(){document.querySelectorAll("a,button,.q-option,.dim-card").forEach(el=>{el.addEventListener("mouseenter",()=>cur.classList.add("hover"));el.addEventListener("mouseleave",()=>cur.classList.remove("hover"));});}
+
+// dim: CS=Conscience de soi, MS=Maîtrise de soi, E=Empathie, S=Social
+// score: 0-3 (3=haute IE sur cette question)
+const QUESTIONS=[
+  {dim:"CS",sit:"Tu termines une présentation importante devant toute l'équipe. Le directeur te fait signe mais ne dit rien.",text:"Que ressens-tu immédiatement ?",opts:["Rien, j'attends de voir","De l'anxiété — je pense que j'ai mal fait","Je me demande ce qu'il a pensé mais reste calme","Je suis confiant·e et curieux/curieuse de son retour"],scores:[1,0,2,3]},
+  {dim:"CS",sit:"Un collègue te critique devant toute l'équipe pendant une réunion.",text:"Quelle est ta réaction intérieure immédiate ?",opts:["La colère — c'est humiliant","Le calme — les critiques sont utiles","La honte — peut-être a-t-il raison","L'envie de lui répondre fermement"],scores:[0,3,1,2]},
+  {dim:"CS",sit:"Tu reçois une promotion inattendue.",text:"Comment décris-tu ta réaction émotionnelle ?",opts:["Euphorie totale — je crie victoire","Joie mêlée d'inquiétude — est-ce que je serai à la hauteur ?","Surprise neutre — ça ne change rien","Fierté mais aussi pression de performer"],scores:[1,3,0,2]},
+  {dim:"CS",text:"Quand tu commets une erreur importante au travail, tu ressens généralement :",opts:["Une honte profonde pendant plusieurs jours","De la culpabilité passagère puis tu passes à l'action","Rien de particulier — tout le monde fait des erreurs","De la frustration contre toi-même qui te démotive"],scores:[0,3,2,1]},
+  {dim:"CS",text:"Tu remarques que ta motivation baisse depuis quelques semaines. Tu :",opts:["Continues quand même sans t'interroger","Identifies les raisons précises de ce manque d'enthousiasme","Attends que ça passe","Te forces à travailler plus pour compenser"],scores:[0,3,1,0]},
+  {dim:"CS",sit:"En pleine réunion, tu réalises que tu n'as pas bien préparé ton sujet.",text:"Que se passe-t-il en toi ?",opts:["Panique totale — tu perds tes moyens","Légère nervosité mais tu improvises avec ce que tu sais","Tu fais semblant d'être prêt·e","Tu admets que tu as besoin d'un moment"],scores:[0,3,1,2]},
+  {dim:"CS",text:"Après une journée difficile, tu sais généralement :",opts:["Que quelque chose n'allait pas mais tu ne sais pas quoi","Précisément quelle émotion a dominé ta journée et pourquoi","Rien — tu n'analyses pas tes émotions","Que tu es stressé·e mais tu ne sais pas gérer"],scores:[1,3,0,0]},
+  {dim:"CS",text:"Face à un conflit avec un supérieur, tu te perçois plutôt comme :",opts:["Quelqu'un qui évite le conflit à tout prix","Quelqu'un qui défend ses positions avec calme et respect","Quelqu'un qui réagit vivement sur le moment","Quelqu'un qui obéit par défaut"],scores:[1,3,0,0]},
+  {dim:"MS",sit:"Tu reçois un email agressif d'un client mécontent à 18h.",text:"Quelle est ta première réaction ?",opts:["Tu réponds immédiatement avec la même énergie","Tu réponds le soir après t'être calmé·e","Tu attends le lendemain matin pour répondre posément","Tu ignores l'email"],scores:[0,2,3,0]},
+  {dim:"MS",text:"Quand tu es en colère, tu :",opts:["Exprimes ta colère directement et immédiatement","Prends du recul, identifies la cause et exprimes-la calmement","Gardes tout pour toi et fais semblant d'aller bien","Cherches quelqu'un à qui te confier immédiatement"],scores:[0,3,1,1]},
+  {dim:"MS",sit:"Un projet sur lequel tu travailles depuis 3 mois est annulé sans explication.",text:"Comment réagis-tu ?",opts:["Tu exprimes ta frustration auprès de l'équipe","Tu cherches à comprendre les raisons avant de réagir","Tu démissionnes intérieurement et perds toute motivation","Tu acceptes sans questionner"],scores:[1,3,0,0]},
+  {dim:"MS",text:"Face à une situation de stress intense (examen, présentation), tu :",opts:["Paniques et as du mal à te concentrer","Ressens du stress mais le canalises en préparation","Nies le stress et te dis que tout va bien","T'en remets entièrement à la chance"],scores:[0,3,1,0]},
+  {dim:"MS",text:"Tu as dit quelque chose de blessant à un collègue sans le vouloir. Tu :",opts:["Attends qu'il l'oublie","T'excuses sincèrement dès que tu t'en rends compte","Justifies ce que tu as dit","Évites la personne pendant quelque temps"],scores:[1,3,0,0]},
+  {dim:"MS",sit:"Le directeur change une décision que tu avais déjà annoncée à l'équipe.",text:"Tu ressens une gêne. Comment la gères-tu ?",opts:["Tu exprimes ta frustration au directeur en privé calmement","Tu te plains à tes collègues","Tu acceptes sans dire un mot","Tu remontes la gêne de l'équipe au directeur de façon constructive"],scores:[2,0,1,3]},
+  {dim:"MS",text:"Quand quelqu'un t'interrompt constamment dans une réunion, tu :",opts:["Te tais et perds le fil","Attends un moment et reprends poliment la parole","Perds ta patience et le signales sèchement","Demandes poliment à ne pas être interrompu·e"],scores:[0,2,0,3]},
+  {dim:"MS",text:"Pour gérer une période de travail intense (fin de mois, audit), tu :",opts:["Travailles 16h/jour sans pause jusqu'à la fin","Planifies ton travail et maintiens des pauses régulières","Attends que la pression passe","Demandes immédiatement de l'aide sans essayer"],scores:[0,3,1,1]},
+  {dim:"E",sit:"Un collègue que tu appréciates rate une présentation importante.",text:"Quelle est ta réaction naturelle ?",opts:["Tu lui dis que ça arrive à tout le monde","Tu observes son état émotionnel avant de lui parler","Tu lui donnes immédiatement des conseils pour s'améliorer","Tu n'interviens pas — c'est ses affaires"],scores:[1,3,2,0]},
+  {dim:"E",text:"Tu remarques qu'un collègue est distant depuis quelques jours. Tu :",opts:["Ne fais rien — il viendra te voir s'il a un problème","Lui demandes directement s'il y a un problème","Lui fais savoir discrètement que tu es là s'il a besoin","Suppositions que tu as fait quelque chose de mal"],scores:[0,2,3,0]},
+  {dim:"E",sit:"Un client exprime son mécontentement de façon agressive.",text:"Tu perçois derrière sa colère :",opts:["De la mauvaise foi et de l'impolitesse","Une frustration légitime mal exprimée","Un manque de respect à gérer fermement","De la manipulation pour obtenir plus"],scores:[0,3,1,0]},
+  {dim:"E",text:"Quand quelqu'un te parle d'un problème personnel, tu :",opts:["Cherches immédiatement une solution","Écoutes sans interrompre et valides ce qu'il ressent d'abord","Partages un problème similaire pour montrer que tu comprends","Cherches à relativiser rapidement pour l'aider"],scores:[1,3,1,0]},
+  {dim:"E",sit:"Lors d'un recrutement, tu dois choisir entre deux candidats de niveau égal.",text:"Tu accordes de l'importance à :",opts:["Les diplômes et l'expérience uniquement","La façon dont chacun réagit aux questions difficiles","La fluidité et la confiance dans leur communication","Le ressenti de l'équipe après les entretiens"],scores:[0,2,1,3]},
+  {dim:"E",text:"Face à un collègue qui n'est jamais satisfait, tu :",opts:["L'évites autant que possible","Essaies de comprendre ce qui le rend insatisfait","Te demandes si tu peux faire quelque chose","Lui fais remarquer son comportement négatif"],scores:[0,3,2,1]},
+  {dim:"E",sit:"Ton manager est clairement sous pression mais ne le dit pas.",text:"Tu :",opts:["Attends qu'il te sollicite","Lui demandes si tu peux soulager une partie de sa charge","Évites de lui apporter de nouveaux problèmes","Lui dis ouvertement que tu vois qu'il est sous pression"],scores:[0,3,2,2]},
+  {dim:"E",text:"Quand un collègue réussit quelque chose d'important, tu :",opts:["Félicites sincèrement et t'en réjouis","Félicites par politesse","Compares avec tes propres accomplissements","Ressens une légère jalousie mais la gardes pour toi"],scores:[3,1,0,1]},
+  {dim:"S",sit:"Deux membres de ton équipe sont en conflit ouvert depuis une semaine.",text:"En tant que collègue, tu :",opts:["N'interviens pas — ce n'est pas ton rôle","Invites séparément chacun à s'exprimer","Essaies de les réconcilier directement lors d'une réunion","Signales le conflit au manager"],scores:[0,3,2,1]},
+  {dim:"S",text:"Pour convaincre ton équipe d'une nouvelle idée, tu :",opts:["Expliques les bénéfices rationnellement","Écoutes d'abord leurs préoccupations avant de présenter l'idée","Utilises l'autorité du manager pour l'imposer","Trouves des alliés clés avant de présenter à tout le groupe"],scores:[1,2,0,3]},
+  {dim:"S",sit:"Lors d'une réunion, tu remarques que personne n'ose contredire le manager.",text:"Tu :",opts:["Fais pareil — ce n'est pas utile de créer des tensions","Exprimes discrètement une opinion différente de façon constructive","Attends la réunion informelle pour exprimer les réserves","Soulèves la question ouvertement en réunion"],scores:[0,2,1,3]},
+  {dim:"S",text:"Dans un groupe, tu prends naturellement le rôle de :",opts:["Celui qui suit les décisions des autres","Celui qui facilite la discussion et fait le lien entre les avis","Celui qui structure et décide rapidement","Celui qui apporte les idées créatives"],scores:[0,3,2,2]},
+  {dim:"S",sit:"Un client important demande quelque chose que tu ne peux pas faire.",text:"Tu lui réponds :",opts:["Non directement","Que tu vas explorer les options possibles et revenir vers lui","Que tu vas en parler à ton supérieur","Que c'est impossible selon les règles de l'entreprise"],scores:[0,3,1,0]},
+  {dim:"S",text:"Pour présenter une idée complexe à des non-spécialistes, tu :",opts:["Utilises le vocabulaire technique habituel","Adaptes ton langage et trouves des exemples concrets","Simplifies au maximum en risquant de perdre de l'information","Prépares un support détaillé et le lis"],scores:[0,3,1,0]},
+  {dim:"S",sit:"Tu dois donner un feedback négatif à un collègue sur son travail.",text:"Tu commences par :",opts:["Aller droit au but — le problème doit être clair","Reconnaître les points positifs avant d'aborder les axes d'amélioration","Poser des questions pour qu'il identifie lui-même le problème","Demander à quelqu'un d'autre de le faire"],scores:[1,2,3,0]},
+  {dim:"S",sit:"Tu intègres une nouvelle équipe avec une culture différente.",text:"Tu :",opts:["Attends d'être intégré·e naturellement","Observes les dynamiques et adaptes progressivement ton style","Imposes d'emblée ta façon de travailler","Restes discret·e et évites de prendre des initiatives au début"],scores:[1,3,0,0]},
+  {dim:"CS",text:"Quand tu es en désaccord avec une décision, tu :",opts:["Exécutes sans dire un mot","Exprimes ton désaccord de façon constructive au bon moment","Te plains à tes collègues","Bloques passivement la mise en œuvre"],scores:[1,3,0,0]},
+  {dim:"MS",text:"Lors d'une longue réunion inefficace, tu :",opts:["Patientes silencieusement jusqu'à la fin","Proposes une façon de rendre la réunion plus productive","Décroches mentalement","Exprimes ton impatience ouvertement"],scores:[1,3,0,0]},
+  {dim:"E",sit:"Un nouveau collègue fait des erreurs répétées.",text:"Tu penses d'abord à :",opts:["Signaler ses erreurs au manager","Comprendre pourquoi il commet ces erreurs","Lui offrir ton aide discrètement","Te demander comment ça impacte ton propre travail"],scores:[0,3,2,0]},
+  {dim:"S",text:"En négociation, ton approche naturelle est de :",opts:["Défendre fermement ta position jusqu'au bout","Chercher un accord où les deux parties gagnent","Céder rapidement pour éviter le conflit","Attendre que l'autre partie fasse le premier geste"],scores:[1,3,0,0]},
+  {dim:"CS",sit:"Tu reçois un compliment sincère sur ton travail.",text:"Ta réaction intérieure est :",opts:["Méfiance — qu'est-ce qu'il veut ?","Joie et reconnaissance sincère","Gêne — tu ne sais pas comment réagir","Doute — tu penses que tu ne le mérites pas vraiment"],scores:[0,3,1,0]},
+  {dim:"MS",text:"Quand tu te trompes lourdement, tu :",opts:["Rumines longtemps sur ton erreur","Analyses ce qui s'est passé, corriges et passes à autre chose","Minimises l'erreur pour ne pas te sentir mal","Cherches quelqu'un à qui attribuer une part de responsabilité"],scores:[0,3,1,0]},
+  {dim:"E",sit:"Ton équipe est démoralisée après un échec collectif.",text:"En tant que membre, tu :",opts:["Attends que le moral remonte naturellement","Rappelles ce que l'équipe a bien fait et ce qui peut être amélioré","Évites de parler de l'échec pour ne pas aggraver la situation","Analyses immédiatement les causes de l'échec"],scores:[0,3,1,2]},
+  {dim:"S",text:"Pour créer une bonne ambiance dans une équipe sous pression, tu :",opts:["Organisés une sortie après le projet","Reconnais régulièrement les efforts individuels pendant le projet","Fais des blagues pour détendre l'atmosphère","Attends que le projet soit terminé pour souffler"],scores:[1,3,1,0]},
+];
+
+const DIM_NAMES={CS:"Conscience de soi",MS:"Maîtrise de soi",E:"Empathie",S:"Compétences sociales"};
+const DIM_COLORS={CS:"var(--blue)",MS:"var(--orange)",E:"var(--green)",S:"var(--purple)"};
+const DIM_ICONS={CS:"🧭",MS:"🎯",E:"🤝",S:"🌐"};
+let currentQ=0,answers=new Array(40).fill(null);
+
+function startTest(){
+  document.getElementById("intro-screen").style.display="none";
+  document.getElementById("test-screen").style.display="flex";
+  document.getElementById("bottom-bar").style.display="flex";
+  document.getElementById("top-bar").style.display="flex";
+  renderQ();
+}
+
+function renderQ(){
+  const q=QUESTIONS[currentQ];
+  const pct=Math.round(answers.filter(a=>a!==null).length/40*100);
+  document.getElementById("prog-fill").style.width=pct+"%";
+  document.getElementById("prog-pct").textContent=pct+"%";
+  document.getElementById("q-num-lbl").textContent=currentQ+1;
+  document.getElementById("btn-prev").disabled=currentQ===0;
+  document.getElementById("btn-next").disabled=answers[currentQ]===null;
+
+  document.getElementById("q-card").innerHTML=`
+    <span class="q-dim-badge">${DIM_ICONS[q.dim]} ${DIM_NAMES[q.dim]}</span>
+    <div class="q-num">Question ${currentQ+1} / 40</div>
+    ${q.sit?`<div class="q-situation">📍 ${q.sit}</div>`:""}
+    <div class="q-text">${q.text}</div>
+    <div class="q-options">
+      ${q.opts.map((o,i)=>`
+      <div class="q-option ${answers[currentQ]===i?"selected":""}" onclick="selectOpt(${i})">
+        <div class="opt-key">${i+1}</div>
+        <div class="opt-text">${o}</div>
+      </div>`).join("")}
+    </div>`;
+  addHover();
+}
+
+function selectOpt(idx){
+  answers[currentQ]=idx;
+  document.querySelectorAll(".q-option").forEach((o,i)=>o.classList.toggle("selected",i===idx));
+  document.getElementById("btn-next").disabled=false;
+  if(currentQ<39) setTimeout(()=>nextQ(),400);
+  else setTimeout(()=>showResults(),400);
+}
+
+function nextQ(){if(currentQ<39){currentQ++;renderQ();}else showResults();}
+function prevQ(){if(currentQ>0){currentQ--;renderQ();}}
+
+function showResults(){
+  document.getElementById("test-screen").style.display="none";
+  document.getElementById("bottom-bar").style.display="none";
+  document.getElementById("results-screen").style.display="flex";
+
+  const dimScores={CS:0,MS:0,E:0,S:0};
+  const dimCounts={CS:0,MS:0,E:0,S:0};
+  QUESTIONS.forEach((q,i)=>{
+    if(answers[i]!==null){dimScores[q.dim]+=q.scores[answers[i]];dimCounts[q.dim]+=3;}
+  });
+  const dimPct={};
+  Object.keys(dimScores).forEach(k=>dimPct[k]=dimCounts[k]>0?Math.round(dimScores[k]/dimCounts[k]*100):0);
+  const global=Math.round(Object.values(dimPct).reduce((a,b)=>a+b,0)/4);
+
+  let label="",labelColor="",advice="";
+  if(global>=80){label="IE Élevée";labelColor="var(--green)";advice="Ton intelligence émotionnelle est un véritable atout professionnel. Tu gères bien les situations complexes, comprends les autres et maintiens de bonnes relations. Maintiens ce niveau et partage ces compétences avec ton entourage.";}
+  else if(global>=60){label="IE Bonne";labelColor="var(--blue)";advice="Tu as de bonnes bases en intelligence émotionnelle. Quelques dimensions peuvent être renforcées. Travaille particulièrement sur "+Object.entries(dimPct).sort((a,b)=>a[1]-b[1])[0][0]==="CS"?"la conscience de soi":"la maîtrise de tes réactions"+". La lecture de livres sur le leadership émotionnel peut t'aider.";}
+  else if(global>=40){label="IE Modérée";labelColor="var(--orange)";advice="Ton IE est en développement. C'est une compétence qui s'apprend et s'entraîne. Commence par observer tes propres réactions dans des situations difficiles et demande régulièrement du feedback à tes proches.";}
+  else{label="IE à Développer";labelColor="var(--red)";advice="L'intelligence émotionnelle est la compétence #1 des leaders efficaces. Elle s'apprend ! Commence par tenir un journal émotionnel quotidien (5 min/soir) pour mieux te connaître.";}
+
+  const profile=JSON.parse(sessionStorage.getItem("ae_profile")||"{}");
+  sessionStorage.setItem("ae_profile",JSON.stringify({...profile,ie_score:global,ie_dims:dimPct,ie_date:new Date().toISOString()}));
+
+  document.getElementById("results-card").innerHTML=`
+    <div class="rs-title">Ton profil <em>Intelligence Émotionnelle</em></div>
+    <div class="rs-global">
+      <div class="rs-score" style="color:${labelColor};">${global}</div>
+      <div class="rs-score-lbl">Score global sur 100</div>
+      <div class="rs-ie-label" style="background:${labelColor}22;color:${labelColor};">${label}</div>
+    </div>
+    <div class="rs-dims">
+      ${Object.entries(DIM_NAMES).map(([k,name])=>`
+      <div class="rs-dim">
+        <div class="rs-dim-icon">${DIM_ICONS[k]}</div>
+        <div class="rs-dim-name">${name}</div>
+        <div class="rs-dim-val" style="color:${DIM_COLORS[k]};">${dimPct[k]}/100</div>
+        <div class="rs-dim-bar"><div class="rs-dim-fill" id="rdf-${k}" style="width:0%;background:${DIM_COLORS[k]};"></div></div>
+      </div>`).join("")}
+    </div>
+    <div class="rs-advice">💡 ${advice}</div>
+    <div class="rs-btns">
+      <button class="btn-rs-p" onclick="window.location.href='avenir_etude_dashboard_resultats.html'">Voir mon rapport complet →</button>
+      <button class="btn-rs-g" onclick="window.location.href='avenir_etude_tests.html'">Autres tests</button>
+    </div>`;
+
+  setTimeout(()=>{Object.keys(DIM_NAMES).forEach(k=>{const el=document.getElementById("rdf-"+k);if(el)el.style.width=dimPct[k]+"%";});},200);
+  addHover();
+}
+addHover();
+</script>
+</body>
+</html>

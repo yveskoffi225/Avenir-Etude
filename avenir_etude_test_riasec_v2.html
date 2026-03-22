@@ -36,7 +36,7 @@
       --nav-h:64px;
       --radius:12px;
     }
-    body{font-family:'Instrument Sans',sans-serif;background:var(--ink);color:var(--ivory);-webkit-font-smoothing:antialiased;cursor:none;min-height:100vh;display:flex;flex-direction:column;overflow-x:hidden;}
+    body{font-family:'Instrument Sans',sans-serif;background:var(--ink);color:var(--ivory);-webkit-font-smoothing:antialiased;cursor:none;height:100vh;display:flex;flex-direction:column;overflow:hidden;}
     .cursor{position:fixed;width:8px;height:8px;background:var(--gold);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);mix-blend-mode:screen;transition:width .18s,height .18s;}
     .cursor.big{width:28px;height:28px;background:transparent;border:1.5px solid var(--gold);}
     body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:8000;opacity:.5;}
@@ -197,8 +197,6 @@
       .bottom-bar{padding:0 20px;}
       .top-bar{padding:0 20px;}
     }
-      .tb-back{font-size:11px;font-weight:600;color:var(--ivory-dim);text-decoration:none;padding:5px 12px;border:1px solid var(--wire-mid);border-radius:6px;flex-shrink:0;}
-    .tb-back:hover{border-color:var(--wire-hi);color:var(--ivory);}
   </style>
 </head>
 <body>
@@ -206,8 +204,7 @@
 
 <!-- TOP BAR -->
 <div class="top-bar">
-  <a href="avenir_etude_homepage_v2.html" class="tb-logo" style="font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:15px;letter-spacing:-.03em;">Avenir <span style="font-style:italic;color:var(--gold);">Étude</span></a>
-  <a href="avenir_etude_tests.html" class="tb-back">← Portail tests</a>
+  <a href="avenir_etude_homepage_v2.html" class="tb-logo">AÉ</a>
     <div id="tb-user" style="font-size:11px;color:var(--ivory-dim);display:flex;align-items:center;gap:8px;">
       <span id="tb-metier" style="color:var(--gold);font-weight:600;"></span>
     </div>

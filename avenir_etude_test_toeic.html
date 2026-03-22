@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Avenir Étude — Simulation TOEIC/TOEFL</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    :root{--ink:#060B14;--ink-2:#0C1220;--ink-3:#111827;--gold:#D4A853;--gold-dim:#7A5E2A;--gold-10:rgba(212,168,83,.10);--ivory:#F2EDE4;--ivory-dim:#8A8278;--ivory-faint:#2E3545;--wire:rgba(242,237,228,.07);--wire-mid:rgba(242,237,228,.13);--wire-hi:rgba(242,237,228,.24);--green:#34C97A;--blue:#4F7AE8;--red:#E05A54;--orange:#F59E0B;--purple:#8B5CF6;}
+    body{font-family:'Instrument Sans',sans-serif;background:var(--ink);color:var(--ivory);-webkit-font-smoothing:antialiased;cursor:none;min-height:100vh;display:flex;flex-direction:column;}
+    .ae-cursor{position:fixed;width:10px;height:10px;background:var(--gold);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);mix-blend-mode:screen;top:-100px;left:-100px;transition:width .18s,height .18s;}
+    .ae-cursor.hover{width:30px;height:30px;background:transparent;border:1.5px solid var(--gold);}
+
+    /* TOP BAR */
+    .top-bar{height:56px;border-bottom:1px solid var(--wire);background:rgba(6,11,20,.97);backdrop-filter:blur(16px);display:flex;align-items:center;padding:0 32px;gap:16px;position:sticky;top:0;z-index:200;flex-shrink:0;}
+    .tb-logo{font-family:'Bricolage Grotesque',sans-serif;font-size:15px;font-weight:800;color:var(--ivory);text-decoration:none;letter-spacing:-.03em;}
+    .tb-logo em{font-style:italic;color:var(--gold);}
+    .tb-back{font-size:11px;font-weight:600;color:var(--ivory-dim);text-decoration:none;padding:5px 12px;border:1px solid var(--wire-mid);border-radius:6px;transition:all .15s;flex-shrink:0;}
+    .tb-back:hover{border-color:var(--wire-hi);color:var(--ivory);}
+    .tb-progress-wrap{flex:1;display:flex;align-items:center;gap:10px;}
+    .tb-progress-track{flex:1;height:3px;background:var(--wire);border-radius:2px;}
+    .tb-progress-fill{height:100%;background:var(--blue);border-radius:2px;transition:width .4s ease;}
+    .tb-progress-pct{font-family:'Bricolage Grotesque',sans-serif;font-size:12px;font-weight:700;color:var(--blue);min-width:36px;text-align:right;}
+    .tb-level{font-size:11px;font-weight:700;padding:4px 10px;border-radius:4px;background:var(--blue-10, rgba(79,122,232,.1));color:var(--blue);border:1px solid rgba(79,122,232,.2);flex-shrink:0;}
+    .chrono-wrap{display:flex;align-items:center;gap:6px;flex-shrink:0;}
+    .chrono-ring{position:relative;width:38px;height:38px;}
+    .chrono-ring svg{position:absolute;top:0;left:0;}
+    .chrono-num{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Bricolage Grotesque',sans-serif;font-size:11px;font-weight:800;color:var(--ivory);}
+
+    /* SIDEBAR DOTS */
+    .main{flex:1;display:flex;overflow:hidden;}
+    .sidebar{width:60px;border-right:1px solid var(--wire);display:flex;flex-direction:column;align-items:center;padding:10px 6px;gap:3px;overflow-y:auto;scrollbar-width:none;flex-shrink:0;}
+    .sidebar::-webkit-scrollbar{display:none;}
+    .q-dot{width:24px;height:24px;border-radius:50%;border:1px solid var(--wire);display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:700;color:var(--ivory-faint);cursor:none;transition:all .15s;flex-shrink:0;font-family:'Bricolage Grotesque',sans-serif;}
+    .q-dot.answered{background:var(--blue);border-color:var(--blue);color:var(--ink);}
+    .q-dot.current{border-color:var(--gold);color:var(--gold);}
+    .q-dot.skipped{border-color:var(--red);color:var(--red);}
+
+    /* QUESTION AREA */
+    .q-area{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:28px 40px;overflow-y:auto;}
+    .q-card{width:100%;max-width:720px;}
+    .q-section-badge{display:inline-flex;align-items:center;gap:8px;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:4px 14px;border-radius:20px;margin-bottom:14px;}
+    .qsb-vocab{background:rgba(79,122,232,.12);color:var(--blue);border:1px solid rgba(79,122,232,.2);}
+    .qsb-grammar{background:rgba(139,92,246,.12);color:var(--purple);border:1px solid rgba(139,92,246,.2);}
+    .qsb-reading{background:rgba(52,201,122,.12);color:var(--green);border:1px solid rgba(52,201,122,.2);}
+    .qsb-listening{background:rgba(245,158,11,.12);color:var(--orange);border:1px solid rgba(245,158,11,.2);}
+    .q-level-tag{display:inline-block;font-size:9px;font-weight:700;padding:2px 8px;border-radius:3px;margin-left:8px;}
+    .ql-a1{background:rgba(52,201,122,.15);color:var(--green);}
+    .ql-a2{background:rgba(79,122,232,.15);color:var(--blue);}
+    .ql-b1{background:rgba(245,158,11,.15);color:var(--orange);}
+    .ql-b2{background:rgba(212,168,83,.15);color:var(--gold);}
+    .ql-c1{background:rgba(224,90,84,.15);color:var(--red);}
+    .q-num{font-size:11px;color:var(--ivory-dim);margin-bottom:8px;letter-spacing:.04em;}
+    .q-context{font-size:13px;color:var(--ivory-dim);line-height:1.7;margin-bottom:16px;padding:14px 18px;background:var(--ink-3);border:1px solid var(--wire);border-radius:10px;border-left:3px solid var(--blue);}
+    .q-text{font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(17px,2.2vw,24px);font-weight:700;color:var(--ivory);letter-spacing:-.02em;line-height:1.3;margin-bottom:24px;}
+    .q-text em{color:var(--blue);font-style:normal;text-decoration:underline;text-decoration-color:rgba(79,122,232,.4);}
+    .q-options{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+    .q-option{display:flex;align-items:center;gap:14px;padding:14px 18px;border-radius:10px;border:1px solid var(--wire-mid);background:var(--ink-3);cursor:none;transition:all .2s;}
+    .q-option:hover{border-color:var(--blue);background:rgba(79,122,232,.05);}
+    .q-option.selected{border-color:var(--blue);background:rgba(79,122,232,.1);}
+    .q-option.selected .opt-key{background:var(--blue);border-color:var(--blue);color:var(--ink);}
+    .opt-key{width:28px;height:28px;border-radius:6px;border:1px solid var(--wire-mid);display:flex;align-items:center;justify-content:center;font-family:'Bricolage Grotesque',sans-serif;font-size:12px;font-weight:700;color:var(--ivory-dim);transition:all .2s;flex-shrink:0;}
+    .opt-text{font-size:14px;color:var(--ivory);line-height:1.4;}
+
+    /* BOTTOM BAR */
+    .bottom-bar{height:64px;border-top:1px solid var(--wire);background:rgba(6,11,20,.97);display:flex;align-items:center;justify-content:space-between;padding:0 32px;flex-shrink:0;gap:20px;}
+    .bb-info{font-size:12px;color:var(--ivory-dim);}
+    .bb-info strong{color:var(--ivory);}
+    .bb-actions{display:flex;gap:10px;}
+    .btn-skip{font-size:12px;font-weight:600;color:var(--ivory-dim);background:none;border:1px solid var(--wire-mid);border-radius:8px;padding:8px 16px;cursor:none;transition:all .15s;font-family:'Instrument Sans',sans-serif;}
+    .btn-skip:hover{border-color:var(--red);color:var(--red);}
+    .btn-next{font-family:'Bricolage Grotesque',sans-serif;font-size:14px;font-weight:700;padding:10px 24px;background:var(--blue);color:var(--ink);border:none;border-radius:10px;cursor:none;transition:all .15s;display:flex;align-items:center;gap:8px;}
+    .btn-next:hover{background:#3d6bd4;}
+    .btn-next:disabled{opacity:.4;}
+
+    /* INTRO */
+    .intro-screen{flex:1;display:flex;align-items:center;justify-content:center;padding:40px;}
+    .intro-card{max-width:660px;width:100%;background:var(--ink-2);border:1px solid var(--wire-mid);border-radius:20px;padding:40px;}
+    .intro-icon{font-size:48px;margin-bottom:16px;}
+    .intro-title{font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(24px,4vw,36px);font-weight:800;color:var(--ivory);letter-spacing:-.04em;margin-bottom:8px;}
+    .intro-title em{font-style:italic;color:var(--blue);}
+    .intro-sub{font-size:14px;color:var(--ivory-dim);line-height:1.7;margin-bottom:24px;}
+    .levels-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:24px;}
+    .level-card{padding:10px 8px;background:var(--ink-3);border:1px solid var(--wire);border-radius:8px;text-align:center;}
+    .lc-badge{font-size:14px;font-weight:800;font-family:'Bricolage Grotesque',sans-serif;margin-bottom:3px;}
+    .lc-name{font-size:9px;color:var(--ivory-dim);}
+    .lc-toeic{font-size:9px;font-weight:600;color:var(--ivory-faint);margin-top:2px;}
+    .intro-rules{display:flex;flex-direction:column;gap:8px;margin-bottom:24px;}
+    .intro-rule{display:flex;gap:10px;font-size:12px;color:var(--ivory-dim);}
+    .ir-i{flex-shrink:0;font-size:14px;}
+    .btn-start{width:100%;font-family:'Bricolage Grotesque',sans-serif;font-size:16px;font-weight:700;padding:15px;background:var(--blue);color:var(--ink);border:none;border-radius:12px;cursor:none;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:10px;}
+    .btn-start:hover{background:#3d6bd4;transform:translateY(-2px);}
+
+    /* RESULTS */
+    .results-screen{flex:1;display:flex;align-items:center;justify-content:center;padding:40px;overflow-y:auto;}
+    .results-card{max-width:700px;width:100%;background:var(--ink-2);border:1px solid var(--wire-mid);border-radius:20px;padding:40px;}
+    .rs-title{font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(24px,3vw,36px);font-weight:800;color:var(--ivory);letter-spacing:-.04em;margin-bottom:6px;}
+    .rs-title em{font-style:italic;color:var(--blue);}
+    .rs-toeic-score{text-align:center;padding:28px;background:var(--ink-3);border:1px solid var(--wire);border-radius:14px;margin:24px 0;}
+    .rs-score-val{font-family:'Bricolage Grotesque',sans-serif;font-size:64px;font-weight:800;color:var(--blue);letter-spacing:-.06em;line-height:1;}
+    .rs-score-max{font-size:18px;color:var(--ivory-dim);font-family:'Bricolage Grotesque',sans-serif;}
+    .rs-level-badge{display:inline-block;font-family:'Bricolage Grotesque',sans-serif;font-size:22px;font-weight:800;padding:8px 24px;border-radius:8px;margin-top:12px;}
+    .rs-level-desc{font-size:13px;color:var(--ivory-dim);margin-top:8px;}
+    .rs-sections{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:20px 0;}
+    .rs-sec{background:var(--ink-3);border:1px solid var(--wire);border-radius:10px;padding:14px;}
+    .rs-sec-name{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ivory-faint);margin-bottom:8px;}
+    .rs-sec-val{font-family:'Bricolage Grotesque',sans-serif;font-size:22px;font-weight:800;}
+    .rs-sec-bar{height:3px;background:var(--ink-2);border-radius:2px;margin-top:6px;}
+    .rs-sec-fill{height:100%;border-radius:2px;transition:width 1s ease;}
+    .rs-advice{padding:16px 20px;background:var(--blue-10, rgba(79,122,232,.08));border:1px solid rgba(79,122,232,.2);border-radius:10px;margin:16px 0;font-size:13px;color:var(--ivory-dim);line-height:1.7;}
+    .rs-btns{display:flex;gap:10px;margin-top:20px;}
+    .btn-rs-p{flex:1;font-family:'Bricolage Grotesque',sans-serif;font-size:15px;font-weight:700;padding:14px;background:var(--gold);color:var(--ink);border:none;border-radius:10px;cursor:none;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px;}
+    .btn-rs-p:hover{background:#e0b55e;}
+    .btn-rs-g{padding:14px 20px;background:transparent;border:1px solid var(--wire-mid);border-radius:10px;font-size:13px;color:var(--ivory-dim);cursor:none;transition:all .15s;}
+    .btn-rs-g:hover{border-color:var(--wire-hi);color:var(--ivory);}
+    .kb-hint{font-size:11px;color:var(--ivory-faint);text-align:center;margin-top:14px;}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+    @media(max-width:768px){.top-bar,.bottom-bar{padding:0 16px;} .q-area{padding:16px 20px;} .q-options{grid-template-columns:1fr;} .sidebar{display:none;} .levels-grid{grid-template-columns:1fr 1fr;} .rs-sections{grid-template-columns:1fr;}}
+    ::-webkit-scrollbar{width:4px;} ::-webkit-scrollbar-track{background:var(--ink);} ::-webkit-scrollbar-thumb{background:var(--wire-mid);border-radius:2px;}
+  </style>
+</head>
+<body>
+<div class="ae-cursor" id="ae-cursor"></div>
+
+<div class="top-bar" id="top-bar" style="display:none;">
+  <a href="avenir_etude_homepage_v2.html" class="tb-logo">Avenir <em>Étude</em></a>
+  <a href="avenir_etude_tests.html" class="tb-back">← Portail tests</a>
+  <div class="tb-progress-wrap">
+    <div class="tb-progress-track"><div class="tb-progress-fill" id="progress-fill" style="width:0%"></div></div>
+    <div class="tb-progress-pct" id="progress-pct">0%</div>
+  </div>
+  <div class="tb-level" id="tb-level">—</div>
+  <div class="chrono-wrap">
+    <div class="chrono-ring">
+      <svg width="38" height="38" viewBox="0 0 38 38">
+        <circle cx="19" cy="19" r="15" fill="none" stroke="rgba(242,237,228,.08)" stroke-width="3"/>
+        <circle cx="19" cy="19" r="15" fill="none" stroke="#4F7AE8" stroke-width="3" stroke-dasharray="94" stroke-dashoffset="0" stroke-linecap="round" transform="rotate(-90 19 19)" id="chrono-ring"/>
+      </svg>
+      <div class="chrono-num" id="chrono-num">60</div>
+    </div>
+  </div>
+</div>
+
+<!-- INTRO -->
+<div class="intro-screen" id="intro-screen">
+  <div class="intro-card" style="animation:fadeIn .5s ease;">
+    <div class="intro-icon">🌍</div>
+    <h1 class="intro-title">Simulation <em>TOEIC / TOEFL</em></h1>
+    <p class="intro-sub">50 questions adaptées du contexte professionnel ivoirien et africain. Vocabulaire, grammaire, compréhension écrite. Ton score estimé TOEIC et ton niveau CECRL à la fin.</p>
+    <div class="levels-grid">
+      <div class="level-card"><div class="lc-badge" style="color:var(--green);">A1</div><div class="lc-name">Débutant</div><div class="lc-toeic">0–250</div></div>
+      <div class="level-card"><div class="lc-badge" style="color:var(--blue);">A2</div><div class="lc-name">Élémentaire</div><div class="lc-toeic">255–400</div></div>
+      <div class="level-card"><div class="lc-badge" style="color:var(--orange);">B1</div><div class="lc-name">Intermédiaire</div><div class="lc-toeic">405–600</div></div>
+      <div class="level-card"><div class="lc-badge" style="color:var(--gold);">B2</div><div class="lc-name">Avancé</div><div class="lc-toeic">605–780</div></div>
+      <div class="level-card"><div class="lc-badge" style="color:var(--red);">C1</div><div class="lc-name">Courant</div><div class="lc-toeic">785–990</div></div>
+    </div>
+    <div class="intro-rules">
+      <div class="intro-rule"><span class="ir-i">⏱</span><span><strong style="color:var(--ivory);">60 secondes</strong> par question — chrono automatique</span></div>
+      <div class="intro-rule"><span class="ir-i">📊</span><span>Score estimé <strong style="color:var(--ivory);">TOEIC (990)</strong> + niveau CECRL (A1→C1)</span></div>
+      <div class="intro-rule"><span class="ir-i">🌍</span><span>Questions contextualisées : Abidjan, entreprises CI, situations professionnelles africaines</span></div>
+      <div class="intro-rule"><span class="ir-i">⌨️</span><span>Touches <strong style="color:var(--ivory);">A B C D</strong> pour répondre · <strong>→</strong> pour passer</span></div>
+    </div>
+    <button class="btn-start" onclick="startTest()">Commencer la simulation <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+  </div>
+</div>
+
+<!-- TEST -->
+<div class="main" id="main-screen" style="display:none;">
+  <div class="sidebar" id="sidebar"></div>
+  <div class="q-area" id="q-area">
+    <div class="q-card" id="q-card"></div>
+    <div class="kb-hint">A · B · C · D pour répondre · → passer · ← précédent</div>
+  </div>
+</div>
+<div class="bottom-bar" id="bottom-bar" style="display:none;">
+  <div class="bb-info">Question <strong id="q-num-lbl">1</strong> / <strong>50</strong></div>
+  <div class="bb-actions">
+    <button class="btn-skip" onclick="skipQ()">Passer →</button>
+    <button class="btn-next" id="btn-next" onclick="nextQ()" disabled>Suivant <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+  </div>
+</div>
+
+<!-- RESULTS -->
+<div class="results-screen" id="results-screen" style="display:none;">
+  <div class="results-card" style="animation:fadeIn .5s ease;" id="results-card"></div>
+</div>
+
+<script>
+const cur = document.getElementById('ae-cursor');
+document.addEventListener('mousemove', e => { cur.style.left=e.clientX+'px'; cur.style.top=e.clientY+'px'; });
+document.addEventListener('mouseleave',()=>cur.style.opacity='0');
+document.addEventListener('mouseenter',()=>cur.style.opacity='1');
+function addHover(){document.querySelectorAll('a,button,.q-option,.level-card').forEach(el=>{el.addEventListener('mouseenter',()=>cur.classList.add('hover'));el.addEventListener('mouseleave',()=>cur.classList.remove('hover'));});}
+
+/* ══════════════════════════════════════════════════
+   50 QUESTIONS TOEIC/TOEFL — Contexte CI & Afrique
+   V=Vocabulary · G=Grammar · R=Reading · L=Listening
+══════════════════════════════════════════════════ */
+const QUESTIONS = [
+  // ── VOCABULARY A1-A2 ──
+  {id:1,sec:'V',level:'A1',text:"What does 'Hello' mean in English?",opts:["Bonjour","Au revoir","Merci","S'il vous plaît"],correct:0},
+  {id:2,sec:'V',level:'A1',text:"Which word means 'travail' in English?",opts:["Travel","Work","Word","Walk"],correct:1},
+  {id:3,sec:'V',level:'A1',text:"The opposite of 'expensive' is:",opts:["Dear","Cheap","Cost","Price"],correct:1},
+  {id:4,sec:'V',level:'A2',text:"'Headquarters' means:",opts:["Siège social","Chef de service","Quartier général militaire","Département principal"],correct:0},
+  {id:5,sec:'V',level:'A2',text:"In a business context, 'deadline' means:",opts:["Fin de contrat","Date limite","Heure de travail","Accord de dernière minute"],correct:1},
+  {id:6,sec:'V',level:'A2',text:"The word 'invoice' refers to:",opts:["Inventaire","Contrat","Facture","Investissement"],correct:2},
+  {id:7,sec:'V',level:'A2',text:"'Staff' in a company means:",opts:["Fournitures","Personnel","Bureau","Étage"],correct:1},
+  {id:8,sec:'V',level:'B1',text:"An 'entrepreneur' is someone who:",opts:["Manages a large corporation","Creates and runs their own business","Works for the government","Teaches business skills"],correct:1},
+  {id:9,sec:'V',level:'B1',text:"'Revenue' means the same as:",opts:["Profit","Income from sales","Expenses","Investment"],correct:1},
+  {id:10,sec:'V',level:'B1',text:"When something is 'sustainable', it:",opts:["Makes a profit","Can continue long-term without harming the environment","Is very expensive","Is imported from abroad"],correct:1},
+  {id:11,sec:'V',level:'B1',text:"A 'subsidiary' of a company is:",opts:["A competitor","A controlled company owned by a larger one","A government partner","An independent supplier"],correct:1},
+  {id:12,sec:'V',level:'B2',text:"'Procurement' in business refers to:",opts:["Selling products to clients","The process of acquiring goods and services","Managing human resources","Developing marketing strategies"],correct:1},
+  {id:13,sec:'V',level:'B2',text:"'Stakeholders' are:",opts:["Only company shareholders","All parties with an interest in a company's activities","Government officials only","International investors"],correct:1},
+  {id:14,sec:'V',level:'C1',text:"'Due diligence' refers to:",opts:["Legal punishment for negligence","Thorough investigation before a business decision","Paying taxes on time","A financial audit report"],correct:1},
+  {id:15,sec:'V',level:'C1',text:"'Leverage' in finance means:",opts:["Using borrowed capital to increase potential return","The strength of a negotiation","A type of insurance policy","Market price fluctuation"],correct:0},
+
+  // ── GRAMMAR A1-A2 ──
+  {id:16,sec:'G',level:'A1',context:"Amara works at a bank in Abidjan.",text:"___ she work on weekends?",opts:["Do","Does","Is","Are"],correct:1},
+  {id:17,sec:'G',level:'A1',text:"Choose the correct sentence:",opts:["He go to the office every day","He goes to the office every day","He going to the office every day","He is go to the office every day"],correct:1},
+  {id:18,sec:'G',level:'A2',context:"Kofi sent an email yesterday.",text:"When ___ Kofi send the email?",opts:["does","did","was","has"],correct:1},
+  {id:19,sec:'G',level:'A2',text:"The meeting ___ cancelled due to the storm.",opts:["is","was","were","be"],correct:1},
+  {id:20,sec:'G',level:'B1',context:"Fatima has worked at the company for three years.",text:"This means Fatima:",opts:["Left the company three years ago","Started working there three years ago and still works there","Worked there for exactly three years then left","Is planning to work there for three years"],correct:1},
+  {id:21,sec:'G',level:'B1',text:"By the time the manager arrived, the team ___ the presentation.",opts:["finishes","finished","had finished","will finish"],correct:2},
+  {id:22,sec:'G',level:'B1',text:"If we ___ the contract earlier, we would have saved money.",opts:["signed","sign","had signed","would sign"],correct:2},
+  {id:23,sec:'G',level:'B2',text:"The report ___ to the board by Friday at the latest.",opts:["must submit","must be submitted","must have submit","must submitted"],correct:1},
+  {id:24,sec:'G',level:'B2',text:"___ having little experience, she was hired for the senior position.",opts:["Despite","Although","Even","However"],correct:0},
+  {id:25,sec:'G',level:'C1',text:"The CEO suggested that the merger ___ reconsidered.",opts:["should be","be","would be","is"],correct:1},
+
+  // ── READING B1-C1 ──
+  {id:26,sec:'R',level:'B1',context:"Email: 'Dear Mr. Koffi, We regret to inform you that your application for the Data Analyst position has not been successful. We will keep your CV on file for future opportunities.'",text:"What is the purpose of this email?",opts:["To invite Mr. Koffi for an interview","To offer Mr. Koffi a job","To inform Mr. Koffi he was not selected","To request more documents from Mr. Koffi"],correct:2},
+  {id:27,sec:'R',level:'B1',context:"Notice: 'All employees must complete their timesheets by 5 PM on Friday. Late submissions will not be processed until the following pay period.'",text:"What happens if you submit your timesheet late?",opts:["You lose your salary for that month","You will be paid in the next pay period","You must pay a fine","Your manager will be informed"],correct:1},
+  {id:28,sec:'R',level:'B2',context:"Report extract: 'Q3 revenues increased by 23% year-on-year, driven primarily by our mobile money integration launched in June. Customer acquisition costs fell by 12%, indicating improved marketing efficiency.'",text:"What does the report suggest about marketing?",opts:["Marketing costs increased in Q3","Marketing became less effective","Marketing results improved with lower costs","Marketing was not a priority in Q3"],correct:2},
+  {id:29,sec:'R',level:'B2',context:"Contract clause: 'Either party may terminate this agreement with 90 days written notice. In the event of material breach, the non-breaching party may terminate immediately.'",text:"Under what condition can the contract end immediately?",opts:["After 90 days notice from either party","When one party seriously violates the agreement","When the contract period expires","When both parties agree to terminate"],correct:1},
+  {id:30,sec:'R',level:'B2',context:"Job posting: 'We are looking for a motivated individual with a minimum of 3 years experience in supply chain management. Proficiency in SAP is required. French and English fluency is essential.'",text:"Which candidate would NOT qualify?",opts:["Someone with 4 years supply chain experience and SAP skills","Someone fluent in French and English with supply chain experience","Someone with 2 years experience but excellent SAP knowledge","Someone with 5 years experience who speaks both languages"],correct:2},
+  {id:31,sec:'R',level:'B2',context:"Memo: 'As of next month, all international travel requests must be submitted 3 weeks in advance and require VP approval. This policy applies to all employees regardless of grade.'",text:"Who does this new policy apply to?",opts:["Only senior managers","Only employees who travel internationally regularly","All employees without exception","Only employees below VP level"],correct:2},
+  {id:32,sec:'R',level:'C1',context:"Article: 'The West African fintech landscape has witnessed unprecedented growth, with mobile money transaction volumes surpassing traditional banking in five countries. This disruption has forced legacy institutions to accelerate digital transformation or risk losing market share to agile startups.'",text:"What is the main implication for traditional banks?",opts:["They should invest in mobile money startups","They must adapt digitally or lose customers to fintech companies","They should lobby governments to regulate fintech","They are already well-positioned in the digital market"],correct:1},
+  {id:33,sec:'R',level:'C1',context:"Legal text: 'The indemnification clause herein obligates the contractor to hold harmless the client from any third-party claims arising from the contractor's negligence or willful misconduct during the performance of services.'",text:"What does the indemnification clause require the contractor to do?",opts:["Pay the client for poor performance","Protect the client from claims caused by the contractor's wrongdoing","Report third-party disputes to the client","Insure all employees working on the project"],correct:1},
+
+  // ── LISTENING/COMPREHENSION (written scenarios) ──
+  {id:34,sec:'L',level:'A2',context:"Dialogue at Orange CI: 'Good morning, I'd like to report a problem with my account.' 'Of course, sir. Can I have your phone number please?'",text:"Where is this conversation taking place?",opts:["At a bank","At a telecommunications company","At a government office","At a hotel"],correct:1},
+  {id:35,sec:'L',level:'B1',context:"Meeting transcript: 'We need to make a decision on the new supplier by Thursday. If we wait any longer, we'll miss the production deadline.' 'I agree, but I'd like to review the quality report first.'",text:"What is the speaker's concern about waiting?",opts:["The supplier will choose another client","They will miss an important deadline","The quality will be poor","The price will increase"],correct:1},
+  {id:36,sec:'L',level:'B1',context:"Phone call: 'I'm calling to confirm our appointment for tomorrow at 2 PM.' 'I'm afraid I need to reschedule. Would Thursday work for you?' 'Thursday is fine. Same time?'",text:"What is agreed at the end of the call?",opts:["The appointment is cancelled","The meeting moves to Thursday at 2 PM","The meeting stays on the original day","The time needs to be confirmed later"],correct:1},
+  {id:37,sec:'L',level:'B2',context:"Presentation: 'Our analysis shows that customer retention costs 5 times less than acquisition. Therefore, I recommend we reallocate 30% of our marketing budget from advertising to loyalty programmes.'",text:"What is the speaker's main recommendation?",opts:["Increase advertising budget by 30%","Invest more in keeping existing customers","Reduce the overall marketing budget","Find new customers in different markets"],correct:1},
+  {id:38,sec:'L',level:'B2',context:"Negotiation: 'We can offer you the unit at 45,000 FCFA.' 'That's above our budget. We were thinking closer to 38,000.' 'I can go to 42,000, but that's our final offer.'",text:"What is the seller's final price?",opts:["38,000 FCFA","40,000 FCFA","42,000 FCFA","45,000 FCFA"],correct:2},
+  {id:39,sec:'L',level:'B2',context:"Job interview: 'Tell me about a challenge you faced at work.' 'In my previous role, our main client threatened to leave after a delivery delay. I organized an emergency meeting, apologized formally, and proposed a compensation plan. We retained the client and actually grew the account by 20%.'",text:"What was the positive outcome of the situation?",opts:["The client received a full refund","The delivery issue was immediately fixed","The client stayed and the account grew","The employee was promoted"],correct:2},
+  {id:40,sec:'L',level:'C1',context:"Board meeting: 'The Q2 results are concerning. While revenue is up 8%, our EBITDA margin has compressed from 22% to 17% due to rising input costs and FX headwinds. We need to address this before the end of H2.'",text:"What is the primary concern expressed?",opts:["Revenue is declining","Profitability margins have worsened despite revenue growth","Currency exchange rates have improved","Input costs have decreased unexpectedly"],correct:1},
+
+  // ── VOCABULARY B2-C1 (professional CI context) ──
+  {id:41,sec:'V',level:'B2',text:"In an Abidjan hotel, the 'concierge' is responsible for:",opts:["Cooking meals for guests","Helping guests with information, reservations and special requests","Managing the hotel finances","Cleaning guest rooms"],correct:1},
+  {id:42,sec:'V',level:'B2',context:"Email subject: 'Follow-up on our MOU'",text:"MOU stands for:",opts:["Meeting of Understanding","Memorandum of Understanding","Management of Units","Minutes of the Union"],correct:1},
+  {id:43,sec:'V',level:'B1',text:"'KPI' in business means:",opts:["Key Personnel Information","Knowledge and Performance Index","Key Performance Indicator","Known Problem Identification"],correct:2},
+  {id:44,sec:'V',level:'B2',text:"A 'tender' in business is:",opts:["A formal offer to supply goods or services at a stated price","A type of employment contract","A financial penalty","A business meeting format"],correct:0},
+  {id:45,sec:'V',level:'C1',text:"'Working capital' refers to:",opts:["The money used to buy equipment","Current assets minus current liabilities","Total company revenue","Annual operating budget"],correct:1},
+
+  // ── GRAMMAR B2-C1 ──
+  {id:46,sec:'G',level:'B2',text:"___ to your email regarding the partnership proposal, we are pleased to confirm our interest.",opts:["Refer","Referring","With reference","Referenced"],correct:2},
+  {id:47,sec:'G',level:'B2',text:"The project was delayed, ___ resulted in significant cost overruns.",opts:["that","what","which","who"],correct:2},
+  {id:48,sec:'G',level:'C1',text:"Had the board approved the budget earlier, the expansion ___ completed on schedule.",opts:["would be","will be","would have been","had been"],correct:2},
+  {id:49,sec:'G',level:'C1',text:"The audit committee ___ that all financial records ___ re-examined.",opts:["recommended / be","recommended / are","recommends / were","recommended / were"],correct:0},
+  {id:50,sec:'G',level:'C1',text:"Notwithstanding the initial setbacks, the company ___ to maintain its market position.",opts:["managed","has managed","manages","had managed"],correct:1},
+];
+
+const SEC_NAMES = {V:'Vocabulaire',G:'Grammaire',R:'Compréhension écrite',L:'Compréhension orale'};
+const SEC_CLASSES = {V:'qsb-vocab',G:'qsb-grammar',R:'qsb-reading',L:'qsb-listening'};
+const LEVEL_CLASSES = {A1:'ql-a1',A2:'ql-a2',B1:'ql-b1',B2:'ql-b2',C1:'ql-c1'};
+const CIRCUM = 94.25;
+const CHRONO_TOTAL = 60;
+
+let currentQ = 0;
+let answers = new Array(50).fill(null);
+let chronoInterval = null;
+let chronoLeft = CHRONO_TOTAL;
+
+function startTest() {
+  document.getElementById('intro-screen').style.display = 'none';
+  document.getElementById('main-screen').style.display = 'flex';
+  document.getElementById('bottom-bar').style.display = 'flex';
+  document.getElementById('top-bar').style.display = 'flex';
+  buildSidebar();
+  renderQ();
+}
+
+function buildSidebar() {
+  document.getElementById('sidebar').innerHTML = QUESTIONS.map((q,i) =>
+    `<div class="q-dot ${i===0?'current':''}" id="qdot-${i}" onclick="gotoQ(${i})">${i+1}</div>`).join('');
+}
+
+function renderQ() {
+  const q = QUESTIONS[currentQ];
+  clearInterval(chronoInterval);
+  chronoLeft = CHRONO_TOTAL;
+  updateChrono();
+
+  document.getElementById('q-card').innerHTML = `
+    <span class="q-section-badge ${SEC_CLASSES[q.sec]}">${SEC_NAMES[q.sec]} <span class="q-level-tag ${LEVEL_CLASSES[q.level]}">${q.level}</span></span>
+    <div class="q-num">Question ${currentQ+1} sur 50</div>
+    ${q.context?`<div class="q-context">${q.context}</div>`:''}
+    <div class="q-text">${q.text}</div>
+    <div class="q-options">
+      ${q.opts.map((o,i)=>`
+      <div class="q-option ${answers[currentQ]===i?'selected':''}" onclick="selectOpt(${i})" data-idx="${i}">
+        <div class="opt-key">${'ABCD'[i]}</div>
+        <div class="opt-text">${o}</div>
+      </div>`).join('')}
+    </div>`;
+
+  document.getElementById('q-num-lbl').textContent = currentQ+1;
+  document.getElementById('btn-next').disabled = answers[currentQ]===null;
+  const pct = Math.round(answers.filter(a=>a!==null).length/50*100);
+  document.getElementById('progress-fill').style.width = pct+'%';
+  document.getElementById('progress-pct').textContent = pct+'%';
+  document.getElementById('tb-level').textContent = q.level;
+
+  QUESTIONS.forEach((_,i)=>{
+    const d = document.getElementById('qdot-'+i);
+    if(!d) return;
+    d.className = 'q-dot';
+    if(i===currentQ) d.classList.add('current');
+    else if(answers[i]!==null) d.classList.add('answered');
+    else if(i<currentQ&&answers[i]===null) d.classList.add('skipped');
+  });
+  document.getElementById('qdot-'+currentQ)?.scrollIntoView({block:'nearest',behavior:'smooth'});
+
+  chronoInterval = setInterval(()=>{ chronoLeft--; updateChrono(); if(chronoLeft<=0){clearInterval(chronoInterval);skipQ(true);} },1000);
+  addHover();
+}
+
+function updateChrono() {
+  const ring = document.getElementById('chrono-ring');
+  const num = document.getElementById('chrono-num');
+  const offset = CIRCUM*(1-chronoLeft/CHRONO_TOTAL);
+  ring.setAttribute('stroke-dashoffset', offset);
+  num.textContent = Math.max(0,chronoLeft);
+  if(chronoLeft<=10){ring.setAttribute('stroke','#E05A54');num.style.color='var(--red)';}
+  else if(chronoLeft<=20){ring.setAttribute('stroke','#F59E0B');num.style.color='var(--orange)';}
+  else{ring.setAttribute('stroke','#4F7AE8');num.style.color='';}
+}
+
+function selectOpt(idx) {
+  answers[currentQ] = idx;
+  document.querySelectorAll('.q-option').forEach((o,i)=>o.classList.toggle('selected',i===idx));
+  document.getElementById('btn-next').disabled = false;
+  clearInterval(chronoInterval);
+  setTimeout(()=>{if(answers[currentQ]!==null)nextQ();},500);
+}
+
+function nextQ(){clearInterval(chronoInterval);if(currentQ<49){currentQ++;renderQ();}else showResults();}
+function skipQ(auto=false){clearInterval(chronoInterval);if(currentQ<49){currentQ++;renderQ();}else showResults();}
+function gotoQ(idx){clearInterval(chronoInterval);currentQ=idx;renderQ();}
+
+document.addEventListener('keydown',e=>{
+  const m={'a':0,'b':1,'c':2,'d':3,'A':0,'B':1,'C':2,'D':3};
+  if(e.key in m) selectOpt(m[e.key]);
+  else if(e.key==='ArrowRight') nextQ();
+  else if(e.key==='ArrowLeft'&&currentQ>0){clearInterval(chronoInterval);currentQ--;renderQ();}
+});
+
+function showResults() {
+  clearInterval(chronoInterval);
+  document.getElementById('main-screen').style.display='none';
+  document.getElementById('bottom-bar').style.display='none';
+  document.getElementById('results-screen').style.display='flex';
+
+  const secs = {V:[],G:[],R:[],L:[]};
+  QUESTIONS.forEach((q,i)=>{ secs[q.sec].push(answers[i]===q.correct?1:0); });
+  const scores = {};
+  Object.entries(secs).forEach(([k,v])=>scores[k]=v.length?Math.round(v.reduce((a,b)=>a+b,0)/v.length*100):0);
+  const total = answers.filter((a,i)=>a===QUESTIONS[i].correct).length;
+  const pct = Math.round(total/50*100);
+
+  // TOEIC estimation (max 990)
+  const toeic = Math.round(pct/100*990);
+  let cecrl='A1',cecrlColor='var(--green)',cecrlBg='rgba(52,201,122,.15)',advice='';
+  if(toeic>=785){cecrl='C1';cecrlColor='var(--red)';cecrlBg='rgba(224,90,84,.15)';advice='Excellent niveau ! Tu es prêt pour les postes internationaux et les grandes entreprises multinationales. Vise la certification TOEIC officielle pour valider ton niveau.';}
+  else if(toeic>=605){cecrl='B2';cecrlColor='var(--gold)';cecrlBg='rgba(212,168,83,.15)';advice='Très bon niveau professionnel. Tu peux travailler en anglais dans la plupart des contextes. Renforce la grammaire avancée et le vocabulaire spécialisé pour atteindre le C1.';}
+  else if(toeic>=405){cecrl='B1';cecrlColor='var(--orange)';cecrlBg='rgba(245,158,11,.15)';advice='Niveau intermédiaire. Tu peux te débrouiller en anglais professionnel mais il te manque de la fluidité. Pratique régulière recommandée : 30 min/jour de lecture et d\'écoute en anglais.';}
+  else if(toeic>=255){cecrl='A2';cecrlColor='var(--blue)';cecrlBg='rgba(79,122,232,.15)';advice='Niveau élémentaire. Tu comprends les bases mais tu as besoin de renforcer significativement ton anglais pour les postes qui l\'exigent. Commence par des apps comme Duolingo + podcasts simples.';}
+  else{cecrl='A1';advice='Niveau débutant. L\'anglais professionnel est une compétence clé pour le marché CI. Beaucoup de grandes entreprises (Orange, Total, Bolloré) travaillent en anglais. Commence dès maintenant !';}
+
+  // Save to profile
+  const profile = JSON.parse(sessionStorage.getItem('ae_profile')||'{}');
+  sessionStorage.setItem('ae_profile', JSON.stringify({...profile, toeic_score:toeic, cecrl_level:cecrl, toeic_date:new Date().toISOString()}));
+
+  document.getElementById('results-card').innerHTML = `
+    <div class="rs-title">Résultats <em>Simulation TOEIC</em></div>
+    <div class="rs-toeic-score">
+      <div class="rs-score-val">${toeic}<span class="rs-score-max">/990</span></div>
+      <div class="rs-level-badge" style="background:${cecrlBg};color:${cecrlColor};">Niveau ${cecrl}</div>
+      <div class="rs-level-desc">${total} bonnes réponses sur 50</div>
+    </div>
+    <div class="rs-sections">
+      ${Object.entries({V:'Vocabulaire',G:'Grammaire',R:'Compréhension',L:'Oral'}).map(([k,name])=>`
+      <div class="rs-sec">
+        <div class="rs-sec-name">${name}</div>
+        <div class="rs-sec-val" style="color:${scores[k]>=70?'var(--green)':scores[k]>=50?'var(--orange)':'var(--red)'};">${scores[k]}%</div>
+        <div class="rs-sec-bar"><div class="rs-sec-fill" style="width:0%;background:${scores[k]>=70?'var(--green)':scores[k]>=50?'var(--orange)':'var(--red)'};"></div></div>
+      </div>`).join('')}
+    </div>
+    <div class="rs-advice">💡 ${advice}</div>
+    <div class="rs-btns">
+      <button class="btn-rs-p" onclick="window.location.href='avenir_etude_dashboard_resultats.html'">Voir mon rapport complet →</button>
+      <button class="btn-rs-g" onclick="window.location.href='avenir_etude_tests.html'">Autres tests</button>
+    </div>`;
+
+  setTimeout(()=>{
+    document.querySelectorAll('.rs-sec-fill').forEach(el=>{
+      const w=el.style.getPropertyValue('width');el.style.width='0';
+      setTimeout(()=>el.style.width=el.parentElement.previousElementSibling.textContent,50);
+    });
+    // Animate bars properly
+    Object.entries(scores).forEach(([k,v])=>{
+      document.querySelectorAll('.rs-sec-fill').forEach((el,i)=>{
+        setTimeout(()=>el.style.width=Object.values(scores)[i]+'%',100+i*50);
+      });
+    });
+  },200);
+  addHover();
+}
+
+addHover();
+</script>
+</body>
+</html>
