@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Avenir Étude — Fiche Métier</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Instrument+Serif:ital@0;1&family=Instrument+Sans:ital,wght@0,400;0,500;0,600&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    :root{
+      --ink:#060B14;--ink-2:#0C1220;--ink-3:#111827;--ink-4:#1C2535;
+      --gold:#D4A853;--gold-dim:#7A5E2A;--gold-10:rgba(212,168,83,.10);
+      --ivory:#F2EDE4;--ivory-dim:#8A8278;--ivory-faint:#2E3545;
+      --wire:rgba(242,237,228,.07);--wire-mid:rgba(242,237,228,.13);--wire-hi:rgba(242,237,228,.24);
+      --green:#34C97A;--green-10:rgba(52,201,122,.1);
+      --blue:#4F7AE8;--blue-10:rgba(79,122,232,.1);
+      --red:#E05A54;--red-10:rgba(224,90,84,.1);
+      --orange:#F59E0B;--purple:#8B5CF6;
+      --max-w:1200px;
+    }
+    body{font-family:'Instrument Sans',sans-serif;background:var(--ink);color:var(--ivory);-webkit-font-smoothing:antialiased;cursor:none;}
+    .ae-cursor{position:fixed;width:10px;height:10px;background:var(--gold);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);mix-blend-mode:screen;transition:width .18s,height .18s;top:-100px;left:-100px;}
+    .ae-cursor.hover{width:32px;height:32px;background:transparent;border:1.5px solid var(--gold);}
+    body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:8000;}
+
+    /* NAV */
+    nav{position:sticky;top:0;z-index:500;height:64px;border-bottom:1px solid var(--wire);background:rgba(6,11,20,.94);backdrop-filter:blur(20px);display:flex;align-items:center;}
+    .nav-inner{max-width:var(--max-w);margin:0 auto;padding:0 40px;width:100%;display:flex;align-items:center;gap:8px;}
+    .nav-logo{font-family:'Bricolage Grotesque',sans-serif;font-size:17px;font-weight:800;color:var(--ivory);text-decoration:none;letter-spacing:-.03em;margin-right:16px;}
+    .nav-logo em{font-style:italic;color:var(--gold);}
+    .nav-link{font-size:13px;font-weight:500;color:var(--ivory-dim);text-decoration:none;padding:7px 12px;border-radius:7px;transition:all .15s;white-space:nowrap;}
+    .nav-link:hover{color:var(--ivory);background:var(--ink-3);}
+    .nav-back{font-size:13px;font-weight:600;color:var(--ivory-dim);text-decoration:none;display:flex;align-items:center;gap:6px;padding:8px 14px;border:1px solid var(--wire-mid);border-radius:8px;transition:all .15s;cursor:none;}
+    .nav-back:hover{border-color:var(--wire-hi);color:var(--ivory);}
+    .nav-right{display:flex;align-items:center;gap:8px;margin-left:auto;}
+    .btn-cx{font-size:13px;font-weight:600;padding:8px 18px;border:1.5px solid var(--wire-mid);border-radius:8px;background:transparent;color:var(--ivory-dim);text-decoration:none;transition:all .15s;cursor:none;}
+    .btn-cx:hover{border-color:var(--wire-hi);color:var(--ivory);}
+    .btn-ins{font-family:'Bricolage Grotesque',sans-serif;font-size:13px;font-weight:700;padding:9px 20px;background:var(--gold);color:var(--ink);border:none;border-radius:8px;text-decoration:none;cursor:none;transition:all .15s;display:inline-flex;align-items:center;gap:6px;}
+    .btn-ins:hover{background:#e0b55e;}
+
+    .wrap{max-width:var(--max-w);margin:0 auto;padding:0 40px;}
+
+    /* HERO MÉTIER */
+    .fiche-hero{padding:48px 0 40px;border-bottom:1px solid var(--wire);background:var(--ink-2);}
+    .hero-breadcrumb{font-size:11px;color:var(--ivory-faint);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+    .hero-breadcrumb a{color:var(--ivory-dim);text-decoration:none;transition:color .15s;}
+    .hero-breadcrumb a:hover{color:var(--gold);}
+    .hero-top{display:flex;align-items:flex-start;gap:24px;margin-bottom:28px;}
+    .hero-icon-box{
+      width:80px;height:80px;border-radius:16px;
+      display:flex;align-items:center;justify-content:center;
+      font-size:40px;flex-shrink:0;
+      background:var(--ink-3);border:1px solid var(--wire-mid);
+    }
+    .hero-info{flex:1;}
+    .hero-badges{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;}
+    .hb{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:3px 10px;border-radius:4px;}
+    .hb-critical{background:var(--red-10);color:var(--red);border:1px solid rgba(224,90,84,.2);}
+    .hb-high{background:var(--blue-10);color:var(--blue);border:1px solid rgba(79,122,232,.2);}
+    .hb-hot{background:var(--gold-10);color:var(--gold);border:1px solid var(--gold-dim);}
+    .hb-secteur{background:var(--ink-3);color:var(--ivory-dim);border:1px solid var(--wire);}
+    .hero-title{font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(28px,4vw,44px);font-weight:800;color:var(--ivory);letter-spacing:-.04em;line-height:1.1;margin-bottom:8px;}
+    .hero-secteur{font-size:14px;color:var(--ivory-dim);}
+
+    /* KPI BAND */
+    .kpi-band{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:28px;}
+    .kpi{background:var(--ink-3);border:1px solid var(--wire);border-radius:12px;padding:16px 18px;}
+    .kpi-val{font-family:'Bricolage Grotesque',sans-serif;font-size:24px;font-weight:800;letter-spacing:-.03em;line-height:1;}
+    .kpi-lbl{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--ivory-faint);margin-top:5px;}
+    .kpi-note{font-size:11px;color:var(--ivory-dim);margin-top:3px;}
+
+    /* MAIN LAYOUT */
+    .fiche-body{display:grid;grid-template-columns:1fr 340px;gap:32px;padding:40px 0 80px;}
+    .fiche-main{}
+    .fiche-sidebar{}
+
+    /* SECTIONS */
+    .fsec{margin-bottom:36px;padding-bottom:36px;border-bottom:1px solid var(--wire);}
+    .fsec:last-child{border-bottom:none;}
+    .fsec-title{font-family:'Bricolage Grotesque',sans-serif;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+    .fsec-title::before{content:'';width:14px;height:1px;background:var(--gold-dim);}
+    .fsec-body{font-size:14px;color:var(--ivory-dim);line-height:1.8;}
+    .fsec-body strong{color:var(--ivory);font-weight:600;}
+    .fsec-body p+p{margin-top:12px;}
+
+    /* Tags */
+    .tags-wrap{display:flex;flex-wrap:wrap;gap:8px;}
+    .tag{font-size:12px;font-weight:600;padding:6px 14px;border-radius:6px;background:var(--ink-3);border:1px solid var(--wire);color:var(--ivory-dim);}
+    .tag-gold{background:var(--gold-10);border-color:var(--gold-dim);color:var(--gold);}
+    .tag-blue{background:var(--blue-10);border-color:rgba(79,122,232,.2);color:var(--blue);}
+    .tag-green{background:var(--green-10);border-color:rgba(52,201,122,.2);color:var(--green);}
+
+    /* BAC requis */
+    .bac-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+    .bac-card{padding:14px 16px;background:var(--ink-3);border:1px solid var(--wire);border-radius:10px;}
+    .bac-label{font-family:'Bricolage Grotesque',sans-serif;font-size:20px;font-weight:800;margin-bottom:4px;}
+    .bac-name{font-size:11px;color:var(--ivory-dim);line-height:1.4;}
+
+    /* Parcours timeline */
+    .timeline{display:flex;flex-direction:column;gap:0;}
+    .tl-item{display:flex;gap:16px;padding:14px 0;border-left:2px solid var(--wire);padding-left:20px;position:relative;}
+    .tl-item::before{content:'';position:absolute;left:-6px;top:20px;width:10px;height:10px;border-radius:50%;background:var(--ink-3);border:2px solid var(--wire-mid);}
+    .tl-item.active::before{background:var(--gold);border-color:var(--gold);}
+    .tl-item.done::before{background:var(--green);border-color:var(--green);}
+    .tl-duration{font-size:10px;font-weight:700;color:var(--gold);min-width:60px;padding-top:2px;flex-shrink:0;}
+    .tl-content{}
+    .tl-title{font-size:14px;font-weight:600;color:var(--ivory);margin-bottom:3px;}
+    .tl-desc{font-size:12px;color:var(--ivory-dim);line-height:1.6;}
+
+    /* Salary chart */
+    .salary-chart{background:var(--ink-3);border:1px solid var(--wire);border-radius:12px;padding:20px;}
+    .sc-row{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+    .sc-row:last-child{margin-bottom:0;}
+    .sc-label{font-size:12px;color:var(--ivory-dim);min-width:80px;}
+    .sc-bar{flex:1;height:6px;background:var(--ink-4);border-radius:3px;overflow:hidden;}
+    .sc-fill{height:100%;border-radius:3px;transition:width 1s ease;}
+    .sc-val{font-family:'Bricolage Grotesque',sans-serif;font-size:12px;font-weight:700;color:var(--gold);min-width:90px;text-align:right;}
+
+    /* Sidebar cards */
+    .sb-card{background:var(--ink-2);border:1px solid var(--wire);border-radius:14px;padding:20px;margin-bottom:16px;}
+    .sb-card-title{font-family:'Bricolage Grotesque',sans-serif;font-size:14px;font-weight:700;color:var(--ivory);margin-bottom:14px;}
+    .ecole-item{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--ink-3);border:1px solid var(--wire);border-radius:9px;text-decoration:none;cursor:none;transition:border-color .15s;margin-bottom:8px;}
+    .ecole-item:hover{border-color:var(--gold-dim);}
+    .ecole-item:last-child{margin-bottom:0;}
+    .ei-logo{width:32px;height:32px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:'Bricolage Grotesque',sans-serif;font-size:7px;font-weight:800;flex-shrink:0;}
+    .ei-name{font-size:13px;font-weight:700;color:var(--ivory);}
+    .ei-type{font-size:10px;color:var(--ivory-dim);margin-top:1px;}
+    .ei-free{font-size:9px;color:var(--green);font-weight:700;margin-left:auto;}
+
+    /* RIASEC compat */
+    .riasec-bars{display:flex;flex-direction:column;gap:8px;}
+    .rb-row{display:flex;align-items:center;gap:10px;}
+    .rb-letter{font-family:'Bricolage Grotesque',sans-serif;font-size:12px;font-weight:800;width:16px;text-align:center;}
+    .rb-track{flex:1;height:4px;background:var(--ink-3);border-radius:2px;}
+    .rb-fill{height:100%;border-radius:2px;transition:width 1s ease;}
+    .rb-name{font-size:11px;color:var(--ivory-dim);min-width:100px;}
+
+    /* CTA sticky */
+    .cta-sticky{position:sticky;top:80px;}
+    .btn-gps-big{width:100%;font-family:'Bricolage Grotesque',sans-serif;font-size:15px;font-weight:700;padding:14px;background:var(--gold);color:var(--ink);border:none;border-radius:10px;cursor:none;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:10px;text-decoration:none;}
+    .btn-gps-big:hover{background:#e0b55e;transform:translateY(-1px);}
+    .btn-test-big{width:100%;font-family:'Bricolage Grotesque',sans-serif;font-size:14px;font-weight:700;padding:13px;background:transparent;color:var(--ivory-dim);border:1.5px solid var(--wire-mid);border-radius:10px;cursor:none;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;}
+    .btn-test-big:hover{border-color:var(--blue);color:var(--blue);}
+
+    /* Not found */
+    .not-found{text-align:center;padding:120px 40px;color:var(--ivory-dim);}
+    .nf-icon{font-size:64px;margin-bottom:16px;opacity:.3;}
+    .nf-title{font-family:'Bricolage Grotesque',sans-serif;font-size:24px;font-weight:800;color:var(--ivory);margin-bottom:8px;}
+
+    footer{background:var(--ink);border-top:1px solid var(--wire);padding:48px 0 28px;}
+    .footer-inner{max-width:var(--max-w);margin:0 auto;padding:0 40px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;}
+    .footer-logo{font-family:'Bricolage Grotesque',sans-serif;font-size:16px;font-weight:800;color:var(--ivory);text-decoration:none;}
+    .footer-logo em{font-style:italic;color:var(--gold);}
+    .footer-copy{font-size:11px;color:var(--ivory-faint);}
+    .footer-links{display:flex;gap:20px;}
+    .footer-links a{font-size:12px;color:var(--ivory-dim);text-decoration:none;transition:color .15s;}
+    .footer-links a:hover{color:var(--ivory);}
+
+    @media(max-width:1024px){.fiche-body{grid-template-columns:1fr;} .kpi-band{grid-template-columns:1fr 1fr;} .bac-grid{grid-template-columns:1fr 1fr;} .cta-sticky{position:static;}}
+    @media(max-width:768px){.wrap,.nav-inner,.footer-inner{padding-left:20px;padding-right:20px;} .kpi-band{grid-template-columns:1fr 1fr;} .nav-links-wrap{display:none;}}
+    ::-webkit-scrollbar{width:4px;} ::-webkit-scrollbar-track{background:var(--ink);} ::-webkit-scrollbar-thumb{background:var(--wire-mid);border-radius:2px;}
+  </style>
+</head>
+<body>
+<div class="ae-cursor" id="ae-cursor"></div>
+
+<nav>
+  <div class="nav-inner">
+    <a href="avenir_etude_homepage_v2.html" class="nav-logo">Avenir <em>Étude</em></a>
+    <a href="avenir_etude_carrieres.html" class="nav-back">← Carrières</a>
+    <div class="nav-links-wrap" style="display:flex;gap:2px;flex:1;margin-left:8px;">
+      <a href="avenir_etude_ecoles.html" class="nav-link">Écoles</a>
+      <a href="avenir_etude_tests.html" class="nav-link">Tests</a>
+      <a href="avenir_etude_gps_academique.html" class="nav-link">GPS</a>
+    </div>
+    <div class="nav-right">
+      <a href="avenir_etude_auth.html" class="btn-cx">Connexion</a>
+      <a href="avenir_etude_auth.html" class="btn-ins">S'inscrire <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+    </div>
+  </div>
+</nav>
+
+<div id="fiche-content">
+  <div class="not-found">
+    <div class="nf-icon">⏳</div>
+    <div class="nf-title">Chargement...</div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <a href="avenir_etude_homepage_v2.html" class="footer-logo">Avenir <em>Étude</em></a>
+    <div class="footer-links">
+      <a href="avenir_etude_carrieres.html">← Tous les métiers</a>
+      <a href="avenir_etude_tests.html">Passer un test</a>
+      <a href="avenir_etude_ecoles.html">Écoles</a>
+    </div>
+    <div class="footer-copy">© 2026 Avenir Étude · CI</div>
+  </div>
+</footer>
+
+<script>
+/* CURSOR */
+const cur = document.getElementById('ae-cursor');
+document.addEventListener('mousemove', e => { cur.style.left=e.clientX+'px'; cur.style.top=e.clientY+'px'; });
+document.addEventListener('mouseleave', () => cur.style.opacity='0');
+document.addEventListener('mouseenter', () => cur.style.opacity='1');
+function addHover() {
+  document.querySelectorAll('a,button,.ecole-item,.kpi').forEach(el => {
+    el.addEventListener('mouseenter', () => cur.classList.add('hover'));
+    el.addEventListener('mouseleave', () => cur.classList.remove('hover'));
+  });
+}
+
+/* ── DATA ── (same as carrieres page) */
+const BAC_COLORS = {A1:'#8B5CF6',A2:'#A78BFA',B:'#F59E0B',C:'#4F7AE8',D:'#34C97A',E:'#E05A54',F2:'#F97316',G1:'#10B981',G2:'#06B6D4'};
+const BAC_NAMES = {A1:'Lettres & Philos.',A2:'Langues',B:'Économie',C:'Mathématiques',D:'Sciences Nat.',E:'Maths-Techniques',F2:'Génie Électrique',G1:'Commerce',G2:'Comptabilité'};
+const RIASEC_COLORS = {R:'#E05A54',I:'#4F7AE8',A:'#8B5CF6',S:'#34C97A',E:'#D4A853',C:'#F59E0B'};
+const RIASEC_NAMES = {R:'Réaliste',I:'Investigatif',A:'Artistique',S:'Social',E:'Entreprenant',C:'Conventionnel'};
+const DEMAND_LABELS = {critical:'🔴 Très forte demande',high:'🟡 Forte demande',medium:'⚪ Demande normale'};
+const ECOLES_MAP = {
+  "CI-001":{nom:"INP-HB",type:"Grande École Pub.",bg:"#1a3a1a",fg:"#5cb85c",gratuit:true},
+  "CI-002":{nom:"ENSEA",type:"Centre d'Excellence",bg:"#0a2244",fg:"#4a9edd",gratuit:true},
+  "CI-003":{nom:"ESATIC",type:"Grande École Pub.",bg:"#0d1f3a",fg:"#3b82f6",gratuit:true},
+  "CI-004":{nom:"UFHB",type:"Université Pub.",bg:"#1a1a3a",fg:"#8b5cf6",gratuit:true},
+  "CI-005":{nom:"HEC Abidjan",type:"Grande École Priv.",bg:"#2a1010",fg:"#ef4444",gratuit:false},
+  "CI-006":{nom:"IUA",type:"Université Priv.",bg:"#1a2a1a",fg:"#22c55e",gratuit:false},
+  "CI-007":{nom:"AUCI",type:"Université Priv.",bg:"#2a2a10",fg:"#f59e0b",gratuit:false},
+  "CI-008":{nom:"ENA CI",type:"Grande École Pub.",bg:"#10101a",fg:"#6366f1",gratuit:true},
+  "CI-009":{nom:"INFAS",type:"Grande École Pub.",bg:"#0a2a1a",fg:"#10b981",gratuit:true},
+  "CI-010":{nom:"CAFOP",type:"Grande École Pub.",bg:"#1a0a2a",fg:"#a855f7",gratuit:true},
+  "CI-011":{nom:"IMAT",type:"Institut Priv.",bg:"#2a1a0a",fg:"#f97316",gratuit:false},
+  "CI-012":{nom:"CERAP",type:"Institut Priv.",bg:"#1a1a0a",fg:"#d4a853",gratuit:false},
+  "CI-013":{nom:"ABS",type:"Grande École Priv.",bg:"#0a1a2a",fg:"#0ea5e9",gratuit:false},
+  "CI-014":{nom:"ENS",type:"Grande École Pub.",bg:"#1a0a1a",fg:"#ec4899",gratuit:true},
+  "CI-018":{nom:"BEM Abidjan",type:"Grande École Priv.",bg:"#10102a",fg:"#818cf8",gratuit:false},
+  "CI-019":{nom:"UFHB SciTech",type:"Université Pub.",bg:"#0a1a2a",fg:"#38bdf8",gratuit:true},
+  "CI-020":{nom:"ISTC",type:"Institut Priv.",bg:"#2a0a1a",fg:"#f43f5e",gratuit:false},
+};
+
+/* ── EXTENDED CAREER INFO ── */
+const CAREER_DETAILS = {
+  "m-001":{
+    desc_long:`Le Data Scientist est l'un des profils les plus recherchés en Côte d'Ivoire en 2026. Il collecte, analyse et interprète des volumes massifs de données pour aider les entreprises à prendre des décisions stratégiques basées sur des faits, pas des intuitions.
+
+En CI, les banques (SGBCI, BICICI, Ecobank), les opérateurs télécoms (Orange, MTN, Moov) et les startups fintech (Wave, CinetPay) recrutent massivement ces profils. La mission principale : transformer la donnée brute en avantage compétitif.
+
+Le marché africain du data offre une particularité rare : les données sont souvent peu structurées, ce qui crée des défis techniques stimulants et des opportunités d'innovation propres au continent.`,
+    missions:["Collecter et nettoyer des données brutes","Construire des modèles de machine learning","Créer des tableaux de bord analytiques","Automatiser les rapports de performance","Collaborer avec les équipes métiers pour identifier les besoins en data"],
+    environnement:"Startups tech, banques, télécoms, institutions financières, grandes entreprises ivoiriennes. Possibilité de télétravail partiel dans certaines structures.",
+    evolution:"Data Analyst → Data Scientist Junior → Data Scientist Senior → Lead Data Scientist → Chief Data Officer (CDO)",
+    parcours:[
+      {d:"BAC C ou D",t:"Maths & Sciences",desc:"Série recommandée. Maths 16+/20 et statistiques solides indispensables.",done:false},
+      {d:"L3",t:"Licence Maths-Informatique ou Économétrie",desc:"UFHB, INP-HB ou équivalent. Base théorique en statistiques et programmation.",done:false},
+      {d:"M1-M2",t:"Master Data Science ou Statistiques",desc:"ENSEA (référence africaine), INP-HB/ESI, ou master international.",done:false},
+      {d:"0-2 ans",t:"Expérience en entreprise",desc:"Stage en banque ou télécom. Projets personnels sur Kaggle recommandés.",done:false},
+    ],
+    tendances:"Le métier évolue rapidement vers le MLOps (mise en production des modèles) et l'IA générative. En 2026, 65% des entreprises ivoiriennes cotées cherchent à intégrer des capacités data dans leurs opérations.",
+    salaires:{junior:400000,confirme:800000,senior:1200000,expert:2000000},
+    secteurs_recruteurs:["Banques & Finance","Télécoms","E-commerce","Santé numérique","Administration publique"],
+  },
+  "m-002":{
+    desc_long:`Le Développeur Full Stack maîtrise à la fois le développement front-end (ce que voit l'utilisateur) et le back-end (la logique serveur et les bases de données). C'est le profil le plus polyvalent de l'écosystème tech ivoirien.
+
+Avec plus de 20 millions d'utilisateurs mobile en Côte d'Ivoire et une pénétration internet en forte croissance, la demande de développeurs qualifiés explose. Les startups ivoiriennes (Jumia CI, Wave, CinetPay, Yango) recrutent en permanence.
+
+Le marché CI a une spécificité : les applications doivent fonctionner en conditions réseau dégradées (zones à faible connectivité). Les développeurs qui maîtrisent le offline-first et l'optimisation mobile ont un avantage concurrentiel fort.`,
+    missions:["Développer des interfaces utilisateur responsives","Concevoir et maintenir des APIs REST/GraphQL","Optimiser les performances des applications","Gérer les bases de données SQL et NoSQL","Intégrer les APIs de paiement mobile (Orange Money, Wave, MTN)"],
+    environnement:"Startups tech, agences digitales, DSI des grandes entreprises. Freelance très développé en CI. Remote possible.",
+    evolution:"Développeur Junior → Développeur Senior → Lead Developer → CTO (Directeur Technique)",
+    parcours:[
+      {d:"BAC C/E/F2",t:"Série technique ou scientifique",desc:"Informatique ou mathématiques. BTS technique accepté comme alternative.",done:false},
+      {d:"3 ans",t:"Licence Informatique ou BTS Développement",desc:"ESATIC, INP-HB/ESI ou formations privées reconnues.",done:false},
+      {d:"2 ans",t:"Spécialisation + projets",desc:"Contribuer à des projets open source. Certifications Google/AWS valorisées.",done:false},
+      {d:"0-2 ans",t:"Premier emploi ou freelance",desc:"Portfolio de 3-5 projets démontrables. Les startups acceptent les autodidactes talentueux.",done:false},
+    ],
+    tendances:"Flutter pour le mobile, Next.js pour le web, et l'intégration des APIs IA (GPT, Gemini) dans les applications sont les compétences les plus demandées en 2026.",
+    salaires:{junior:250000,confirme:500000,senior:900000,expert:1500000},
+    secteurs_recruteurs:["Fintech","E-commerce","Médias digitaux","Santé numérique","Éducation en ligne"],
+  },
+};
+
+function fSal(v) {
+  if (!v) return '—';
+  if (v >= 1000000) return (v/1000000).toFixed(1).replace('.0','') + 'M';
+  return (v/1000) + 'k';
+}
+
+/* ── GET CAREER ID FROM URL ── */
+function getCareerIdFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get('id');
+  if (id) return id;
+  // Also check sessionStorage
+  return sessionStorage.getItem('ae_metier_id');
+}
+
+/* ── LOAD CAREERS DATA ── */
+function loadCareersData() {
+  // Try to get from sessionStorage (passed from carrieres page)
+  const stored = sessionStorage.getItem('ae_careers_data');
+  if (stored) {
+    try { return JSON.parse(stored); } catch(e) {}
+  }
+  return null;
+}
+
+/* ── RENDER FICHE ── */
+function renderFiche(career, details) {
+  const e = career;
+  const d = details || {};
+  const salaires = d.salaires || {junior:e.salaire_min, confirme:Math.round((e.salaire_min+e.salaire_max)/2), senior:e.salaire_max, expert:e.salaire_max*1.5};
+  const maxSal = Math.max(...Object.values(salaires));
+
+  const bacs = (e.bac_requis||[]).map(b => `
+    <div class="bac-card">
+      <div class="bac-label" style="color:${BAC_COLORS[b]||'var(--gold)'};">BAC ${b}</div>
+      <div class="bac-name">${BAC_NAMES[b]||b}</div>
+    </div>`).join('');
+
+  const ecoles = (e.ecoles_ids||[]).map(eid => {
+    const ec = ECOLES_MAP[eid];
+    if (!ec) return '';
+    return `<a href="avenir_etude_fiche_ecole.html?id=${eid}" class="ecole-item">
+      <div class="ei-logo" style="background:${ec.bg};color:${ec.fg};">${ec.nom}</div>
+      <div><div class="ei-name">${ec.nom}</div><div class="ei-type">${ec.type}</div></div>
+      ${ec.gratuit?'<span class="ei-free">Gratuit</span>':''}
+    </a>`;
+  }).join('');
+
+  const riasecBars = Object.entries(RIASEC_NAMES).map(([k,name]) => {
+    const isMatch = (e.riasec||[]).includes(k);
+    const pct = isMatch ? (e.riasec.indexOf(k)===0?90:70) : Math.floor(Math.random()*25+10);
+    return `<div class="rb-row">
+      <div class="rb-letter" style="color:${RIASEC_COLORS[k]};">${k}</div>
+      <div class="rb-track"><div class="rb-fill" id="rf-${k}" style="width:0%;background:${RIASEC_COLORS[k]};--target:${pct}%;"></div></div>
+      <div class="rb-name">${name}</div>
+    </div>`;
+  }).join('');
+
+  const missions = (d.missions||e.competences||[]).map(m => `
+    <div style="display:flex;gap:10px;padding:10px 14px;background:var(--ink-3);border:1px solid var(--wire);border-radius:8px;margin-bottom:8px;font-size:13px;color:var(--ivory-dim);">
+      <span style="color:var(--gold);flex-shrink:0;">→</span>${m}
+    </div>`).join('');
+
+  const parcours = (d.parcours||e.filieres_bac||[]).map((p,i) => {
+    if (typeof p === 'string') {
+      return `<div class="tl-item ${i===0?'active':''}">
+        <div class="tl-duration">Étape ${i+1}</div>
+        <div class="tl-content"><div class="tl-title">${p}</div></div>
+      </div>`;
+    }
+    return `<div class="tl-item ${p.done?'done':i===1?'active':''}">
+      <div class="tl-duration">${p.d}</div>
+      <div class="tl-content">
+        <div class="tl-title">${p.t}</div>
+        <div class="tl-desc">${p.desc}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  const filieres = (e.filieres_bac||[]).map(f => `<span class="tag tag-blue">${f}</span>`).join('');
+  const comps = (e.competences||[]).map(c => `<span class="tag">${c}</span>`).join('');
+
+  document.title = `${e.nom} — Avenir Étude`;
+
+  document.getElementById('fiche-content').innerHTML = `
+    <!-- HERO -->
+    <div class="fiche-hero">
+      <div class="wrap">
+        <div class="hero-breadcrumb">
+          <a href="avenir_etude_carrieres.html">Carrières</a>
+          <span>›</span>
+          <span>${e.secteur}</span>
+          <span>›</span>
+          <span style="color:var(--ivory);">${e.nom}</span>
+        </div>
+        <div class="hero-top">
+          <div class="hero-icon-box">${e.icon}</div>
+          <div class="hero-info">
+            <div class="hero-badges">
+              <span class="hb ${e.demande==='critical'?'hb-critical':'hb-high'}">${DEMAND_LABELS[e.demande]}</span>
+              ${e.hot?'<span class="hb hb-hot">🔥 Tendance 2026</span>':''}
+              <span class="hb hb-secteur">${e.secteur}</span>
+            </div>
+            <h1 class="hero-title">${e.nom}</h1>
+            <div class="hero-secteur">${e.formation}</div>
+          </div>
+        </div>
+        <div class="kpi-band">
+          <div class="kpi">
+            <div class="kpi-val" style="color:var(--gold);">${fSal(e.salaire_min)}–${fSal(e.salaire_max)}</div>
+            <div class="kpi-lbl">Salaire mensuel net · CI</div>
+            <div class="kpi-note">FCFA · Source Grey Search Africa 2025</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-val" style="color:var(--green);">+${e.croissance}%</div>
+            <div class="kpi-lbl">Croissance annuelle</div>
+            <div class="kpi-note">Projection marché CI 2026</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-val" style="color:var(--blue);">${(e.ecoles_ids||[]).length}</div>
+            <div class="kpi-lbl">Écoles recommandées</div>
+            <div class="kpi-note">Dans la base Avenir Étude</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-val" style="color:var(--purple);">${(e.bac_requis||[]).join(' · ')}</div>
+            <div class="kpi-lbl">Séries BAC</div>
+            <div class="kpi-note">Pour accéder aux formations</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BODY -->
+    <div class="wrap">
+      <div class="fiche-body">
+
+        <!-- MAIN -->
+        <div class="fiche-main">
+
+          <div class="fsec">
+            <div class="fsec-title">Le métier</div>
+            <div class="fsec-body">${(d.desc_long||e.desc).split('\n\n').map(p=>`<p>${p}</p>`).join('')}</div>
+          </div>
+
+          <div class="fsec">
+            <div class="fsec-title">Missions principales</div>
+            ${missions}
+          </div>
+
+          ${d.environnement?`<div class="fsec">
+            <div class="fsec-title">Environnement de travail</div>
+            <div class="fsec-body"><p>${d.environnement}</p></div>
+          </div>`:''}
+
+          <div class="fsec">
+            <div class="fsec-title">Compétences clés</div>
+            <div class="tags-wrap">${comps}</div>
+          </div>
+
+          <div class="fsec">
+            <div class="fsec-title">Séries BAC recommandées</div>
+            <div class="bac-grid">${bacs}</div>
+            ${e.bac_note?`<div style="margin-top:12px;padding:12px 16px;background:var(--gold-10);border:1px solid var(--gold-dim);border-radius:8px;font-size:13px;color:var(--ivory-dim);">💡 ${e.bac_note}</div>`:''}
+          </div>
+
+          <div class="fsec">
+            <div class="fsec-title">Filières recommandées après le BAC</div>
+            <div class="tags-wrap">${filieres}</div>
+          </div>
+
+          <div class="fsec">
+            <div class="fsec-title">Parcours de formation</div>
+            <div class="timeline">${parcours}</div>
+          </div>
+
+          ${d.evolution?`<div class="fsec">
+            <div class="fsec-title">Évolution de carrière</div>
+            <div class="fsec-body" style="padding:16px 20px;background:var(--ink-3);border:1px solid var(--wire);border-radius:10px;">
+              <p style="font-family:'Bricolage Grotesque',sans-serif;font-size:14px;font-weight:600;color:var(--ivory);">${d.evolution}</p>
+            </div>
+          </div>`:''}
+
+          <div class="fsec">
+            <div class="fsec-title">Grille salariale · CI 2025</div>
+            <div class="salary-chart">
+              ${Object.entries({Junior:salaires.junior,'Confirmé':salaires.confirme,Senior:salaires.senior,'Expert':salaires.expert}).map(([label,val])=>`
+              <div class="sc-row">
+                <div class="sc-label">${label}</div>
+                <div class="sc-bar"><div class="sc-fill" style="width:${Math.round(val/maxSal*100)}%;background:var(--gold);"></div></div>
+                <div class="sc-val">${fSal(val)} FCFA</div>
+              </div>`).join('')}
+            </div>
+          </div>
+
+          ${d.tendances?`<div class="fsec">
+            <div class="fsec-title">Tendances du marché 2026</div>
+            <div class="fsec-body"><p>${d.tendances}</p></div>
+          </div>`:''}
+
+          <div class="fsec">
+            <div class="fsec-title">Compatibilité RIASEC</div>
+            <div style="padding:16px 20px;background:var(--ink-3);border:1px solid var(--wire);border-radius:10px;">
+              <div class="riasec-bars">${riasecBars}</div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- SIDEBAR -->
+        <div class="fiche-sidebar">
+          <div class="cta-sticky">
+
+            <div class="sb-card">
+              <a href="avenir_etude_gps_academique.html" class="btn-gps-big">🗺️ Activer mon GPS vers ce métier</a>
+              <a href="avenir_etude_tests.html" class="btn-test-big">🧩 Faire le test RIASEC</a>
+            </div>
+
+            ${ecoles?`<div class="sb-card">
+              <div class="sb-card-title">Écoles qui forment à ce métier</div>
+              ${ecoles}
+            </div>`:''}
+
+            ${d.secteurs_recruteurs?`<div class="sb-card">
+              <div class="sb-card-title">Secteurs qui recrutent en CI</div>
+              <div class="tags-wrap">${d.secteurs_recruteurs.map(s=>`<span class="tag tag-green">${s}</span>`).join('')}</div>
+            </div>`:''}
+
+            <div class="sb-card">
+              <div class="sb-card-title">Métiers similaires</div>
+              <div id="similaires-list"></div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>`;
+
+  // Animate bars
+  setTimeout(() => {
+    document.querySelectorAll('.rb-fill').forEach(el => {
+      const t = el.style.getPropertyValue('--target') || '50%';
+      el.style.width = t;
+    });
+    document.querySelectorAll('.sc-fill').forEach(el => {
+      const w = el.style.width;
+      el.style.width = '0';
+      setTimeout(() => el.style.width = w, 50);
+    });
+  }, 200);
+
+  addHover();
+}
+
+function renderSimilaires(currentId, allCareers) {
+  if (!allCareers) return;
+  const current = allCareers.find(c => c.id === currentId);
+  if (!current) return;
+  const similaires = allCareers.filter(c =>
+    c.id !== currentId &&
+    (c.secteur === current.secteur || (c.riasec||[]).some(r => (current.riasec||[]).includes(r)))
+  ).slice(0,4);
+  const list = document.getElementById('similaires-list');
+  if (!list) return;
+  list.innerHTML = similaires.map(c => `
+    <div onclick="window.location.href='avenir_etude_fiche_metier.html?id=${c.id}'"
+      style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--ink-3);border:1px solid var(--wire);border-radius:9px;cursor:none;transition:border-color .15s;margin-bottom:8px;"
+      onmouseenter="this.style.borderColor='var(--wire-mid)'" onmouseleave="this.style.borderColor='var(--wire)'">
+      <span style="font-size:20px;">${c.icon}</span>
+      <div>
+        <div style="font-size:13px;font-weight:600;color:var(--ivory);">${c.nom}</div>
+        <div style="font-size:11px;color:var(--ivory-dim);">${c.secteur}</div>
+      </div>
+    </div>`).join('');
+}
+
+/* ── INIT ── */
+(function init() {
+  const id = getCareerIdFromUrl();
+  if (!id) {
+    document.getElementById('fiche-content').innerHTML = `
+      <div class="not-found">
+        <div class="nf-icon">🔍</div>
+        <div class="nf-title">Métier introuvable</div>
+        <p style="color:var(--ivory-dim);margin-top:8px;">
+          <a href="avenir_etude_carrieres.html" style="color:var(--gold);">← Retour aux carrières</a>
+        </p>
+      </div>`;
+    return;
+  }
+
+  // Get careers from sessionStorage (injected by carrieres page)
+  const stored = sessionStorage.getItem('ae_careers_all');
+  let allCareers = null;
+  if (stored) {
+    try { allCareers = JSON.parse(stored); } catch(e) {}
+  }
+
+  if (allCareers) {
+    const career = allCareers.find(c => c.id === id);
+    if (career) {
+      const details = CAREER_DETAILS[id] || {};
+      renderFiche(career, details);
+      setTimeout(() => renderSimilaires(id, allCareers), 300);
+      return;
+    }
+  }
+
+  // If no sessionStorage data, load from script tag
+  // This loads CAREERS from carrieres page data
+  document.getElementById('fiche-content').innerHTML = `
+    <div class="not-found">
+      <div class="nf-icon">⚠️</div>
+      <div class="nf-title">Session expirée</div>
+      <p style="color:var(--ivory-dim);margin-top:8px;font-size:14px;">Veuillez revenir depuis la page Carrières.</p>
+      <a href="avenir_etude_carrieres.html" style="display:inline-block;margin-top:16px;padding:12px 24px;background:var(--gold);color:var(--ink);border-radius:8px;text-decoration:none;font-family:'Bricolage Grotesque',sans-serif;font-weight:700;">← Voir les carrières</a>
+    </div>`;
+})();
+</script>
+</body>
+</html>

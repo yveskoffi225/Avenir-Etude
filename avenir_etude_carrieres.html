@@ -250,6 +250,25 @@
     @media(max-width:1024px){.careers-grid{grid-template-columns:1fr 1fr;} .m-kpi{grid-template-columns:1fr 1fr;} .ecoles-liees{grid-template-columns:1fr;} .footer-grid{grid-template-columns:1fr 1fr;}}
     @media(max-width:768px){.nav-links{display:none;} .wrap,.nav-inner,.footer-inner,.toolbar-inner,.secteurs-inner{padding-left:20px;padding-right:20px;} .careers-grid{grid-template-columns:1fr;} .footer-grid{grid-template-columns:1fr;} .m-kpi{grid-template-columns:1fr 1fr;}}
     ::-webkit-scrollbar{width:4px;} ::-webkit-scrollbar-track{background:var(--ink);} ::-webkit-scrollbar-thumb{background:var(--wire-mid);border-radius:2px;}
+  
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+    /* Pagination */
+    #careers-pagination .pag-btn{font-family:'Bricolage Grotesque',sans-serif;font-size:13px;font-weight:700;padding:10px 20px;background:var(--ink-3);border:1px solid var(--wire-mid);border-radius:9px;color:var(--ivory-dim);cursor:none;transition:all .15s;}
+    #careers-pagination .pag-btn:hover:not(:disabled){border-color:var(--gold-dim);color:var(--gold);}
+    #careers-pagination .pag-btn:disabled{opacity:.3;}
+    #careers-pagination .pag-pages{display:flex;gap:6px;}
+    #careers-pagination .pag-num{width:38px;height:38px;border-radius:8px;border:1px solid var(--wire);background:var(--ink-3);color:var(--ivory-dim);font-family:'Bricolage Grotesque',sans-serif;font-size:13px;font-weight:700;cursor:none;transition:all .15s;}
+    #careers-pagination .pag-num.active{background:var(--gold);border-color:var(--gold);color:var(--ink);}
+    #careers-pagination .pag-num:hover:not(.active){border-color:var(--wire-mid);color:var(--ivory);}
+    /* Vogue cards */
+    .vogue-card{background:var(--ink-2);border:1px solid var(--gold-dim);border-radius:14px;padding:18px 20px;cursor:none;transition:all .2s;position:relative;overflow:hidden;}
+    .vogue-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(212,168,83,.12);}
+    .vogue-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold),var(--orange));}
+    .vc-badge{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border-radius:3px;background:var(--red-10);color:var(--red);border:1px solid rgba(224,90,84,.2);display:inline-block;margin-bottom:8px;}
+    .vc-icon{font-size:24px;margin-bottom:6px;}
+    .vc-name{font-family:'Bricolage Grotesque',sans-serif;font-size:16px;font-weight:800;color:var(--ivory);letter-spacing:-.02em;margin-bottom:4px;}
+    .vc-sal{font-size:12px;color:var(--gold);font-weight:600;margin-bottom:6px;}
+    .vc-growth{font-size:11px;color:var(--green);display:flex;align-items:center;gap:4px;}
   </style>
 </head>
 <body>
@@ -322,10 +341,21 @@
 <!-- MAIN -->
 <div class="main-content">
   <div class="wrap">
+    <!-- Métiers en vogue -->
+    <div id="vogue-section" style="margin-bottom:28px;">
+      <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;display:flex;align-items:center;gap:8px;">
+        <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--red);animation:blink 1.5s ease-in-out infinite;"></span>
+        Métiers en forte demande · CI 2026
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;" id="vogue-grid"></div>
+    </div>
+    <div style="width:100%;height:1px;background:var(--wire);margin-bottom:24px;"></div>
     <div class="results-bar">
       <div class="results-info" id="results-info"></div>
     </div>
     <div class="careers-grid" id="careers-grid"></div>
+    <!-- Pagination -->
+    <div id="careers-pagination" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:28px 0;"></div>
   </div>
 </div>
 
@@ -560,7 +590,7 @@ function renderCard(c) {
   const comps = (c.competences||[]).slice(0,4).map(k => `<span class="cc-comp">${k}</span>`).join('');
 
   return `
-  <div class="career-card ${c.hot?'hot-card':''}" onclick="openModal('${c.id}')">
+  <div class="career-card ${c.hot?'hot-card':''}" onclick="goToFiche('${c.id}')">
     <div class="cc-header">
       <div class="cc-badges">${demBadge}${hotBadge}</div>
     </div>
@@ -582,11 +612,16 @@ function renderCard(c) {
       <div class="cc-stat"><div class="cc-stat-val sv-gold">${DEMAND_LABELS[c.demande]}</div><div class="cc-stat-lbl">Demande</div></div>
     </div>
     <div class="cc-actions">
-      <button class="btn-detail">Voir la fiche →</button>
+      <button class="btn-detail" onclick="event.stopPropagation();goToFiche('${c.id}')">Voir la fiche →</button>
       <button class="btn-gps" onclick="event.stopPropagation();openModal('${c.id}');setTimeout(()=>{const el=document.getElementById('modal-gps-'+c.id);if(el)el.scrollIntoView({behavior:'smooth'})},300)">🗺️ GPS</button>
     </div>
   </div>`;
 }
+
+/* ══ PAGINATION ══ */
+const PER_PAGE = 12;
+let currentPage = 0;
+let filteredData = [];
 
 /* ══ APPLY FILTERS ══ */
 function applyFilters() {
@@ -594,7 +629,7 @@ function applyFilters() {
   const demande = document.getElementById('demande-filter').value;
   const sort = document.getElementById('sort-filter').value;
 
-  let data = CAREERS.filter(c => {
+  filteredData = CAREERS.filter(c => {
     const sOk = activeSecteur === 'all' || c.secteur === activeSecteur;
     const qOk = !q || c.nom.toLowerCase().includes(q)
       || c.secteur.toLowerCase().includes(q)
@@ -605,17 +640,59 @@ function applyFilters() {
     return sOk && qOk && dOk;
   });
 
-  if (sort === 'salaire') data.sort((a,b) => b.salaire_max - a.salaire_max);
-  else if (sort === 'croissance') data.sort((a,b) => b.croissance - a.croissance);
-  else if (sort === 'alpha') data.sort((a,b) => a.nom.localeCompare(b.nom));
-  else data.sort((a,b) => (b.hot?1:0)-(a.hot?1:0) || b.croissance-a.croissance);
+  if (sort === 'salaire') filteredData.sort((a,b) => b.salaire_max - a.salaire_max);
+  else if (sort === 'croissance') filteredData.sort((a,b) => b.croissance - a.croissance);
+  else if (sort === 'alpha') filteredData.sort((a,b) => a.nom.localeCompare(b.nom));
+  else filteredData.sort((a,b) => (b.hot?1:0)-(a.hot?1:0) || b.croissance-a.croissance);
 
-  document.getElementById('results-info').innerHTML = `<strong>${data.length}</strong> métier${data.length>1?'s':''} trouvé${data.length>1?'s':''}`;
+  currentPage = 0;
+  renderPage();
+}
+
+function renderPage() {
+  const total = filteredData.length;
+  const totalPages = Math.ceil(total / PER_PAGE);
+  const slice = filteredData.slice(currentPage * PER_PAGE, (currentPage+1) * PER_PAGE);
+  
+  document.getElementById('results-info').innerHTML = 
+    `<strong>${total}</strong> métier${total>1?'s':''} · Page <strong>${currentPage+1}</strong>/${totalPages}`;
+  
   const grid = document.getElementById('careers-grid');
-  grid.innerHTML = data.length
-    ? data.map(renderCard).join('')
+  grid.innerHTML = slice.length
+    ? slice.map(renderCard).join('')
     : `<div class="empty-state"><div class="es-icon">🔍</div><div class="es-title">Aucun métier trouvé</div><div class="es-sub">Essayez un autre terme ou élargissez les filtres.</div></div>`;
+  
+  // Pagination controls
+  const pag = document.getElementById('careers-pagination');
+  if (pag) {
+    if (totalPages <= 1) { pag.innerHTML = ''; }
+    else {
+      pag.innerHTML = `
+        <button class="pag-btn" onclick="changePage(-1)" ${currentPage===0?'disabled':''}>← Précédent</button>
+        <div class="pag-pages">
+          ${Array.from({length:Math.min(5,totalPages)},(_, i)=>{
+            const p = currentPage < 3 ? i : Math.min(currentPage-2+i, totalPages-1);
+            return p < totalPages ? `<button class="pag-num ${p===currentPage?'active':''}" onclick="gotoPage(${p})">${p+1}</button>` : '';
+          }).join('')}
+        </div>
+        <button class="pag-btn" onclick="changePage(1)" ${currentPage>=totalPages-1?'disabled':''}>Suivant →</button>`;
+    }
+  }
+  
+  // Scroll to top of grid
+  if (currentPage > 0) grid.scrollIntoView({behavior:'smooth', block:'start'});
   addHover();
+}
+
+function changePage(dir) {
+  const totalPages = Math.ceil(filteredData.length / PER_PAGE);
+  currentPage = Math.max(0, Math.min(totalPages-1, currentPage + dir));
+  renderPage();
+}
+
+function gotoPage(p) {
+  currentPage = p;
+  renderPage();
 }
 
 /* ══ VIEW MODE ══ */
@@ -627,6 +704,15 @@ function setView(mode) {
 }
 
 /* ══ MODAL ══ */
+function goToFiche(id) {
+  sessionStorage.setItem('ae_metier_id', id);
+  // Save all careers data for the fiche page
+  try { sessionStorage.setItem('ae_careers_all', JSON.stringify(CAREERS)); } catch(e) {}
+  document.body.style.opacity = '0';
+  document.body.style.transition = 'opacity .3s';
+  setTimeout(() => window.location.href = 'avenir_etude_fiche_metier.html?id=' + id, 300);
+}
+
 function openModal(id) {
   const c = CAREERS.find(x => x.id === id);
   if (!c) return;
@@ -791,8 +877,23 @@ document.addEventListener('keydown', e => { if(e.key==='Escape') closeModal(); }
 
 /* ══ INIT ══ */
 buildSecteurChips();
+renderVogue();
 applyFilters();
 addHover();
+
+function renderVogue() {
+  const vogueMetiers = CAREERS.filter(c => c.demande==='critical').slice(0,3);
+  const grid = document.getElementById('vogue-grid');
+  if (!grid) return;
+  grid.innerHTML = vogueMetiers.map(c => `
+    <div class="vogue-card" onclick="goToFiche('${c.id}')">
+      <span class="vc-badge">🔴 Très forte demande</span>
+      <div class="vc-icon">${c.icon}</div>
+      <div class="vc-name">${c.nom}</div>
+      <div class="vc-sal">${fSal(c.salaire_min)}–${fSal(c.salaire_max)} FCFA/mois</div>
+      <div class="vc-growth">↑ +${c.croissance}% croissance/an</div>
+    </div>`).join('');
+}
 </script>
 </body>
 </html>

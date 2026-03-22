@@ -192,6 +192,37 @@
       .grades-grid{grid-template-columns:1fr;}
       nav{padding:0 20px;}
     }
+  
+    /* ── CHOICE MODAL ── */
+    #choice-modal{
+      position:fixed;inset:0;background:rgba(6,11,20,.95);z-index:9000;
+      display:none;align-items:center;justify-content:center;padding:24px;
+      backdrop-filter:blur(12px);
+    }
+    .cm-card{
+      background:var(--ink-2);border:1px solid var(--wire-mid);border-radius:20px;
+      width:100%;max-width:560px;padding:36px;
+      animation:fadeIn .4s ease;
+    }
+    @keyframes fadeIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+    .cm-title{font-family:'Bricolage Grotesque',sans-serif;font-size:26px;font-weight:800;color:var(--ivory);letter-spacing:-.03em;margin-bottom:8px;}
+    .cm-title em{font-style:italic;color:var(--gold);}
+    .cm-sub{font-size:13px;color:var(--ivory-dim);line-height:1.7;margin-bottom:28px;}
+    .cm-choices{display:flex;flex-direction:column;gap:12px;}
+    .choice-card{
+      display:flex;align-items:center;gap:16px;padding:18px 20px;
+      background:var(--ink-3);border:1px solid var(--wire);border-radius:12px;
+      cursor:none;transition:all .2s;
+    }
+    .choice-card:hover{border-color:var(--gold-dim);transform:translateX(4px);}
+    .cc-icon{font-size:28px;flex-shrink:0;}
+    .cc-body{flex:1;}
+    .cc-title{font-family:'Bricolage Grotesque',sans-serif;font-size:16px;font-weight:700;color:var(--ivory);margin-bottom:3px;}
+    .cc-desc{font-size:12px;color:var(--ivory-dim);line-height:1.5;}
+    .cc-arrow{font-size:18px;color:var(--ivory-faint);transition:color .2s,transform .2s;}
+    .choice-card:hover .cc-arrow{color:var(--gold);transform:translateX(4px);}
+    .choice-card.primary{border-color:var(--gold-dim);background:var(--gold-10);}
+    .choice-card.primary .cc-title{color:var(--gold);}
   </style>
 </head>
 <body>
@@ -652,10 +683,29 @@ function launchTest() {
   sessionStorage.setItem('ae_profile', JSON.stringify(fullProfile));
   sessionStorage.setItem('ae_user', JSON.stringify(fullProfile));
 
-  // Show loading transition
+  // Save complete profile
+  sessionStorage.setItem('ae_complete', '1');
+  // Show choice modal instead of redirecting directly
+  showChoiceModal();
+}
+
+function showChoiceModal() {
+  document.getElementById('choice-modal').style.display = 'flex';
+  document.querySelectorAll('a,button,.choice-card').forEach(el => {
+    el.addEventListener('mouseenter', () => { const c = document.getElementById('ae-cur'); if(c) c.classList.add('hover'); });
+    el.addEventListener('mouseleave', () => { const c = document.getElementById('ae-cur'); if(c) c.classList.remove('hover'); });
+  });
+}
+
+function goToTest(type) {
   document.body.style.opacity = '0';
   document.body.style.transition = 'opacity .4s';
-  setTimeout(() => window.location.href = 'avenir_etude_test_riasec_v2.html', 400);
+  const urls = {
+    riasec: 'avenir_etude_test_riasec_v2.html',
+    aptitudes: 'avenir_etude_test_aptitudes.html',
+    explorer: 'avenir_etude_homepage_v2.html'
+  };
+  setTimeout(() => window.location.href = urls[type] || 'avenir_etude_homepage_v2.html', 400);
 }
 
 
@@ -708,5 +758,39 @@ function launchTest() {
 /* INIT */
 goToStep(1);
 </script>
+
+<!-- CHOICE MODAL -->
+<div id="choice-modal">
+  <div class="cm-card">
+    <div class="cm-title">Profil créé !<br><em>Que veux-tu faire ?</em></div>
+    <p class="cm-sub">Ton profil est sauvegardé. Tu peux commencer un test d'orientation maintenant ou explorer le site d'abord — tes données sont conservées.</p>
+    <div class="cm-choices">
+      <div class="choice-card primary" onclick="goToTest('riasec')">
+        <div class="cc-icon">🧩</div>
+        <div class="cc-body">
+          <div class="cc-title">Commencer le Test RIASEC</div>
+          <div class="cc-desc">100 questions · 15 min · Découvrir tes intérêts professionnels</div>
+        </div>
+        <div class="cc-arrow">→</div>
+      </div>
+      <div class="choice-card" onclick="goToTest('aptitudes')">
+        <div class="cc-icon">⚡</div>
+        <div class="cc-body">
+          <div class="cc-title">Commencer le Test d'Aptitudes</div>
+          <div class="cc-desc">40 questions · 30 min · Mesurer tes capacités cognitives</div>
+        </div>
+        <div class="cc-arrow">→</div>
+      </div>
+      <div class="choice-card" onclick="goToTest('explorer')">
+        <div class="cc-icon">🔍</div>
+        <div class="cc-body">
+          <div class="cc-title">Explorer le site d'abord</div>
+          <div class="cc-desc">Découvrir les écoles, carrières et ressources avant de passer les tests</div>
+        </div>
+        <div class="cc-arrow">→</div>
+      </div>
+    </div>
+  </div>
+</div>
 </body>
 </html>
