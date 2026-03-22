@@ -176,11 +176,33 @@ function showResults(){
       <div class="rs-dim-bar"><div class="rs-dim-fill" id="rdf-${k}" style="width:0%;background:${DIM_COLORS[k]};"></div></div>
     </div>`).join("")}</div>
     <div class="rs-advice">💡 ${advice}</div>
+    <div style="background:var(--ink-3);border:1px solid var(--wire);border-radius:12px;padding:16px;margin-bottom:16px;">
+      <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;">🎯 Métiers alignés avec tes valeurs</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12px;color:var(--ivory-dim);">
+        ${dimP.S>=60?'<div>❤️ Fort impact social → Médecine, Enseignement, Agronomie</div>':''} 
+        ${dimP.E>=60?'<div>⚡ Autonomie recherchée → Entrepreneuriat, Consulting, Commercial</div>':''}
+        ${dimP.A>=60?'<div>❤️ Sens & passion → Recherche, Enseignement, Arts, ONG</div>':''}
+        ${dimP.R>=60?'<div>🏆 Reconnaissance → Banque d'Affaires, IT, Top Management</div>':''}
+      </div>
+      <div style="font-size:11px;color:var(--ivory-faint);margin-top:10px;">Ces orientations alimentent automatiquement ton GPS Académique →</div>
+    </div>
     <div class="rs-btns">
       <button class="btn-rs-p" onclick="window.location.href='avenir_etude_dashboard_resultats.html'">Voir mon rapport →</button>
       <button class="btn-rs-g" onclick="window.location.href='avenir_etude_tests.html'">Autres tests</button>
     </div>`;
   setTimeout(()=>{Object.keys(DIM_NAMES).forEach(k=>{const el=document.getElementById("rdf-"+k);if(el)el.style.width=dimP[k]+"%";});},200);
+  // Salary reality check based on values scores
+  const salarySectors = {
+    high_salary: ['Banque','Finance & Comptabilité','Technologie & IA','Top Management','BTP & Infrastructure'],
+    impact: ['Santé & Sciences médicales','Éducation & Formation','Agronomie & Agrobusiness','Énergie & Environnement'],
+    autonomy: ['Top Management','Commerce & Marketing','Médias & Communication'],
+    stability: ['Droit & Institutions','Administration & Support','Éducation & Formation','Ressources Humaines'],
+  };
+  
+  // Cross-save to profile for GPS
+  const profile2 = JSON.parse(sessionStorage.getItem("ae_profile")||"{}");
+  const top3 = Object.entries(dimP).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([k])=>k);
+  sessionStorage.setItem("ae_profile", JSON.stringify({...profile2, valeurs_top3: top3, valeurs_scores: dimP, valeurs_date: new Date().toISOString()}));
   addHover();
 }
 addHover();
