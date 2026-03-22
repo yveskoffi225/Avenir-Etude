@@ -89,7 +89,7 @@
     .footer-copy{font-size:11px;color:var(--ivory-faint);}
     .footer-badges{display:flex;gap:8px;}
     .footer-badge{font-size:10px;font-weight:600;padding:3px 9px;border-radius:4px;background:var(--ink-3);border:1px solid var(--wire);color:var(--ivory-faint);}
-    @media(max-width:1024px){.tests-grid{grid-template-columns:1fr;} .test-card-wide{grid-template-columns:1fr;} .how-grid{grid-template-columns:1fr 1fr;} .footer-grid{grid-template-columns:1fr 1fr;}}
+    @media(max-width:1024px){.tests-grid{grid-template-columns:1fr;} [style*="grid-template-columns:repeat(3"]{grid-template-columns:1fr 1fr !important;} .test-card-wide{grid-template-columns:1fr;} .how-grid{grid-template-columns:1fr 1fr;} .footer-grid{grid-template-columns:1fr 1fr;}}
     @media(max-width:768px){.nav-links{display:none;} .wrap,.nav-inner,.footer-inner{padding-left:20px;padding-right:20px;} .footer-grid{grid-template-columns:1fr;} .how-grid{grid-template-columns:1fr;}}
     ::-webkit-scrollbar{width:4px;} ::-webkit-scrollbar-track{background:var(--ink);} ::-webkit-scrollbar-thumb{background:var(--wire-mid);border-radius:2px;}
   </style>
@@ -125,72 +125,108 @@
 
 <div class="tests-section">
   <div class="wrap">
-    <div class="tests-grid">
-
-      <!-- Test RIASEC -->
-      <a href="avenir_etude_test_riasec_v2.html" class="test-card tc-gold">
-        <span class="tc-timer tt-gold">⏱ 8s / question</span>
-        <div class="tc-badge tcb-principal">✦ Test Principal</div>
-        <div class="tc-icon">🧩</div>
-        <div>
-          <div class="tc-title">Test RIASEC</div>
-          <div style="font-size:12px;color:var(--ivory-dim);margin-bottom:10px;">Intérêts Professionnels</div>
-        </div>
-        <div class="tc-desc">100 questions pour identifier tes intérêts dominants sur 6 dimensions contextualisées pour la Côte d'Ivoire. Réaliste, Investigatif, Artistique, Social, Entreprenant, Conventionnel.</div>
-        <div class="tc-specs">
-          <div class="tc-spec">🕐 15 minutes</div>
-          <div class="tc-spec">📊 6 dimensions</div>
-          <div class="tc-spec">✓ 100% gratuit</div>
-          <div class="tc-spec">🎓 Profil RIASEC + métiers + écoles</div>
-        </div>
-        <span class="tc-cta tc-cta-gold">Commencer le test → </span>
-      </a>
-
-      <!-- Test Aptitudes -->
-      <a href="avenir_etude_test_aptitudes.html" class="test-card tc-blue">
-        <span class="tc-timer tt-blue">⏱ 45s / question</span>
-        <div class="tc-badge tcb-cognitif">⚡ Test Cognitif</div>
-        <div class="tc-icon">⚡</div>
-        <div>
-          <div class="tc-title">Test d'Aptitudes</div>
-          <div style="font-size:12px;color:var(--ivory-dim);margin-bottom:10px;">Capacités Cognitives</div>
-        </div>
-        <div class="tc-desc">40 questions pour mesurer tes capacités réelles : raisonnement logique, aptitude verbale, aptitude numérique et analyse. Ces scores affinent les recommandations de filières.</div>
-        <div class="tc-specs">
-          <div class="tc-spec">🕐 30 minutes</div>
-          <div class="tc-spec">🧠 4 dimensions</div>
-          <div class="tc-spec">📈 Score /100 par dimension</div>
-          <div class="tc-spec">✓ Complète le RIASEC</div>
-        </div>
-        <span class="tc-cta tc-cta-blue">Commencer le test →</span>
-      </a>
-
-      <!-- GPS Académique -->
-      <a href="avenir_etude_gps_academique.html" class="test-card test-card-wide tc-green">
-        <div>
-          <div class="tc-badge tcb-gps">🗺️ GPS Académique</div>
-          <div class="tc-icon" style="font-size:40px;margin:12px 0;">🗺️</div>
-          <div class="tc-title">Ton GPS vers ton métier de rêve</div>
-          <div class="tc-desc" style="max-width:480px;">Déclare ton objectif — médecin, ingénieur, data scientist, avocat. On génère un plan de route complet avec chaque étape détaillée, les écoles à cibler, les concours à préparer et un Plan B automatique.</div>
-          <div class="tc-specs" style="margin-top:14px;">
-            <div class="tc-spec">📍 3ème → Université</div>
-            <div class="tc-spec">📊 Mis à jour chaque trimestre</div>
-            <div class="tc-spec">🔔 Alertes concours</div>
-            <div class="tc-spec">🔄 Plan B automatique</div>
-          </div>
-          <span class="tc-cta tc-cta-ghost" style="margin-top:16px;">Activer mon GPS →</span>
-        </div>
-        <div class="gps-steps-preview">
-          <div class="gsp-step"><div class="gsp-dot" style="background:var(--green);color:var(--ink);">✓</div><div class="gsp-text"><strong style="color:var(--ivory);">Choisir la série D</strong><br>Sciences de la vie — recommandé pour médecine</div></div>
-          <div class="gsp-step"><div class="gsp-dot" style="background:var(--gold);color:var(--ink);">⚡</div><div class="gsp-text"><strong style="color:var(--ivory);">Renforcer SVT & Chimie</strong><br>Objectif 16/20 minimum</div></div>
-          <div class="gsp-step"><div class="gsp-dot" style="background:var(--ink-3);border:1px solid var(--wire-mid);color:var(--ivory-faint);">3</div><div class="gsp-text"><strong style="color:var(--ivory);">BAC D mention Bien</strong><br>Seuil pour le concours UFHB Médecine</div></div>
-          <div class="gsp-step"><div class="gsp-dot" style="background:var(--ink-3);border:1px solid var(--wire-mid);color:var(--ivory-faint);">4</div><div class="gsp-text"><strong style="color:var(--ivory);">Concours UFHB Médecine</strong><br>S'inscrire dès les résultats BAC</div></div>
-        </div>
-      </a>
-
+    <!-- SECTION 1: Tests scientifiques -->
+    <div style="margin-bottom:14px;">
+      <div style="font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;display:flex;align-items:center;gap:8px;">
+        <span style="width:14px;height:1px;background:var(--gold-dim);display:inline-block;"></span>
+        Tests scientifiques d'orientation
+      </div>
+      <div class="tests-grid">
+        <a href="avenir_etude_test_riasec_v2.html" class="test-card tc-gold">
+          <span class="tc-timer tt-gold">⏱ 8s / question</span>
+          <div class="tc-badge tcb-principal">✦ Test Principal</div>
+          <div class="tc-icon">🧩</div>
+          <div><div class="tc-title">Test RIASEC</div><div style="font-size:12px;color:var(--ivory-dim);margin-bottom:10px;">Intérêts Professionnels</div></div>
+          <div class="tc-desc">100 questions pour identifier tes intérêts sur 6 dimensions contextualisées CI.</div>
+          <div class="tc-specs"><div class="tc-spec">🕐 15 min</div><div class="tc-spec">📊 6 dimensions</div><div class="tc-spec">✓ Gratuit</div></div>
+          <span class="tc-cta tc-cta-gold">Commencer →</span>
+        </a>
+        <a href="avenir_etude_test_aptitudes.html" class="test-card tc-blue">
+          <span class="tc-timer tt-blue">⏱ 45s / question</span>
+          <div class="tc-badge tcb-cognitif">⚡ Cognitif</div>
+          <div class="tc-icon">⚡</div>
+          <div><div class="tc-title">Test d'Aptitudes</div><div style="font-size:12px;color:var(--ivory-dim);margin-bottom:10px;">Capacités Cognitives</div></div>
+          <div class="tc-desc">40 questions : logique, verbal, numérique, analytique. Affine les recommandations.</div>
+          <div class="tc-specs"><div class="tc-spec">🕐 30 min</div><div class="tc-spec">🧠 4 dimensions</div><div class="tc-spec">📈 Score /100</div></div>
+          <span class="tc-cta tc-cta-blue">Commencer →</span>
+        </a>
+      </div>
     </div>
 
-    <!-- How it works -->
+    <!-- SECTION 2: Tests complémentaires -->
+    <div style="margin-bottom:14px;">
+      <div style="font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ivory-dim);margin-bottom:14px;display:flex;align-items:center;gap:8px;">
+        <span style="width:14px;height:1px;background:var(--wire-mid);display:inline-block;"></span>
+        Tests de développement professionnel
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
+        <a href="avenir_etude_test_ie.html" class="test-card" style="border-color:rgba(139,92,246,.2);">
+          <div class="tc-badge" style="background:rgba(139,92,246,.1);color:var(--purple);border:1px solid rgba(139,92,246,.2);">💜 IE</div>
+          <div class="tc-icon">💜</div>
+          <div class="tc-title" style="font-size:16px;">Intelligence Émotionnelle</div>
+          <div class="tc-desc">40 situations — conscience de soi, empathie, compétences sociales.</div>
+          <div class="tc-specs"><div class="tc-spec">🕐 20 min</div><div class="tc-spec">4 dimensions</div></div>
+          <span class="tc-cta" style="color:var(--purple);">Commencer →</span>
+        </a>
+        <a href="avenir_etude_test_leadership.html" class="test-card" style="border-color:rgba(245,158,11,.2);">
+          <div class="tc-badge" style="background:rgba(245,158,11,.1);color:var(--orange);border:1px solid rgba(245,158,11,.2);">👑 Leadership</div>
+          <div class="tc-icon">👑</div>
+          <div class="tc-title" style="font-size:16px;">Leadership & Management</div>
+          <div class="tc-desc">30 situations — vision, gestion d'équipe, décision, influence.</div>
+          <div class="tc-specs"><div class="tc-spec">🕐 15 min</div><div class="tc-spec">4 dimensions</div></div>
+          <span class="tc-cta" style="color:var(--orange);">Commencer →</span>
+        </a>
+        <a href="avenir_etude_test_entrepreneuriat.html" class="test-card" style="border-color:rgba(52,201,122,.2);">
+          <div class="tc-badge" style="background:rgba(52,201,122,.1);color:var(--green);border:1px solid rgba(52,201,122,.2);">🚀 Entrepreneuriat</div>
+          <div class="tc-icon">🚀</div>
+          <div class="tc-title" style="font-size:16px;">Potentiel Entrepreneurial</div>
+          <div class="tc-desc">26 questions — innovation, risque, résilience, vision marché CI.</div>
+          <div class="tc-specs"><div class="tc-spec">🕐 12 min</div><div class="tc-spec">Contexte CI</div></div>
+          <span class="tc-cta" style="color:var(--green);">Commencer →</span>
+        </a>
+        <a href="avenir_etude_test_valeurs.html" class="test-card" style="border-color:rgba(212,168,83,.2);">
+          <div class="tc-badge" style="background:var(--gold-10);color:var(--gold);border:1px solid var(--gold-dim);">🌟 Valeurs</div>
+          <div class="tc-icon">🌟</div>
+          <div class="tc-title" style="font-size:16px;">Valeurs Professionnelles</div>
+          <div class="tc-desc">20 questions — ce qui te motive vraiment dans ta vie pro.</div>
+          <div class="tc-specs"><div class="tc-spec">🕐 10 min</div><div class="tc-spec">Guide le GPS</div></div>
+          <span class="tc-cta" style="color:var(--gold);">Commencer →</span>
+        </a>
+        <a href="avenir_etude_test_toeic.html" class="test-card" style="border-color:rgba(79,122,232,.2);">
+          <div class="tc-badge" style="background:var(--blue-10);color:var(--blue);border:1px solid rgba(79,122,232,.2);">🌍 Anglais</div>
+          <div class="tc-icon">🌍</div>
+          <div class="tc-title" style="font-size:16px;">Simulation TOEIC/TOEFL</div>
+          <div class="tc-desc">50 questions — vocabulaire, grammaire, compréhension. Score TOEIC estimé.</div>
+          <div class="tc-specs"><div class="tc-spec">🕐 60s/question</div><div class="tc-spec">Score /990</div></div>
+          <span class="tc-cta" style="color:var(--blue);">Commencer →</span>
+        </a>
+        <a href="avenir_etude_test_digital.html" class="test-card" style="border-color:rgba(79,122,232,.15);">
+          <div class="tc-badge" style="background:rgba(79,122,232,.08);color:var(--blue);border:1px solid rgba(79,122,232,.15);">💻 Digital</div>
+          <div class="tc-icon">💻</div>
+          <div class="tc-title" style="font-size:16px;">Maturité Digitale</div>
+          <div class="tc-desc">20 questions — outils numériques, IA, productivité digitale, sécurité.</div>
+          <div class="tc-specs"><div class="tc-spec">🕐 10 min</div><div class="tc-spec">Score /100</div></div>
+          <span class="tc-cta" style="color:var(--blue);">Commencer →</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- SECTION 3: GPS -->
+    <a href="avenir_etude_gps_academique.html" class="test-card test-card-wide" style="display:grid;">
+      <div>
+        <div class="tc-badge tcb-gps" style="margin-bottom:12px;">🗺️ GPS Académique</div>
+        <div class="tc-title" style="font-size:22px;">Ton plan de route vers ton métier de rêve</div>
+        <div class="tc-desc" style="max-width:480px;">Déclare ton objectif — médecin, ingénieur, data scientist. Obtiens un plan d'action complet avec chaque étape, les écoles à cibler et les concours à préparer.</div>
+        <span class="tc-cta tc-cta-ghost" style="margin-top:16px;">Activer mon GPS →</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;align-content:start;">
+        <div style="background:var(--ink-3);border:1px solid var(--wire);border-radius:10px;padding:14px;text-align:center;"><div style="font-size:22px;margin-bottom:6px;">🏫</div><div style="font-family:'Bricolage Grotesque',sans-serif;font-size:13px;font-weight:700;color:var(--ivory);">3ème</div><div style="font-size:10px;color:var(--ivory-dim);margin-top:3px;">Plan 4 ans</div></div>
+        <div style="background:var(--ink-3);border:1px solid var(--wire);border-radius:10px;padding:14px;text-align:center;"><div style="font-size:22px;margin-bottom:6px;">📚</div><div style="font-family:'Bricolage Grotesque',sans-serif;font-size:13px;font-weight:700;color:var(--ivory);">Lycéen</div><div style="font-size:10px;color:var(--ivory-dim);margin-top:3px;">Suivi trimestriel</div></div>
+        <div style="background:var(--ink-3);border:1px solid var(--gold-dim);border-radius:10px;padding:14px;text-align:center;"><div style="font-size:22px;margin-bottom:6px;">🎓</div><div style="font-family:'Bricolage Grotesque',sans-serif;font-size:13px;font-weight:700;color:var(--gold);">Bachelier</div><div style="font-size:10px;color:var(--ivory-dim);margin-top:3px;">Actions J+30</div></div>
+      </div>
+    </a>
+
+        <!-- How it works -->
     <div class="how-section">
       <div class="how-title">Comment utiliser les tests ensemble</div>
       <div class="how-grid">
